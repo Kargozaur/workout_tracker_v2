@@ -14,8 +14,8 @@ DRIVER = Annotated[
 HOST = Annotated[SecretStr, Field(default="localhost")]
 
 
-class AbstactDbConfig(BaseSettings):
-    model_confgig = SettingsConfigDict(
+class AbstractDbConfig(BaseSettings):
+    model_config = SettingsConfigDict(
         env_prefix="DB_", env_file=".db.env", extra="ignore"
     )
 
@@ -24,7 +24,7 @@ class AbstactDbConfig(BaseSettings):
         raise NotImplementedError()
 
 
-class PostgresConfig(AbstactDbConfig):
+class PostgresConfig(AbstractDbConfig):
     user: SecretStr
     password: SecretStr
     host: HOST
@@ -46,7 +46,7 @@ class PostgresConfig(AbstactDbConfig):
         )
 
 
-class SQLiteConfig(AbstactDbConfig):
+class SQLiteConfig(AbstractDbConfig):
     database: str
     driver: Annotated[str, Field(default="aiosqlite")]
 
@@ -55,14 +55,14 @@ class SQLiteConfig(AbstactDbConfig):
         return f"sqlite+{self.driver}:///{self.database}"
 
 
-def config_factory() -> AbstactDbConfig:
+def config_factory() -> AbstractDbConfig:
     import os
 
     from dotenv import load_dotenv
 
     load_dotenv(".db.env")
     db_type: str = os.getenv("DB_TYPE", "sqlite")
-    configs: dict[str, type[AbstactDbConfig]] = {
+    configs: dict[str, type[AbstractDbConfig]] = {
         "sqlite": SQLiteConfig,
         "postgres": PostgresConfig,
     }

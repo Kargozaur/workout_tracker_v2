@@ -1,6 +1,6 @@
 from dishka import Provider, Scope, provide
 
-from app.workout.core.settings.db_settings import AbstactDbConfig
+from app.workout.core.settings.db_settings import AbstractDbConfig
 from app.workout.core.settings.orm_settings import ORMConfig
 from app.workout.core.settings.redis_settings import RedisConfig
 from app.workout.core.settings.settings import AppConfig
@@ -14,7 +14,7 @@ class ConfigProvider(Provider):
         return AppConfig()
 
     @provide
-    def get_db_config(self, config: AppConfig) -> AbstactDbConfig:
+    def get_db_config(self, config: AppConfig) -> AbstractDbConfig:
         return config.db
 
     @provide

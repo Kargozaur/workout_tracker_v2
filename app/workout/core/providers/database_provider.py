@@ -8,13 +8,13 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-from app.workout.core.settings.db_settings import AbstactDbConfig
+from app.workout.core.settings.db_settings import AbstractDbConfig
 from app.workout.core.settings.orm_settings import ORMConfig
 
 
 class SQLAlchemyProvider(Provider):
     @provide(scope=Scope.APP)
-    def get_engine(self, db_cfg: AbstactDbConfig, orm_cfg: ORMConfig) -> AsyncEngine:
+    def get_engine(self, db_cfg: AbstractDbConfig, orm_cfg: ORMConfig) -> AsyncEngine:
         return create_async_engine(url=db_cfg.dsn, **orm_cfg.model_dump())
 
     @provide(scope=Scope.APP)

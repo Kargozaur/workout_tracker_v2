@@ -1,4 +1,7 @@
-from app.workout.core.settings.db_settings import AbstactDbConfig, config_factory
+from app.workout.core.settings.db_settings import (
+    AbstractDbConfig,
+    config_factory,
+)
 from app.workout.core.settings.orm_settings import ORMConfig, orm_factory
 from app.workout.core.settings.redis_settings import RedisConfig
 
@@ -6,8 +9,10 @@ from . import BaseSettings, Field, SettingsConfigDict
 
 
 class AppConfig(BaseSettings):
-    db: AbstactDbConfig = Field(default_factory=config_factory)
+    db: AbstractDbConfig = Field(default_factory=config_factory)
     orm: ORMConfig = Field(default_factory=orm_factory)
     redis: RedisConfig = Field(default_factory=RedisConfig)
 
-    model_config = SettingsConfigDict(arbitrary_types_allowed=True, case_sensitive=True)
+    model_config = SettingsConfigDict(
+        arbitrary_types_allowed=True, case_sensitive=True
+    )
