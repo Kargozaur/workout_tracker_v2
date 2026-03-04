@@ -14,5 +14,5 @@ def create_app() -> FastAPI:
         ConfigProvider(),
         SecurityProvider(),
     )
-    setup_dishka(app, container)
+    setup_dishka(container, app)
     return app
