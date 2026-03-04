@@ -17,7 +17,7 @@ class RegisterUser[UserEntity]:
     @transactional
     async def execute(self, user_data: CreateUser) -> UserEntity:
         existing_user: (
-                UserEntity | None
+            UserEntity | None
         ) = await self.UoW.user_repository.get_user(email=user_data.email)
         if existing_user:
             raise UserExistsException("Failed to create user")

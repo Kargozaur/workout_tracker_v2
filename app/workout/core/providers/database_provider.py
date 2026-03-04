@@ -15,7 +15,7 @@ from app.workout.core.settings.orm_settings import ORMConfig
 class SQLAlchemyProvider(Provider):
     @provide(scope=Scope.APP)
     async def get_engine(
-            self, db_cfg: AbstractDbConfig, orm_cfg: ORMConfig
+        self, db_cfg: AbstractDbConfig, orm_cfg: ORMConfig
     ) -> AsyncIterable[AsyncEngine]:
         """Dishka takes responsibility of SQLAlchemy engine lifetime."""
         engine = create_async_engine(url=db_cfg.dsn, **orm_cfg.model_dump())
@@ -24,7 +24,7 @@ class SQLAlchemyProvider(Provider):
 
     @provide(scope=Scope.APP)
     def get_session_maker(
-            self, engine: AsyncEngine
+        self, engine: AsyncEngine
     ) -> async_sessionmaker[AsyncSession]:
         return async_sessionmaker(
             engine, expire_on_commit=False, autoflush=False
@@ -32,7 +32,7 @@ class SQLAlchemyProvider(Provider):
 
     @provide(scope=Scope.REQUEST)
     async def create_session(
-            self, session_maker: async_sessionmaker[AsyncSession]
+        self, session_maker: async_sessionmaker[AsyncSession]
     ) -> AsyncIterable[AsyncSession]:
         async with session_maker() as session:
             yield session

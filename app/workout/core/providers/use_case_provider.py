@@ -10,6 +10,6 @@ class UseCaseProvider(Provider):
 
     @provide
     def register_user_provider(
-            self, uow: IUnitOfWork, hasher: IPasswordHasher
+        self, uow: IUnitOfWork, hasher: IPasswordHasher
     ) -> RegisterUser:
         return RegisterUser(uow, hasher)
