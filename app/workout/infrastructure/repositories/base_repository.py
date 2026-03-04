@@ -1,8 +1,6 @@
 from typing import Any
 
-import sqlalchemy as sa
 from pydantic import BaseModel
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.workout.domains.exceptions.entity_exceptions import (
     EntityCreationException,
@@ -11,6 +9,8 @@ from app.workout.domains.exceptions.entity_exceptions import (
     EntityUpdateException,
 )
 from app.workout.domains.protocols.irepository import IRepository
+
+from . import AsyncSession, sa
 
 
 class BaseRepository[
@@ -39,7 +39,7 @@ UpdateSchemaT: BaseModel,
     async def update_entity(
             self, attributes: UpdateSchemaT, **filters: object
     ) -> ModelT:
-        entity = await self.get_entity(**filters)
+        entity: ModelT | None = await self.get_entity(**filters)
         if entity is None:
             raise EntityNotFoundException("Entity not found")
         data: dict[str, Any] = attributes.model_dump(exclude_unset=True)
@@ -53,7 +53,7 @@ UpdateSchemaT: BaseModel,
             raise EntityUpdateException() from exc
 
     async def delete_entity(self, **filters: object) -> bool:
-        entity = await self.get_entity(**filters)
+        entity: ModelT | None = await self.get_entity(**filters)
         if entity is None:
             raise EntityNotFoundException("Entity not found")
         try:
