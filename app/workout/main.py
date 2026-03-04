@@ -15,5 +15,4 @@ def create_app() -> FastAPI:
         SecurityProvider(),
     )
     setup_dishka(app, container)
-    app.state.container = container
     return app
