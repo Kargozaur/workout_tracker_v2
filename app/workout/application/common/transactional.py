@@ -2,7 +2,7 @@ from . import Any, Awaitable, Callable, Coroutine, IUnitOfWork, wraps
 
 
 def transactional[**P, R](
-        func: Callable[..., Coroutine[Any, Any, R]] | Callable[..., Awaitable[R]],
+    func: Callable[..., Coroutine[Any, Any, R]] | Callable[..., Awaitable[R]],
 ) -> Callable[..., Coroutine[Any, Any, R]]:
     @wraps(func)
     async def wrapper(self, *args: P.args, **kwargs: P.kwargs) -> R:
