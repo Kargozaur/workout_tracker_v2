@@ -28,7 +28,7 @@ UpdateSchemaT: BaseModel,
         return result.scalar_one_or_none()
 
     async def create_entity(self, attributes: CreateSchemaT) -> ModelT | None:
-        model: ModelT = self.model(**attributes.model_dump())
+        model: ModelT = self.model(**attributes.model_dump(by_alias=True))
         try:
             self.session.add(model)
             await self.session.flush()

@@ -6,7 +6,7 @@ SHORT_EXPIRE = Annotated[
     dt.timedelta, Field(default=dt.timedelta(minutes=30), gt=0)
 ]
 LONG_EXPIRE = Annotated[
-    dt.timedelta, Field(default=dt.timedelta(days=7, gt=0))
+    dt.timedelta, Field(default=dt.timedelta(days=7), gt=0)
 ]
 
 
