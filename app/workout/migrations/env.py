@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from app.workout.core.settings.settings import AppConfig
 from app.workout.infrastructure.db import Base, RefreshToken, User
 
+
 settings = AppConfig()
 
 # this is the Alembic Config object, which provides

@@ -17,4 +17,4 @@ class RefreshToken(UUIDIdMixin, CreatedAtMixin, Base):
         sa.DateTime(timezone=True), nullable=True
     )
 
-    user = relationship("User", back_populates="refresh_tokens")
+    owned_by = relationship("User", back_populates="refresh_tokens")
