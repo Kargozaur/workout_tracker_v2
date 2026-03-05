@@ -1,6 +1,7 @@
 from typing import Any
 
 from pydantic import BaseModel
+from sqlalchemy.orm import load_only
 
 from app.workout.domains.exceptions.entity_exceptions import (
     EntityCreationException,
@@ -23,7 +24,16 @@ UpdateSchemaT: BaseModel,
         self.model = model
 
     async def get_entity(self, **filters) -> ModelT | None:
+        fields = filters.pop("fields", None)
         query = sa.select(self.model).filter_by(**filters)
+        if fields is not None and isinstance(fields, (list, tuple)):
+            load_fields = [
+                getattr(self.model, f)
+                for f in fields
+                if hasattr(self.model, f)
+            ]
+            if load_fields:
+                query = query.options(load_only(*load_fields))
         result = await self.session.execute(query)
         return result.scalar_one_or_none()
 

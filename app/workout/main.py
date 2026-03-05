@@ -10,7 +10,10 @@ from app.workout.core.providers.settings_provider import ConfigProvider
 from app.workout.core.providers.uow_provider import UnitOfWorkProvider
 from app.workout.core.providers.use_case_provider import UseCaseProvider
 from app.workout.presentation.api.api_router import create_api_router
-from app.workout.presentation.api.handlers import create_user_exception_handler
+from app.workout.presentation.api.handlers import (
+    create_entity_exception_handler,
+    create_user_exception_handler,
+)
 
 
 def create_app() -> FastAPI:
@@ -25,6 +28,7 @@ def create_app() -> FastAPI:
 
     app.state.container = container
     create_user_exception_handler(app)
+    create_entity_exception_handler(app)
     app.include_router(create_api_router())
     setup_dishka(container, app)
 
