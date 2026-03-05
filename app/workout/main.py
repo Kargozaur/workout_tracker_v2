@@ -10,7 +10,7 @@ from app.workout.core.providers.settings_provider import ConfigProvider
 from app.workout.core.providers.uow_provider import UnitOfWorkProvider
 from app.workout.core.providers.use_case_provider import UseCaseProvider
 from app.workout.presentation.api.api_router import create_api_router
-from app.workout.presentation.api.handlers import (
+from app.workout.presentation.api.exception_handlers import (
     create_entity_exception_handler,
     create_user_exception_handler,
 )

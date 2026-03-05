@@ -18,7 +18,7 @@ def create_auth_router() -> APIRouter:
     )
     @inject
     async def register_user(
-            user_data: CreateUser, interactor: FromDishka[RegisterUser]
+        user_data: CreateUser, interactor: FromDishka[RegisterUser]
     ) -> GetUser:
         user = await interactor.execute(user_data)
         return user
@@ -29,9 +29,9 @@ def create_auth_router() -> APIRouter:
     )
     @inject
     async def login_user(
-            login_schema: LoginSchema,
-            interactor: FromDishka[LoginInteractor],
-            response: Response,
+        login_schema: LoginSchema,
+        interactor: FromDishka[LoginInteractor],
+        response: Response,
     ) -> Response:
         access_token, refresh_token = await interactor.execute(login_schema)
         response.set_cookie(
