@@ -12,7 +12,7 @@ class TokenProvider(ITokenProvider):
     def __init__(self, jwt_provider: JWTSettings) -> None:
         self.jwt_provider = jwt_provider
 
-    async def _encode(self, user_id: UUID, expire: dt.timedelta) -> str:
+    def _encode(self, user_id: UUID, expire: dt.timedelta) -> str:
         u_id: str = str(user_id)
         to_encode: dict[str, Any] = {"sub": u_id}
         exp: dt.datetime = dt.datetime.utcnow() + expire
@@ -24,19 +24,19 @@ class TokenProvider(ITokenProvider):
         )
         return encoded
 
-    async def create_access_token(self, user_id: UUID) -> str:
-        encoded: str = await self._encode(
+    def create_access_token(self, user_id: UUID) -> str:
+        encoded: str = self._encode(
             user_id=user_id, expire=self.jwt_provider.expire
         )
         return encoded
 
-    async def create_refresh_token(self, user_id: UUID) -> str:
-        encoded: str = await self._encode(
+    def create_refresh_token(self, user_id: UUID) -> str:
+        encoded: str = self._encode(
             user_id=user_id, expire=self.jwt_provider.refresh_expire
         )
         return encoded
 
-    async def decode_token(self, token: str) -> dict[str, Any]:
+    def decode_token(self, token: str) -> dict[str, Any]:
         try:
             payload: dict[str, Any] = jwt.decode(
                 jwt=token,

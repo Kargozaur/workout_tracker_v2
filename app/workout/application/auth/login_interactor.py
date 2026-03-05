@@ -16,11 +16,11 @@ from app.workout.domains.protocols.iuow import IUnitOfWork
 
 class LoginInteractor[UserEntity]:
     def __init__(
-        self,
-        uow: IUnitOfWork,
-        token_provider: ITokenProvider,
-        token_hasher: ITokenHasher,
-        password_hasher: IPasswordHasher,
+            self,
+            uow: IUnitOfWork,
+            token_provider: ITokenProvider,
+            token_hasher: ITokenHasher,
+            password_hasher: IPasswordHasher,
     ) -> None:
         self.UoW = uow
         self.token_provider = token_provider
@@ -42,12 +42,8 @@ class LoginInteractor[UserEntity]:
         if not is_correct_password:
             raise UserNotFoundException("User with such email does not exist")
 
-        access_token: str = await self.token_provider.create_access_token(
-            user.id
-        )
-        refresh_token: str = await self.token_provider.create_refresh_token(
-            user.id
-        )
+        access_token: str = self.token_provider.create_access_token(user.id)
+        refresh_token: str = self.token_provider.create_refresh_token(user.id)
         refresh_token_hash: str = self.token_hasher.hash(refresh_token)
         refresh_schema: RefreshTokenSchema = RefreshTokenSchema(
             user_id=user.id, token_hash=refresh_token_hash
