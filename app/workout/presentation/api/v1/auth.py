@@ -8,7 +8,7 @@ from app.workout.domains.entities.user_schemas import CreateUser, LoginSchema
 from app.workout.presentation.schemas.user_schema import GetUser
 
 
-def create_auth_interactor() -> APIRouter:
+def create_auth_router() -> APIRouter:
     router = APIRouter(prefix="/auth", tags=["Authentication"])
 
     @router.post(
