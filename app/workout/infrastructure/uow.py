@@ -23,10 +23,10 @@ class UnitOfWork(IUnitOfWork):
         return self
 
     async def __aexit__(
-            self: Self,
-            exc_type: type[BaseException] | None,
-            exc_val: BaseException | None,
-            exc_tb: object | None,
+        self: Self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: object | None,
     ) -> None:
         if exc_val:
             await self.rollback()

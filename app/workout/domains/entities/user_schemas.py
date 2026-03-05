@@ -12,13 +12,16 @@ from . import (
     model_validator,
 )
 
+
 GenericStr = Annotated[str | None, Field(default=None, min_length=1)]
 PasswordField = Annotated[str, BeforeValidator(verify_password)]
 
 
 class CreateUser(BaseModel):
     email: EmailStr
-    password: PasswordField = Field(validation_alias="password", alias="password_hash")
+    password: PasswordField = Field(
+        validation_alias="password", alias="password_hash"
+    )
     first_name: GenericStr
     last_name: GenericStr
 
@@ -33,7 +36,7 @@ class CreateUser(BaseModel):
                 .replace(".", "")
             )
             self.last_name: str = (
-                self.email.split("@")[0][len(self.email) // 2:]
+                self.email.split("@")[0][len(self.email) // 2 :]
                 .replace("_", "")
                 .replace(".", "")
             )
@@ -45,7 +48,7 @@ class CreateUser(BaseModel):
             )
         if not self.last_name:
             self.last_name: str = (
-                self.email.split("@")[0][len(self.email) // 2:]
+                self.email.split("@")[0][len(self.email) // 2 :]
                 .replace("_", "")
                 .replace(".", "")
             )

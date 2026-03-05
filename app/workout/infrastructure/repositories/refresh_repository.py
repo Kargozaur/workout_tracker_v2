@@ -25,7 +25,7 @@ class RefreshTokenRepository(
         super().__init__(session, RefreshToken)
 
     async def create_refresh_token(
-            self, data: RefreshTokenSchema
+        self, data: RefreshTokenSchema
     ) -> RefreshToken:
         return await super().create_entity(data)
 

@@ -14,7 +14,7 @@ from app.workout.domains.protocols.itokenhasher import ITokenHasher
 from app.workout.domains.protocols.iuow import IUnitOfWork
 
 
-class LoginInteractor:
+class LoginInteractor[UserEntity]:
     def __init__(
             self,
             uow: IUnitOfWork,
@@ -28,7 +28,7 @@ class LoginInteractor:
         self.password_hasher = password_hasher
 
     @transactional
-    async def execute[UserEntity](self, login: LoginSchema) -> tuple[str, str]:
+    async def execute(self, login: LoginSchema) -> tuple[str, str]:
         user: UserEntity | None = await self.UoW.user_repository.get_user(
             email=login.email, fields=("id", "email", "password_hash")
         )

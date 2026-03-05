@@ -15,9 +15,9 @@ from . import AsyncSession, sa
 
 
 class BaseRepository[
-ModelT,
-CreateSchemaT: BaseModel,
-UpdateSchemaT: BaseModel,
+    ModelT,
+    CreateSchemaT: BaseModel,
+    UpdateSchemaT: BaseModel,
 ](IRepository[ModelT, CreateSchemaT, UpdateSchemaT]):
     def __init__(self, session: AsyncSession, model: type[ModelT]) -> None:
         self.session = session
@@ -48,7 +48,7 @@ UpdateSchemaT: BaseModel,
             raise EntityCreationException() from exc
 
     async def update_entity(
-            self, attributes: UpdateSchemaT, **filters: object
+        self, attributes: UpdateSchemaT, **filters: object
     ) -> ModelT:
         entity: ModelT | None = await self.get_entity(**filters)
         if entity is None:
