@@ -15,15 +15,17 @@ from . import AsyncSession, sa
 
 
 class BaseRepository[
-    ModelT,
-    CreateSchemaT: BaseModel,
-    UpdateSchemaT: BaseModel,
+ModelT,
+CreateSchemaT: BaseModel,
+UpdateSchemaT: BaseModel,
 ](IRepository[ModelT, CreateSchemaT, UpdateSchemaT]):
     def __init__(self, session: AsyncSession, model: type[ModelT]) -> None:
         self.session = session
         self.model = model
 
     async def get_entity(self, **filters) -> ModelT | None:
+        """Generic method to get entity based on filters. It is possible to
+        provide fields to load via fields parameter."""
         fields = filters.pop("fields", None)
         query = sa.select(self.model).filter_by(**filters)
         if fields is not None and isinstance(fields, (list, tuple)):
@@ -39,6 +41,7 @@ class BaseRepository[
         return result.scalar_one_or_none()
 
     async def create_entity(self, attributes: CreateSchemaT) -> ModelT | None:
+        """Creates entity based on pydantic schema provided."""
         model: ModelT = self.model(**attributes.model_dump(by_alias=True))
         try:
             self.session.add(model)
@@ -48,8 +51,10 @@ class BaseRepository[
             raise EntityCreationException() from exc
 
     async def update_entity(
-        self, attributes: UpdateSchemaT, **filters: object
+            self, attributes: UpdateSchemaT, **filters: object
     ) -> ModelT:
+        """Updates entity based on pydantic schema provided. Filters are applied
+        based on method call."""
         entity: ModelT | None = await self.get_entity(**filters)
         if entity is None:
             raise EntityNotFoundException("Entity not found")
@@ -64,11 +69,13 @@ class BaseRepository[
             raise EntityUpdateException() from exc
 
     async def delete_entity(self, **filters: object) -> bool:
+        """Deletes entity from the database based on filters."""
         entity: ModelT | None = await self.get_entity(**filters)
         if entity is None:
             raise EntityNotFoundException("Entity not found")
         try:
             await self.session.delete(entity)
+            await self.session.flush()
             return True
         except Exception as exc:
             raise EntityDeletionException() from exc
