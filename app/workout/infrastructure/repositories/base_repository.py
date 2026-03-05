@@ -34,6 +34,7 @@ UpdateSchemaT: BaseModel,
             ]
             if load_fields:
                 query = query.options(load_only(*load_fields))
+        # print(f"SQL: {query.compile(compile_kwargs={'literal_binds': True})}")
         result = await self.session.execute(query)
         return result.scalar_one_or_none()
 

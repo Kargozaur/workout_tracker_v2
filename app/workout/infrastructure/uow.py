@@ -3,6 +3,9 @@ from typing import Self
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.workout.domains.protocols.iuow import IUnitOfWork
+from app.workout.infrastructure.repositories.refresh_repository import (
+    RefreshTokenRepository,
+)
 from app.workout.infrastructure.repositories.user_repository import (
     UserRepository,
 )
@@ -12,6 +15,9 @@ class UnitOfWork(IUnitOfWork):
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
         self.user_repository: UserRepository = UserRepository(session)
+        self.refresh_repository: RefreshTokenRepository = (
+            RefreshTokenRepository(session)
+        )
 
     async def __aenter__(self) -> Self:
         return self

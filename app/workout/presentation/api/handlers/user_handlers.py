@@ -19,7 +19,7 @@ def create_user_exception_handler(app: FastAPI) -> None:
 
     @app.exception_handler(UserExistsException)
     async def user_exists_exception(
-            _: Request, exception: UserExistsException
+        _: Request, exception: UserExistsException
     ) -> JSONResponse:
         return JSONResponse(
             status_code=exception.status_code,
@@ -28,7 +28,7 @@ def create_user_exception_handler(app: FastAPI) -> None:
 
     @app.exception_handler(UserNotFoundException)
     async def user_not_found_exception(
-            _: Request, exception: UserNotFoundException
+        _: Request, exception: UserNotFoundException
     ) -> JSONResponse:
         return JSONResponse(
             status_code=exception.status_code,
@@ -37,7 +37,7 @@ def create_user_exception_handler(app: FastAPI) -> None:
 
     @app.exception_handler(UserFailedToCreateException)
     async def user_exception(
-            _: Request, exception: UserFailedToCreateException
+        _: Request, exception: UserFailedToCreateException
     ) -> JSONResponse:
         return JSONResponse(
             status_code=exception.status_code,

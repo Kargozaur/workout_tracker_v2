@@ -12,7 +12,10 @@ class RefreshToken(UUIDIdMixin, CreatedAtMixin, Base):
 
     token_hash: Mapped[str] = mapped_column(sa.String(100))
     expires_at: Mapped[dt.datetime] = mapped_column(
-        sa.DateTime(timezone=True), nullable=False
+        sa.DateTime(timezone=True),
+        nullable=False,
+        default=dt.datetime.utcnow(),
+        server_default=sa.func.now(),
     )
     revoked_at: Mapped[dt.datetime] = mapped_column(
         sa.DateTime(timezone=True), nullable=True

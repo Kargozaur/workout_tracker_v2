@@ -13,7 +13,7 @@ from app.workout.domains.exceptions.entity_exceptions import (
 def create_entity_exception_handler(app: FastAPI) -> None:
     @app.exception_handler(EntityBaseException)
     async def entity_exception_handler(
-            _: Request, exc: EntityBaseException
+        _: Request, exc: EntityBaseException
     ) -> JSONResponse:
         return JSONResponse(
             status_code=exc.status_code, content={"detail": exc.message}
@@ -21,7 +21,7 @@ def create_entity_exception_handler(app: FastAPI) -> None:
 
     @app.exception_handler(EntityCreationException)
     async def entity_creation_exception_handler(
-            _: Request, exc: EntityCreationException
+        _: Request, exc: EntityCreationException
     ) -> JSONResponse:
         return JSONResponse(
             status_code=exc.status_code, content={"detail": exc.message}
@@ -29,7 +29,7 @@ def create_entity_exception_handler(app: FastAPI) -> None:
 
     @app.exception_handler(EntityDeletionException)
     async def entity_deletion_exception_handler(
-            _: Request, exc: EntityDeletionException
+        _: Request, exc: EntityDeletionException
     ) -> JSONResponse:
         return JSONResponse(
             status_code=exc.status_code, content={"detail": exc.message}
@@ -37,7 +37,7 @@ def create_entity_exception_handler(app: FastAPI) -> None:
 
     @app.exception_handler(EntityNotFoundException)
     async def entity_not_found_exception_handler(
-            _: Request, exc: EntityNotFoundException
+        _: Request, exc: EntityNotFoundException
     ) -> JSONResponse:
         return JSONResponse(
             status_code=exc.status_code, content={"detail": exc.message}
@@ -45,7 +45,7 @@ def create_entity_exception_handler(app: FastAPI) -> None:
 
     @app.exception_handler(EntityUpdateException)
     async def entity_update_exception_handler(
-            _: Request, exc: EntityUpdateException
+        _: Request, exc: EntityUpdateException
     ) -> JSONResponse:
         return JSONResponse(
             status_code=exc.status_code, content={"detail": exc.message}

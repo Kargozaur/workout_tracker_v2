@@ -13,8 +13,6 @@ class Hasher(IPasswordHasher):
 
     def verify_password(self, password: str, hashed_password: str) -> bool:
         try:
-            return self.hasher.verify(
-                self.hasher.verify(password, hashed_password)
-            )
+            return self.hasher.verify(hashed_password, password)
         except VerifyMismatchError:
             return False
