@@ -1,4 +1,5 @@
 import datetime as dt
+from uuid import UUID
 
 import sqlalchemy as sa
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -15,6 +16,9 @@ class RefreshToken(UUIDIdMixin, CreatedAtMixin, Base):
     )
     revoked_at: Mapped[dt.datetime] = mapped_column(
         sa.DateTime(timezone=True), nullable=True
+    )
+    user_id: Mapped[UUID] = mapped_column(
+        sa.ForeignKey("user.id", ondelete="CASCADE")
     )
 
     owned_by = relationship("User", back_populates="refresh_tokens")

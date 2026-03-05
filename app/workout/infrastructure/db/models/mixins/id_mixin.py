@@ -1,5 +1,6 @@
-from . import UUID, Mapped, mapped_column, sa
+from uuid import uuid7
 
+from . import UUID, Mapped, mapped_column, sa
 
 IDTypes = int | UUID
 
@@ -9,7 +10,7 @@ class IdMixin[T: IDTypes]: ...
 
 class UUIDIdMixin(IdMixin[UUID]):
     id: Mapped[UUID] = mapped_column(
-        sa.UUID(as_uuid=True), primary_key=True, default=sa.func.uuid_generate_v7()
+        sa.UUID(as_uuid=True), primary_key=True, default=uuid7
     )
 
 

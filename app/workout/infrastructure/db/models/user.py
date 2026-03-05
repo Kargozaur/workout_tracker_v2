@@ -11,7 +11,7 @@ class User(UUIDIdMixin, CreatedAtMixin, UpdatedAtMixin, Base):
         sa.String(254), unique=True, nullable=False
     )
     first_name: Mapped[str] = mapped_column(sa.String(100), nullable=False)
-    list_name: Mapped[str] = mapped_column(sa.String(100), nullable=False)
+    last_name: Mapped[str] = mapped_column(sa.String(100), nullable=False)
     password_hash: Mapped[str] = mapped_column(sa.String(100), nullable=False)
 
     refresh_tokens = relationship(

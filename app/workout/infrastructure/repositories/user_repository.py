@@ -19,6 +19,6 @@ class UserRepository(
         return await super().create_entity(attributes)
 
     async def update_user(
-            self, attributes: UpdateUser, **filters: object
+        self, attributes: UpdateUser, **filters: object
     ) -> User:
         return await super().update_entity(attributes, **filters)
