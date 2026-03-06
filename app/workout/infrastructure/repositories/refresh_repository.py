@@ -18,8 +18,11 @@ class RefreshTokenRepository(
     def __init__(self, session: AsyncSession) -> None:
         super().__init__(session, RefreshToken)
 
+    async def get_refresh_token(self, **filters) -> RefreshToken:
+        return await super().get_entity(**filters)
+
     async def create_refresh_token(
-        self, data: RefreshTokenSchema
+            self, data: RefreshTokenSchema
     ) -> RefreshToken:
         return await super().create_entity(data)
 

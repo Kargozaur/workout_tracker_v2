@@ -9,6 +9,9 @@ from app.workout.application.auth.logout_global_interactor import (
     LogoutGlobalInteractor,
 )
 from app.workout.application.auth.logout_interactor import LogoutInteractor
+from app.workout.application.auth.refresh_token_interactor import (
+    RefreshTokenInteractor,
+)
 from app.workout.application.auth.registry_interactor import RegisterUser
 from app.workout.application.common.status_codes import success_status_codes
 from app.workout.domains.entities.user_schemas import CreateUser, LoginSchema
@@ -28,7 +31,7 @@ def create_auth_router() -> APIRouter:
     )
     @inject
     async def register_user(
-        user_data: CreateUser, interactor: FromDishka[RegisterUser]
+            user_data: CreateUser, interactor: FromDishka[RegisterUser]
     ) -> GetUser:
         user = await interactor.execute(user_data)
         return user
@@ -40,10 +43,10 @@ def create_auth_router() -> APIRouter:
     )
     @inject
     async def login_user(
-        _: OAuth2,
-        form_data: Form_data,
-        interactor: FromDishka[LoginInteractor],
-        response: Response,
+            _: OAuth2,
+            form_data: Form_data,
+            interactor: FromDishka[LoginInteractor],
+            response: Response,
     ) -> TokenResponse:
         login_schema = LoginSchema(
             email=form_data.username, password=form_data.password
@@ -70,7 +73,7 @@ def create_auth_router() -> APIRouter:
     )
     @inject
     async def get_me(
-        _: OAuth2, interactor: FromDishka[GetUserInteractor]
+            _: OAuth2, interactor: FromDishka[GetUserInteractor]
     ) -> GetUser:
         return await interactor.execute()
 
@@ -81,7 +84,7 @@ def create_auth_router() -> APIRouter:
     )
     @inject
     async def logout(
-        _: OAuth2, interactor: FromDishka[LogoutInteractor], response: Response
+            _: OAuth2, interactor: FromDishka[LogoutInteractor], response: Response
     ) -> dict[str, str]:
         await interactor.execute()
         response.delete_cookie(
@@ -99,9 +102,9 @@ def create_auth_router() -> APIRouter:
     )
     @inject
     async def logout_all(
-        _: OAuth2,
-        interactor: FromDishka[LogoutGlobalInteractor],
-        response: Response,
+            _: OAuth2,
+            interactor: FromDishka[LogoutGlobalInteractor],
+            response: Response,
     ) -> dict[str, str]:
         await interactor.execute()
         response.delete_cookie(
@@ -111,5 +114,34 @@ def create_auth_router() -> APIRouter:
             key="access_token", httponly=True, samesite="lax"
         )
         return {"Success": "You have been logged out"}
+
+    @router.post(
+        "/refresh",
+        response_model=TokenResponse,
+        include_in_schema=False,
+        status_code=success_status_codes.success,
+    )
+    @inject
+    async def get_token(
+            _: OAuth2,
+            interactor: FromDishka[RefreshTokenInteractor],
+            response: Response,
+    ) -> TokenResponse:
+        access_token, refresh_token = await interactor.execute()
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=True,
+            samesite="lax",
+            max_age=1800,
+        )
+        response.set_cookie(
+            key="refresh_token",
+            value=refresh_token,
+            httponly=True,
+            samesite="lax",
+            max_age=604800,
+        )
+        return TokenResponse(access_token=access_token)
 
     return router
