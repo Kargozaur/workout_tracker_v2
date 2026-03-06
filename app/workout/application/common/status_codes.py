@@ -1,6 +1,5 @@
 from collections import namedtuple
 
-
 BadRequests = namedtuple(
     "BadRequests",
     (
@@ -12,7 +11,6 @@ BadRequests = namedtuple(
         "server_error",
     ),
 )
-
 SuccessStatusCodes = namedtuple("Success", ("ok", "success", "no_content"))
 
 failed_status_codes = BadRequests(400, 401, 404, 409, 422, 500)

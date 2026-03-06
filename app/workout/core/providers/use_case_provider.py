@@ -93,7 +93,7 @@ class UseCaseProvider(Provider):
             uow, token_provider, token_hasher, refresh_token
         )
 
-    @decorate(scope=Scope.REQUEST)
+    @decorate
     def cached_interactor(
         self,
         interactor: GetUserInteractor,
@@ -102,6 +102,7 @@ class UseCaseProvider(Provider):
         access_token: AccessToken,
         uow: IUnitOfWork,
     ) -> GetUserInteractor:
+        """Swapes GetUserInteractor with a cached version."""
         return CachedUserInteractor(
             interactor, token_provider, service, access_token, uow
         )

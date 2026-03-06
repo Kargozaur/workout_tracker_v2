@@ -17,6 +17,9 @@ from app.workout.domains.protocols.iuow import IUnitOfWork
 
 
 class CachedUserInteractor[T: CacheUser, R: BaseModel](GetUserInteractor):
+    """Cached wrapper over GetUserInteractor.
+    Transactions are managed inside GetUserInteractor."""
+
     def __init__(
         self,
         interactor: GetUserInteractor[T],
@@ -38,6 +41,8 @@ class CachedUserInteractor[T: CacheUser, R: BaseModel](GetUserInteractor):
         if cached_user:
             return cached_user
         user_data: T = await self.interactor.execute()
-        cached_data: R = GetUser(**user_data.__dict__)
+        cached_data: R = GetUser(
+            **user_data.__dict__
+        )  # passes ORM attributes inside a pydantic model
         await self.service.set_cache(user_id, cached_data)
         return user_data

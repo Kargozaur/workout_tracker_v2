@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 
 from app.workout.domains.exceptions.auth_exceptions import (
     AuthException,
-    TokenExpired,
+    TokenExpiredException,
 )
 
 
@@ -17,7 +17,7 @@ def create_auth_exception_handler(app: FastAPI) -> None:
         )
 
     async def token_exception_handler(
-        _: Request, exc: TokenExpired
+        _: Request, exc: TokenExpiredException
     ) -> JSONResponse:
         return JSONResponse(
             status_code=exc.status_code, content={"message": exc.message}

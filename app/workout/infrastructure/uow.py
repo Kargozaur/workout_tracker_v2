@@ -12,6 +12,9 @@ from app.workout.infrastructure.repositories.user_repository import (
 
 
 class UnitOfWork(IUnitOfWork):
+    """Unit of Work implementation of the IUnitOfWork interface.
+    Sessions are managed by the dishka."""
+
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
         self.user_repository: UserRepository = UserRepository(session)

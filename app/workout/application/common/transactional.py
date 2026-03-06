@@ -4,6 +4,10 @@ from . import Any, Awaitable, Callable, Coroutine, IUnitOfWork, wraps
 def transactional[**P, R](
     func: Callable[..., Coroutine[Any, Any, R]] | Callable[..., Awaitable[R]],
 ) -> Callable[..., Coroutine[Any, Any, R]]:
+    """Transactions manager for a UnitOfWork object.
+    Commits changes on success, otherwise rollbacks.
+    UnitOfWork attribute must be typed as UoW."""
+
     @wraps(func)
     async def wrapper(self, *args: P.args, **kwargs: P.kwargs) -> R:
         uow: IUnitOfWork | None = getattr(self, "UoW", None)

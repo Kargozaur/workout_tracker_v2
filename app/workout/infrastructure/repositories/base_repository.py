@@ -15,20 +15,30 @@ from . import AsyncSession, sa
 
 
 class BaseRepository[
-    ModelT,
-    CreateSchemaT: BaseModel,
-    UpdateSchemaT: BaseModel,
+ModelT,
+CreateSchemaT: BaseModel,
+UpdateSchemaT: BaseModel,
 ](IRepository[ModelT, CreateSchemaT, UpdateSchemaT]):
+    """Base repository for all repositories that are using SQLAlchemy sessions.
+    CRUD functionality provided by methods:
+    get_entity
+    create_entity
+    update_entity
+    delete_entity
+    """
+
     def __init__(self, session: AsyncSession, model: type[ModelT]) -> None:
         self.session = session
         self.model = model
 
     async def get_entity(self, **filters) -> ModelT | None:
         """Generic method to get entity based on filters. It is possible to
-        provide fields to load via fields parameter."""
+        provide fields to load via fields parameter.
+        When passed, fields should look like: (...other kwargs, fields=("id", "name", etc.)).
+        fields must be passed as tuple."""
         fields = filters.pop("fields", None)
         query = sa.select(self.model).filter_by(**filters)
-        if fields is not None and isinstance(fields, (list, tuple)):
+        if fields is not None and isinstance(fields, tuple):
             load_fields = [
                 attr
                 for f in fields

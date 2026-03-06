@@ -6,6 +6,6 @@ class AuthException(Exception):
     message = "Unauthorized"
 
 
-class TokenExpired(AuthException):
+class TokenExpiredException(AuthException):
     status_code = failed_status_codes.not_found
     message = "Token expired"
