@@ -1,6 +1,9 @@
 from dishka.integrations.fastapi import FromDishka, inject
 from fastapi import APIRouter, Response
 
+from app.workout.application.auth.get_current_user_interactor import (
+    GetUserInteractor,
+)
 from app.workout.application.auth.login_interactor import LoginInteractor
 from app.workout.application.auth.registry_interactor import RegisterUser
 from app.workout.application.common.status_codes import success_status_codes
@@ -56,5 +59,14 @@ def create_auth_router() -> APIRouter:
             max_age=1800,
         )
         return TokenResponse(access_token=access_token)
+
+    @router.get(
+        "/me", response_model=GetUser, status_code=success_status_codes.ok
+    )
+    @inject
+    async def get_me(
+            _: OAuth2, interactor: FromDishka[GetUserInteractor]
+    ) -> GetUser:
+        return await interactor.execute()
 
     return router

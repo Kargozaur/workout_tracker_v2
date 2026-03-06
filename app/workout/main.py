@@ -1,9 +1,10 @@
 from contextlib import asynccontextmanager
 
 from dishka import AsyncContainer, make_async_container
-from dishka.integrations.fastapi import setup_dishka
+from dishka.integrations.fastapi import FastapiProvider, setup_dishka
 from fastapi import FastAPI
 
+from app.workout.core.providers.auth_provider import AuthProvider
 from app.workout.core.providers.database_provider import SQLAlchemyProvider
 from app.workout.core.providers.security_providers import SecurityProvider
 from app.workout.core.providers.settings_provider import ConfigProvider
@@ -25,6 +26,8 @@ def create_app() -> FastAPI:
         SecurityProvider(),
         UnitOfWorkProvider(),
         UseCaseProvider(),
+        AuthProvider(),
+        FastapiProvider(),
     )
 
     app.state.container = container
