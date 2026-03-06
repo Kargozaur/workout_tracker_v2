@@ -6,10 +6,10 @@ from app.workout.domains.protocols.iuow import IUnitOfWork
 
 class LogoutInteractor:
     def __init__(
-            self,
-            uow: IUnitOfWork,
-            token_hasher: ITokenHasher,
-            refresh_token: RefreshToken,
+        self,
+        uow: IUnitOfWork,
+        token_hasher: ITokenHasher,
+        refresh_token: RefreshToken,
     ):
         self.UoW = uow
         self.token_hasher = token_hasher

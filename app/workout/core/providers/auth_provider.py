@@ -15,7 +15,7 @@ class AuthProvider(Provider):
     def get_access_token(self, request: Request) -> AccessToken:
         auth_header: str | None = request.headers.get("Authorization")
         if auth_header and auth_header.startswith("Bearer "):
-            return AccessToken(auth_header[len("Bearer "):])
+            return AccessToken(auth_header[len("Bearer ") :])
         auth_token: str | None = request.cookies.get("access_token")
         if not auth_token:
             raise AuthException("Unauthorized access")

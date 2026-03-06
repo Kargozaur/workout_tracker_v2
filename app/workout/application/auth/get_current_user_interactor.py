@@ -12,10 +12,10 @@ from app.workout.domains.protocols.iuow import IUnitOfWork
 
 class GetUserInteractor[T]:
     def __init__(
-            self,
-            uow: IUnitOfWork,
-            access_token: AccessToken,
-            token_provider: ITokenProvider,
+        self,
+        uow: IUnitOfWork,
+        access_token: AccessToken,
+        token_provider: ITokenProvider,
     ) -> None:
         self.UoW = uow
         self.access_token = access_token

@@ -1,6 +1,7 @@
 from typing import Protocol
 from uuid import UUID
 
+
 id_types = int | UUID
 
 

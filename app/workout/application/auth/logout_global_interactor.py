@@ -11,10 +11,10 @@ from app.workout.domains.protocols.iuow import IUnitOfWork
 
 class LogoutGlobalInteractor:
     def __init__(
-            self,
-            uow: IUnitOfWork,
-            token_provider: ITokenProvider,
-            access_token: AccessToken,
+        self,
+        uow: IUnitOfWork,
+        token_provider: ITokenProvider,
+        access_token: AccessToken,
     ) -> None:
         self.UoW = uow
         self.token_provider = token_provider

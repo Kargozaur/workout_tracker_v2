@@ -1,5 +1,6 @@
 from collections import namedtuple
 
+
 BadRequests = namedtuple(
     "BadRequests",
     (
