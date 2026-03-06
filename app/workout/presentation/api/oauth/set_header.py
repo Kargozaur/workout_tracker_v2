@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordBearer
 class OAuth2HeaderOrCookie(OAuth2PasswordBearer):
     async def __call__(self, request: Request):
         header = request.headers.get("Authorization")
-        cookie = request.headers.get("access_token")
+        cookie = request.cookies.get("access_token")
         if header:
             parts = header.split(" ")
             if parts[0].lower().strip() == "bearer":

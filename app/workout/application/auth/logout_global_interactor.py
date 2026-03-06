@@ -12,11 +12,11 @@ from app.workout.domains.protocols.iuow import IUnitOfWork
 
 class LogoutGlobalInteractor:
     def __init__(
-            self,
-            uow: IUnitOfWork,
-            token_provider: ITokenProvider,
-            access_token: AccessToken,
-            cache_service: ICacheService,
+        self,
+        uow: IUnitOfWork,
+        token_provider: ITokenProvider,
+        access_token: AccessToken,
+        cache_service: ICacheService,
     ) -> None:
         self.UoW = uow
         self.token_provider = token_provider
@@ -29,7 +29,5 @@ class LogoutGlobalInteractor:
             self.access_token
         )
         user_id: UUID = UUID(user_data.get("sub"))
-        await self.UoW.refresh_repository.revoke_refresh_token(
-            user_id=user_id
-        )
+        await self.UoW.refresh_repository.revoke_refresh_token(user_id=user_id)
         await self.cache_service.delete_cache(user_id)

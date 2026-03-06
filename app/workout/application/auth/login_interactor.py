@@ -19,12 +19,11 @@ from app.workout.domains.protocols.iuow import IUnitOfWork
 
 class LoginInteractor[T: ExistingUser]:
     def __init__(
-            self,
-            uow: IUnitOfWork,
-            token_provider: ITokenProvider,
-            token_hasher: ITokenHasher,
-            password_hasher: IPasswordHasher,
-
+        self,
+        uow: IUnitOfWork,
+        token_provider: ITokenProvider,
+        token_hasher: ITokenHasher,
+        password_hasher: IPasswordHasher,
     ) -> None:
         self.UoW = uow
         self.token_provider = token_provider

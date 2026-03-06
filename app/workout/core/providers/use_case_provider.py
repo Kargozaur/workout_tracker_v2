@@ -31,17 +31,17 @@ class UseCaseProvider(Provider):
 
     @provide
     def register_user_provider(
-            self, uow: IUnitOfWork, hasher: IPasswordHasher
+        self, uow: IUnitOfWork, hasher: IPasswordHasher
     ) -> RegisterUser:
         return RegisterUser(uow, hasher)
 
     @provide
     def login_provider(
-            self,
-            uow: IUnitOfWork,
-            token_provider: ITokenProvider,
-            token_hasher: ITokenHasher,
-            password_hasher: IPasswordHasher,
+        self,
+        uow: IUnitOfWork,
+        token_provider: ITokenProvider,
+        token_hasher: ITokenHasher,
+        password_hasher: IPasswordHasher,
     ) -> LoginInteractor:
         return LoginInteractor(
             uow, token_provider, token_hasher, password_hasher
@@ -49,21 +49,21 @@ class UseCaseProvider(Provider):
 
     @provide
     def current_user_provider(
-            self,
-            uow: IUnitOfWork,
-            access_token: AccessToken,
-            token_provider: ITokenProvider,
+        self,
+        uow: IUnitOfWork,
+        access_token: AccessToken,
+        token_provider: ITokenProvider,
     ) -> GetUserInteractor:
         return GetUserInteractor(uow, access_token, token_provider)
 
     @provide
     def logout_provider(
-            self,
-            uow: IUnitOfWork,
-            token_hasher: ITokenHasher,
-            refresh_token: RefreshToken,
-            cache_service: ICacheService,
-            token_provider: ITokenProvider,
+        self,
+        uow: IUnitOfWork,
+        token_hasher: ITokenHasher,
+        refresh_token: RefreshToken,
+        cache_service: ICacheService,
+        token_provider: ITokenProvider,
     ) -> LogoutInteractor:
         return LogoutInteractor(
             uow, token_hasher, refresh_token, token_provider, cache_service
@@ -71,21 +71,23 @@ class UseCaseProvider(Provider):
 
     @provide
     def logout_global_provider(
-            self,
-            uow: IUnitOfWork,
-            token_provider: ITokenProvider,
-            access_token: AccessToken,
-            cache_service: ICacheService,
+        self,
+        uow: IUnitOfWork,
+        token_provider: ITokenProvider,
+        access_token: AccessToken,
+        cache_service: ICacheService,
     ) -> LogoutGlobalInteractor:
-        return LogoutGlobalInteractor(uow, token_provider, access_token, cache_service)
+        return LogoutGlobalInteractor(
+            uow, token_provider, access_token, cache_service
+        )
 
     @provide
     def refresh_token_provider(
-            self,
-            uow: IUnitOfWork,
-            token_provider: ITokenProvider,
-            token_hasher: ITokenHasher,
-            refresh_token: RefreshToken,
+        self,
+        uow: IUnitOfWork,
+        token_provider: ITokenProvider,
+        token_hasher: ITokenHasher,
+        refresh_token: RefreshToken,
     ) -> RefreshTokenInteractor:
         return RefreshTokenInteractor(
             uow, token_provider, token_hasher, refresh_token
@@ -93,12 +95,12 @@ class UseCaseProvider(Provider):
 
     @decorate(scope=Scope.REQUEST)
     def cached_interactor(
-            self,
-            interactor: GetUserInteractor,
-            token_provider: ITokenProvider,
-            service: ICacheService,
-            access_token: AccessToken,
-            uow: IUnitOfWork,
+        self,
+        interactor: GetUserInteractor,
+        token_provider: ITokenProvider,
+        service: ICacheService,
+        access_token: AccessToken,
+        uow: IUnitOfWork,
     ) -> GetUserInteractor:
         return CachedUserInteractor(
             interactor, token_provider, service, access_token, uow
