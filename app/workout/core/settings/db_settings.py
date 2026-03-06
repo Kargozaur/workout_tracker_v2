@@ -1,6 +1,14 @@
 from typing_extensions import Doc
 
-from . import Annotated, BaseSettings, Field, PostgresDsn, SecretStr, SettingsConfigDict
+from . import (
+    Annotated,
+    BaseSettings,
+    Field,
+    PostgresDsn,
+    SecretStr,
+    SettingsConfigDict,
+)
+
 
 PORT = Annotated[int, Field(default=5432, ge=1, le=65535)]
 DRIVER = Annotated[
@@ -15,6 +23,7 @@ HOST = Annotated[SecretStr, Field(default="localhost")]
 
 class AbstractDbConfig(BaseSettings):
     """Base class for all database configurations."""
+
     model_config = SettingsConfigDict(
         env_prefix="DB_", env_file=".db.env", extra="ignore"
     )
@@ -39,7 +48,9 @@ class PostgresConfig(AbstractDbConfig):
                 scheme=f"postgresql+{self.driver}",
                 username=self.user.get_secret_value(),
                 password=self.password.get_secret_value(),
-                host=self.host.get_secret_value() if self.host else "localhost",
+                host=self.host.get_secret_value()
+                if self.host
+                else "localhost",
                 port=self.port,
                 path=self.database,
             )
