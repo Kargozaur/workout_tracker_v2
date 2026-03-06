@@ -31,7 +31,7 @@ def create_auth_router() -> APIRouter:
     )
     @inject
     async def register_user(
-            user_data: CreateUser, interactor: FromDishka[RegisterUser]
+        user_data: CreateUser, interactor: FromDishka[RegisterUser]
     ) -> GetUser:
         user = await interactor.execute(user_data)
         return user
@@ -43,10 +43,10 @@ def create_auth_router() -> APIRouter:
     )
     @inject
     async def login_user(
-            _: OAuth2,
-            form_data: Form_data,
-            interactor: FromDishka[LoginInteractor],
-            response: Response,
+        _: OAuth2,
+        form_data: Form_data,
+        interactor: FromDishka[LoginInteractor],
+        response: Response,
     ) -> TokenResponse:
         login_schema = LoginSchema(
             email=form_data.username, password=form_data.password
@@ -73,7 +73,7 @@ def create_auth_router() -> APIRouter:
     )
     @inject
     async def get_me(
-            _: OAuth2, interactor: FromDishka[GetUserInteractor]
+        _: OAuth2, interactor: FromDishka[GetUserInteractor]
     ) -> GetUser:
         return await interactor.execute()
 
@@ -84,7 +84,7 @@ def create_auth_router() -> APIRouter:
     )
     @inject
     async def logout(
-            _: OAuth2, interactor: FromDishka[LogoutInteractor], response: Response
+        _: OAuth2, interactor: FromDishka[LogoutInteractor], response: Response
     ) -> dict[str, str]:
         await interactor.execute()
         response.delete_cookie(
@@ -102,9 +102,9 @@ def create_auth_router() -> APIRouter:
     )
     @inject
     async def logout_all(
-            _: OAuth2,
-            interactor: FromDishka[LogoutGlobalInteractor],
-            response: Response,
+        _: OAuth2,
+        interactor: FromDishka[LogoutGlobalInteractor],
+        response: Response,
     ) -> dict[str, str]:
         await interactor.execute()
         response.delete_cookie(
@@ -123,9 +123,9 @@ def create_auth_router() -> APIRouter:
     )
     @inject
     async def get_token(
-            _: OAuth2,
-            interactor: FromDishka[RefreshTokenInteractor],
-            response: Response,
+        _: OAuth2,
+        interactor: FromDishka[RefreshTokenInteractor],
+        response: Response,
     ) -> TokenResponse:
         access_token, refresh_token = await interactor.execute()
         response.set_cookie(

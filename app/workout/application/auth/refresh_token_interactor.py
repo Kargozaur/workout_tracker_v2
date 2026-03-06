@@ -18,11 +18,11 @@ from app.workout.domains.protocols.iuow import IUnitOfWork
 
 class RefreshTokenInteractor[T: RefreshTokenT]:
     def __init__(
-            self,
-            uow: IUnitOfWork,
-            token_provider: ITokenProvider,
-            token_hasher: ITokenHasher,
-            refresh_token: RefreshToken,
+        self,
+        uow: IUnitOfWork,
+        token_provider: ITokenProvider,
+        token_hasher: ITokenHasher,
+        refresh_token: RefreshToken,
     ) -> None:
         self.UoW = uow
         self.token_provider = token_provider
@@ -40,7 +40,7 @@ class RefreshTokenInteractor[T: RefreshTokenT]:
         current_token_hash: str = self.token_hasher.hash(self.refresh_token)
 
         db_token: (
-                T | None
+            T | None
         ) = await self.UoW.refresh_repository.get_refresh_token(
             token_hash=current_token_hash,
             fields=("id", "token_hash"),

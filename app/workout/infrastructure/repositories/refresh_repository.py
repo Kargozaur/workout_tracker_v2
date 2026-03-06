@@ -22,7 +22,7 @@ class RefreshTokenRepository(
         return await super().get_entity(**filters)
 
     async def create_refresh_token(
-            self, data: RefreshTokenSchema
+        self, data: RefreshTokenSchema
     ) -> RefreshToken:
         return await super().create_entity(data)
 
