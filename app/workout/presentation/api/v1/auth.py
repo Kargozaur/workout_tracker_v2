@@ -5,6 +5,8 @@ from app.workout.application.auth.login_interactor import LoginInteractor
 from app.workout.application.auth.registry_interactor import RegisterUser
 from app.workout.application.common.status_codes import success_status_codes
 from app.workout.domains.entities.user_schemas import CreateUser, LoginSchema
+from app.workout.presentation.api.annotated.oauth import Form_data, OAuth2
+from app.workout.presentation.schemas.token_schema import TokenResponse
 from app.workout.presentation.schemas.user_schema import GetUser
 
 
@@ -18,7 +20,7 @@ def create_auth_router() -> APIRouter:
     )
     @inject
     async def register_user(
-        user_data: CreateUser, interactor: FromDishka[RegisterUser]
+            user_data: CreateUser, interactor: FromDishka[RegisterUser]
     ) -> GetUser:
         user = await interactor.execute(user_data)
         return user
@@ -26,13 +28,18 @@ def create_auth_router() -> APIRouter:
     @router.post(
         "/login",
         status_code=success_status_codes.success,
+        response_model=TokenResponse,
     )
     @inject
     async def login_user(
-        login_schema: LoginSchema,
-        interactor: FromDishka[LoginInteractor],
-        response: Response,
-    ) -> Response:
+            _: OAuth2,
+            form_data: Form_data,
+            interactor: FromDishka[LoginInteractor],
+            response: Response,
+    ) -> TokenResponse:
+        login_schema = LoginSchema(
+            email=form_data.username, password=form_data.password
+        )
         access_token, refresh_token = await interactor.execute(login_schema)
         response.set_cookie(
             key="refresh_token",
@@ -48,6 +55,6 @@ def create_auth_router() -> APIRouter:
             samesite="lax",
             max_age=1800,
         )
-        return Response(status_code=success_status_codes.success)
+        return TokenResponse(access_token=access_token)
 
     return router
