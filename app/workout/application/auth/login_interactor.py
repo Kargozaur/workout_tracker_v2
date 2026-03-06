@@ -1,5 +1,8 @@
 import anyio
 
+from app.workout.application.common.generic_protocols.user_types import (
+    ExistingUser,
+)
 from app.workout.application.common.transactional import transactional
 from app.workout.domains.entities.refresh_token_schema import (
     RefreshTokenSchema,
@@ -14,7 +17,7 @@ from app.workout.domains.protocols.itokenhasher import ITokenHasher
 from app.workout.domains.protocols.iuow import IUnitOfWork
 
 
-class LoginInteractor[UserEntity]:
+class LoginInteractor[T: ExistingUser]:
     def __init__(
             self,
             uow: IUnitOfWork,
@@ -29,7 +32,7 @@ class LoginInteractor[UserEntity]:
 
     @transactional
     async def execute(self, login: LoginSchema) -> tuple[str, str]:
-        user: UserEntity | None = await self.UoW.user_repository.get_user(
+        user: T | None = await self.UoW.user_repository.get_user(
             email=login.email, fields=("id", "email", "password_hash")
         )
         if not user:
