@@ -1,6 +1,3 @@
-from uuid import UUID
-
-import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.workout.domains.entities.refresh_token_schema import (
@@ -22,9 +19,9 @@ class RefreshTokenRepository(
         super().__init__(session, RefreshToken)
 
     async def create_refresh_token(
-        self, data: RefreshTokenSchema
+            self, data: RefreshTokenSchema
     ) -> RefreshToken:
         return await super().create_entity(data)
 
-    async def revoke_refresh_token(self, user_id: UUID) -> bool:
-        return await super().delete_entity(user_id=user_id)
+    async def revoke_refresh_token(self, **filters) -> bool:
+        return await super().delete_entity(**filters)

@@ -5,10 +5,15 @@ from app.workout.application.auth.get_current_user_interactor import (
     GetUserInteractor,
 )
 from app.workout.application.auth.login_interactor import LoginInteractor
+from app.workout.application.auth.logout_global_interactor import (
+    LogoutGlobalInteractor,
+)
+from app.workout.application.auth.logout_interactor import LogoutInteractor
 from app.workout.application.auth.registry_interactor import RegisterUser
 from app.workout.application.common.status_codes import success_status_codes
 from app.workout.domains.entities.user_schemas import CreateUser, LoginSchema
 from app.workout.presentation.api.annotated.oauth import Form_data, OAuth2
+from app.workout.presentation.schemas.logout_schema import LogoutSchema
 from app.workout.presentation.schemas.token_schema import TokenResponse
 from app.workout.presentation.schemas.user_schema import GetUser
 
@@ -68,5 +73,43 @@ def create_auth_router() -> APIRouter:
             _: OAuth2, interactor: FromDishka[GetUserInteractor]
     ) -> GetUser:
         return await interactor.execute()
+
+    @router.post(
+        "/logout",
+        status_code=success_status_codes.ok,
+        response_model=LogoutSchema,
+    )
+    @inject
+    async def logout(
+            _: OAuth2, interactor: FromDishka[LogoutInteractor], response: Response
+    ) -> dict[str, str]:
+        await interactor.execute()
+        response.delete_cookie(
+            key="refresh_token", httponly=True, samesite="lax"
+        )
+        response.delete_cookie(
+            key="access_token", httponly=True, samesite="lax"
+        )
+        return {"Success": "You have been logged out"}
+
+    @router.post(
+        "/logout/all",
+        status_code=success_status_codes.ok,
+        response_model=LogoutSchema,
+    )
+    @inject
+    async def logout_all(
+            _: OAuth2,
+            interactor: FromDishka[LogoutGlobalInteractor],
+            response: Response,
+    ) -> dict[str, str]:
+        await interactor.execute()
+        response.delete_cookie(
+            key="refresh_token", httponly=True, samesite="lax"
+        )
+        response.delete_cookie(
+            key="access_token", httponly=True, samesite="lax"
+        )
+        return {"Success": "You have been logged out"}
 
     return router

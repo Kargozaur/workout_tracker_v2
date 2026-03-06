@@ -4,8 +4,15 @@ from app.workout.application.auth.get_current_user_interactor import (
     GetUserInteractor,
 )
 from app.workout.application.auth.login_interactor import LoginInteractor
+from app.workout.application.auth.logout_global_interactor import (
+    LogoutGlobalInteractor,
+)
+from app.workout.application.auth.logout_interactor import LogoutInteractor
 from app.workout.application.auth.registry_interactor import RegisterUser
-from app.workout.application.common.types.token_types import AccessToken
+from app.workout.application.common.types.token_types import (
+    AccessToken,
+    RefreshToken,
+)
 from app.workout.domains.protocols.ihasher import IPasswordHasher
 from app.workout.domains.protocols.itoken import ITokenProvider
 from app.workout.domains.protocols.itokenhasher import ITokenHasher
@@ -41,3 +48,21 @@ class UseCaseProvider(Provider):
             token_provider: ITokenProvider,
     ) -> GetUserInteractor:
         return GetUserInteractor(uow, access_token, token_provider)
+
+    @provide
+    def logout_provider(
+            self,
+            uow: IUnitOfWork,
+            token_hasher: ITokenHasher,
+            refresh_token: RefreshToken,
+    ) -> LogoutInteractor:
+        return LogoutInteractor(uow, token_hasher, refresh_token)
+
+    @provide
+    def logout_global_provider(
+            self,
+            uow: IUnitOfWork,
+            token_provider: ITokenProvider,
+            access_token: AccessToken,
+    ) -> LogoutGlobalInteractor:
+        return LogoutGlobalInteractor(uow, token_provider, access_token)
