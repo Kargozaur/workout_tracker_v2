@@ -3,6 +3,7 @@ from typing import Final, NamedTuple
 
 class BadRequests(NamedTuple):
     """Failure status codes."""
+
     bad_request: int
     unauthorized: int
     not_found: int
@@ -13,6 +14,7 @@ class BadRequests(NamedTuple):
 
 class SuccessStatusCodes(NamedTuple):
     """Success status codes."""
+
     ok: int
     success: int
     no_content: int
