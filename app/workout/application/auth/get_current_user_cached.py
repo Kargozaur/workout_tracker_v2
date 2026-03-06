@@ -29,7 +29,7 @@ class CachedUserInteractor[T: CacheUser, R: BaseModel](GetUserInteractor):
         self.interactor = interactor
         self.service = service
 
-    async def execute(self) -> T | R:
+    async def execute(self) -> T:
         decoded: dict[str, Any] = self.token_provider.decode_token(
             self.access_token
         )
