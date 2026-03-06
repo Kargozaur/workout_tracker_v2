@@ -12,8 +12,8 @@ class CacheService[R: BaseModel, T: str | None](ICacheService[R, T]):
         self.model = model
 
     async def get_cache(
-            self,
-            user_id: UUID,
+        self,
+        user_id: UUID,
     ) -> R | None:
         cache: T = await self.redis.get(f"user:{user_id}")
         if not cache:

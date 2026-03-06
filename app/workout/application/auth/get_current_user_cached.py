@@ -18,12 +18,12 @@ from app.workout.domains.protocols.iuow import IUnitOfWork
 
 class CachedUserInteractor[T: CacheUser, R: BaseModel](GetUserInteractor):
     def __init__(
-            self,
-            interactor: GetUserInteractor[T],
-            token_provider: ITokenProvider,
-            service: ICacheService[R, T | str | None],
-            access_token: AccessToken,
-            uow: IUnitOfWork,
+        self,
+        interactor: GetUserInteractor[T],
+        token_provider: ITokenProvider,
+        service: ICacheService[R, T | str | None],
+        access_token: AccessToken,
+        uow: IUnitOfWork,
     ) -> None:
         super().__init__(uow, access_token, token_provider)
         self.interactor = interactor

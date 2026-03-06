@@ -11,7 +11,7 @@ class RedisProvider(Provider):
 
     @provide
     async def get_redis(
-            self, redis_config: RedisConfig
+        self, redis_config: RedisConfig
     ) -> AsyncIterable[Redis]:
         redis = Redis.from_url(redis_config.dsn, decode_responses=True)
         yield redis
