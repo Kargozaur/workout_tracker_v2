@@ -6,7 +6,9 @@ from fastapi import FastAPI
 
 from app.workout.core.providers.auth_provider import AuthProvider
 from app.workout.core.providers.database_provider import SQLAlchemyProvider
+from app.workout.core.providers.redis_provider import RedisProvider
 from app.workout.core.providers.security_providers import SecurityProvider
+from app.workout.core.providers.service_provider import ServiceProvider
 from app.workout.core.providers.settings_provider import ConfigProvider
 from app.workout.core.providers.uow_provider import UnitOfWorkProvider
 from app.workout.core.providers.use_case_provider import UseCaseProvider
@@ -28,6 +30,8 @@ def create_app() -> FastAPI:
         UseCaseProvider(),
         AuthProvider(),
         FastapiProvider(),
+        RedisProvider(),
+        ServiceProvider(),
     )
 
     app.state.container = container

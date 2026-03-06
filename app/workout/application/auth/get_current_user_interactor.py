@@ -8,14 +8,15 @@ from app.workout.domains.exceptions.user_exceptions import (
 )
 from app.workout.domains.protocols.itoken import ITokenProvider
 from app.workout.domains.protocols.iuow import IUnitOfWork
+from app.workout.domains.protocols.iuserinteractor import IUserInteractor
 
 
-class GetUserInteractor[T]:
+class GetUserInteractor[T](IUserInteractor):
     def __init__(
-        self,
-        uow: IUnitOfWork,
-        access_token: AccessToken,
-        token_provider: ITokenProvider,
+            self,
+            uow: IUnitOfWork,
+            access_token: AccessToken,
+            token_provider: ITokenProvider,
     ) -> None:
         self.UoW = uow
         self.access_token = access_token

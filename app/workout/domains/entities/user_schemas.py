@@ -1,4 +1,6 @@
+import datetime as dt
 from typing import Self
+from uuid import UUID
 
 from app.workout.application.common.verify_password import verify_password
 
@@ -9,9 +11,9 @@ from . import (
     ConfigDict,
     EmailStr,
     Field,
+    GenericId,
     model_validator,
 )
-
 
 GenericStr = Annotated[str | None, Field(default=None, min_length=1)]
 PasswordField = Annotated[str, BeforeValidator(verify_password)]
@@ -36,7 +38,7 @@ class CreateUser(BaseModel):
                 .replace(".", "")
             )
             self.last_name: str = (
-                self.email.split("@")[0][len(self.email) // 2 :]
+                self.email.split("@")[0][len(self.email) // 2:]
                 .replace("_", "")
                 .replace(".", "")
             )
@@ -48,7 +50,7 @@ class CreateUser(BaseModel):
             )
         if not self.last_name:
             self.last_name: str = (
-                self.email.split("@")[0][len(self.email) // 2 :]
+                self.email.split("@")[0][len(self.email) // 2:]
                 .replace("_", "")
                 .replace(".", "")
             )
@@ -66,3 +68,13 @@ class UpdateUser(BaseModel):
 class LoginSchema(BaseModel):
     email: str
     password: str
+
+
+class GetUser(GenericId[UUID]):
+    email: str
+    first_name: str
+    last_name: str
+    created_at: dt.datetime
+    updated_at: dt.datetime
+
+    model_config = ConfigDict(from_attributes=True)

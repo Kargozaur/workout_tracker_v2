@@ -15,9 +15,9 @@ from . import AsyncSession, sa
 
 
 class BaseRepository[
-ModelT,
-CreateSchemaT: BaseModel,
-UpdateSchemaT: BaseModel,
+    ModelT,
+    CreateSchemaT: BaseModel,
+    UpdateSchemaT: BaseModel,
 ](IRepository[ModelT, CreateSchemaT, UpdateSchemaT]):
     def __init__(self, session: AsyncSession, model: type[ModelT]) -> None:
         self.session = session
@@ -30,7 +30,8 @@ UpdateSchemaT: BaseModel,
         query = sa.select(self.model).filter_by(**filters)
         if fields is not None and isinstance(fields, (list, tuple)):
             load_fields = [
-                attr for f in fields
+                attr
+                for f in fields
                 if (attr := getattr(self.model, f, None)) is not None
             ]
             if load_fields:
@@ -50,7 +51,7 @@ UpdateSchemaT: BaseModel,
             raise EntityCreationException() from exc
 
     async def update_entity(
-            self, attributes: UpdateSchemaT, **filters: object
+        self, attributes: UpdateSchemaT, **filters: object
     ) -> ModelT:
         """Updates entity based on pydantic schema provided. Filters are applied
         based on method call."""

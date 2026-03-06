@@ -12,7 +12,7 @@ services:
       - "5433:5432"
     shm_size: 256mb
     volumes:
-     - db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${DB_USER}" ]
       interval: 30s
@@ -25,6 +25,10 @@ services:
     networks:
       - internalNetwork
     restart: unless-stopped
+    env_file:
+      - .env
+    command: >
+      sh -c "redis-server --requirepass $$REDIS_PASSWORD"
     depends_on:
       - database
     volumes:
