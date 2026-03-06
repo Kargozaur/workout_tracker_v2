@@ -32,8 +32,8 @@ class BaseRepository[
         self.model = model
 
     async def get_entity(self, **filters) -> ModelT | None:
-        """Generic method to get entity based on filters. It is possible to
-        provide fields to load via fields parameter.
+        """Generic method to get an entity based on filters. It is possible to
+        provide fields to load via fields keyword parameter.
         When passed, fields should look like: (...other kwargs, fields=("id", "name", etc.)).
         fields must be passed as tuple."""
         fields = filters.pop("fields", None)
