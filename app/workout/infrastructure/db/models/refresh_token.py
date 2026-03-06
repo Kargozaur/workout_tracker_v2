@@ -17,9 +17,6 @@ class RefreshToken(UUIDIdMixin, CreatedAtMixin, Base):
         default=dt.datetime.utcnow(),
         server_default=sa.func.now(),
     )
-    revoked_at: Mapped[dt.datetime] = mapped_column(
-        sa.DateTime(timezone=True), nullable=True
-    )
     user_id: Mapped[UUID] = mapped_column(
         sa.ForeignKey("user.id", ondelete="CASCADE")
     )
