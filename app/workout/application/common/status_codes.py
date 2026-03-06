@@ -28,7 +28,9 @@ failed_status_codes: Final[BadRequests] = BadRequests(
     unprocessable_content=422,
     server_error=500,
 )
+"""Status codes for a failed requests."""
 
 success_status_codes: Final[SuccessStatusCodes] = SuccessStatusCodes(
     ok=200, success=201, no_content=204
 )
+"""Status codes for a successful request."""
