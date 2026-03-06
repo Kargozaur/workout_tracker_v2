@@ -10,7 +10,7 @@ from app.workout.domains.protocols.itoken import ITokenProvider
 from app.workout.domains.protocols.iuow import IUnitOfWork
 
 
-class GetUserInteractor[UserEntity]:
+class GetUserInteractor[T]:
     def __init__(
             self,
             uow: IUnitOfWork,
@@ -22,13 +22,13 @@ class GetUserInteractor[UserEntity]:
         self.token_provider = token_provider
 
     @read_only
-    async def execute(self) -> UserEntity:
+    async def execute(self) -> T:
         decoded_token: dict[str, Any] = self.token_provider.decode_token(
             self.access_token
         )
-        user_id: UUID = decoded_token.get("sub")
-        user_data: UserEntity | None = await self.UoW.user_repository.get_user(
-            id=user_id,
+        user_id: str = decoded_token.get("sub")
+        user_data: T | None = await self.UoW.user_repository.get_user(
+            id=UUID(user_id),
             fields=(
                 "id",
                 "email",

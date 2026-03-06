@@ -15,9 +15,9 @@ from . import AsyncSession, sa
 
 
 class BaseRepository[
-    ModelT,
-    CreateSchemaT: BaseModel,
-    UpdateSchemaT: BaseModel,
+ModelT,
+CreateSchemaT: BaseModel,
+UpdateSchemaT: BaseModel,
 ](IRepository[ModelT, CreateSchemaT, UpdateSchemaT]):
     def __init__(self, session: AsyncSession, model: type[ModelT]) -> None:
         self.session = session
@@ -36,7 +36,7 @@ class BaseRepository[
             ]
             if load_fields:
                 query = query.options(load_only(*load_fields))
-        # print(f"SQL: {query.compile(compile_kwargs={'literal_binds': True})}")
+        print(f"SQL: {query.compile(compile_kwargs={'literal_binds': True})}")
         result = await self.session.execute(query)
         return result.scalar_one_or_none()
 
@@ -51,7 +51,7 @@ class BaseRepository[
             raise EntityCreationException() from exc
 
     async def update_entity(
-        self, attributes: UpdateSchemaT, **filters: object
+            self, attributes: UpdateSchemaT, **filters: object
     ) -> ModelT:
         """Updates entity based on pydantic schema provided. Filters are applied
         based on method call."""
@@ -72,7 +72,7 @@ class BaseRepository[
         """Deletes entity from the database based on filters."""
         entity: ModelT | None = await self.get_entity(**filters)
         if entity is None:
-            raise EntityNotFoundException("Entity not found")
+            return False
         try:
             await self.session.delete(entity)
             await self.session.flush()
