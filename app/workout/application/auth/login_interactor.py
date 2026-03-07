@@ -1,4 +1,5 @@
 import anyio
+from loguru import logger
 
 from app.workout.application.common.generic_protocols.user_types import (
     ExistingUser,
@@ -51,6 +52,8 @@ class LoginInteractor[T: ExistingUser]:
         refresh_schema: RefreshTokenSchema = RefreshTokenSchema(
             user_id=user.id, token_hash=refresh_token_hash
         )
-        await self.UoW.refresh_repository.revoke_refresh_token(user_id=user.id)
         await self.UoW.refresh_repository.create_refresh_token(refresh_schema)
+        logger.debug(
+            f"Access: {access_token[:-5]}. Refresh: {refresh_token[:-5]}"
+        )
         return access_token, refresh_token

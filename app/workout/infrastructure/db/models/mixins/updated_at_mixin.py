@@ -8,4 +8,5 @@ class UpdatedAtMixin:
         sa.DateTime(timezone=True),
         server_default=sa.func.now(),
         onupdate=sa.func.now(),
+        default=lambda: dt.datetime.now(dt.UTC),
     )

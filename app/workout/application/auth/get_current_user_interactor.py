@@ -1,6 +1,8 @@
 from typing import Any
 from uuid import UUID
 
+from loguru import logger
+
 from app.workout.application.common.read_only import read_only
 from app.workout.application.common.types.token_types import AccessToken
 from app.workout.domains.exceptions.user_exceptions import (
@@ -24,6 +26,7 @@ class GetUserInteractor[T](IUserInteractor):
 
     @read_only
     async def execute(self) -> T:
+        logger.debug("Stepped into decorated interactor")
         decoded_token: dict[str, Any] = self.token_provider.decode_token(
             self.access_token
         )

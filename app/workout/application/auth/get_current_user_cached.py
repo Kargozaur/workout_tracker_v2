@@ -1,6 +1,7 @@
 from typing import Any
 from uuid import UUID
 
+from loguru import logger
 from pydantic import BaseModel
 
 from app.workout.application.auth.get_current_user_interactor import (
@@ -39,10 +40,12 @@ class CachedUserInteractor[T: CacheUser, R: BaseModel](GetUserInteractor):
         user_id: UUID = UUID(decoded.get("sub"))
         cached_user: T | None = await self.service.get_cache(user_id)
         if cached_user:
+            logger.debug(f"Cache hit: {cached_user}")
             return cached_user
         user_data: T = await self.interactor.execute()
         cached_data: R = GetUser(
             **user_data.__dict__
         )  # passes ORM attributes inside a pydantic model
         await self.service.set_cache(user_id, cached_data)
+        logger.debug("Set cache.")
         return user_data

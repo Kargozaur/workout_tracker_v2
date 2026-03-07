@@ -1,5 +1,6 @@
 from typing import Any
 
+from loguru import logger
 from pydantic import BaseModel
 from sqlalchemy.orm import load_only
 
@@ -15,9 +16,9 @@ from . import AsyncSession, sa
 
 
 class BaseRepository[
-    ModelT,
-    CreateSchemaT: BaseModel,
-    UpdateSchemaT: BaseModel,
+ModelT,
+CreateSchemaT: BaseModel,
+UpdateSchemaT: BaseModel,
 ](IRepository[ModelT, CreateSchemaT, UpdateSchemaT]):
     """Base repository for all repositories that are using SQLAlchemy sessions.
     CRUD functionality provided by methods:
@@ -31,7 +32,7 @@ class BaseRepository[
         self.session = session
         self.model = model
 
-    async def get_entity(self, **filters) -> ModelT | None:
+    async def get_entity(self, **filters: object) -> ModelT | None:
         """Generic method to get an entity based on filters. It is possible to
         provide fields to load via fields keyword parameter.
         When passed, fields should look like: (...other kwargs, fields=("id", "name", etc.)).
@@ -46,7 +47,9 @@ class BaseRepository[
             ]
             if load_fields:
                 query = query.options(load_only(*load_fields))
-        print(f"SQL: {query.compile(compile_kwargs={'literal_binds': True})}")
+        logger.debug(
+            f"SQL: {query.compile(compile_kwargs={'literal_binds': True})}"
+        )
         result = await self.session.execute(query)
         return result.scalar_one_or_none()
 
@@ -58,6 +61,7 @@ class BaseRepository[
             await self.session.flush()
             return model
         except Exception as exc:
+            logger.exception("Failed to create entity")
             raise EntityCreationException() from exc
 
     async def update_entity(
@@ -76,6 +80,7 @@ class BaseRepository[
             await self.session.refresh(entity)
             return entity
         except Exception as exc:
+            logger.exception("Failed to update entity")
             raise EntityUpdateException() from exc
 
     async def delete_entity(self, **filters: object) -> bool:
@@ -88,4 +93,5 @@ class BaseRepository[
             await self.session.flush()
             return True
         except Exception as exc:
+            logger.exception("Failed to delete entity")
             raise EntityDeletionException() from exc
