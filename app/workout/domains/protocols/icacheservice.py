@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from . import Protocol
 
 
-class ICacheService[R: BaseModel, T: str | None](Protocol):
+class ICacheService[R: BaseModel](Protocol):
     @abstractmethod
     async def get_cache(self, user_id: UUID) -> R: ...
 

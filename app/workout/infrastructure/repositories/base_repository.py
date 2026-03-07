@@ -68,16 +68,19 @@ UpdateSchemaT: BaseModel,
         self, attributes: UpdateSchemaT, **filters: object
     ) -> ModelT:
         """Updates entity based on pydantic schema provided. Filters are applied
-        based on method call."""
+        based on given kwargs."""
         entity: ModelT | None = await self.get_entity(**filters)
         if entity is None:
             raise EntityNotFoundException("Entity not found")
-        data: dict[str, Any] = attributes.model_dump(exclude_unset=True)
+        data: dict[str, Any] = attributes.model_dump(
+            exclude_unset=True, by_alias=True
+        )
         try:
             for k, v in data.items():
                 if hasattr(entity, k):
                     setattr(entity, k, v)
-            await self.session.refresh(entity)
+
+            await self.session.flush()
             return entity
         except Exception as exc:
             logger.exception("Failed to update entity")

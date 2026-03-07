@@ -25,7 +25,7 @@ class CachedUserInteractor[T: CacheUser, R: BaseModel](GetUserInteractor):
         self,
         interactor: GetUserInteractor[T],
         token_provider: ITokenProvider,
-        service: ICacheService[R, T | str | None],
+        service: ICacheService[R],
         access_token: AccessToken,
         uow: IUnitOfWork,
     ) -> None:

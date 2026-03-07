@@ -7,6 +7,7 @@ from app.workout.application.common.transactional import transactional
 from app.workout.application.common.types.token_types import (
     AccessToken,
 )
+from app.workout.domains.entities.user_schemas import GetUser
 from app.workout.domains.protocols.icacheservice import ICacheService
 from app.workout.domains.protocols.itoken import ITokenProvider
 from app.workout.domains.protocols.iuow import IUnitOfWork
@@ -18,7 +19,7 @@ class LogoutGlobalInteractor:
         uow: IUnitOfWork,
         token_provider: ITokenProvider,
         access_token: AccessToken,
-        cache_service: ICacheService,
+        cache_service: ICacheService[GetUser],
     ) -> None:
         self.UoW = uow
         self.token_provider = token_provider

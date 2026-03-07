@@ -19,6 +19,7 @@ from app.workout.application.common.types.token_types import (
     AccessToken,
     RefreshToken,
 )
+from app.workout.domains.entities.user_schemas import GetUser
 from app.workout.domains.protocols.icacheservice import ICacheService
 from app.workout.domains.protocols.ihasher import IPasswordHasher
 from app.workout.domains.protocols.itoken import ITokenProvider
@@ -62,7 +63,7 @@ class UseCaseProvider(Provider):
         uow: IUnitOfWork,
         token_hasher: ITokenHasher,
         refresh_token: RefreshToken,
-        cache_service: ICacheService,
+        cache_service: ICacheService[GetUser],
         token_provider: ITokenProvider,
     ) -> LogoutInteractor:
         return LogoutInteractor(
@@ -75,7 +76,7 @@ class UseCaseProvider(Provider):
         uow: IUnitOfWork,
         token_provider: ITokenProvider,
         access_token: AccessToken,
-        cache_service: ICacheService,
+        cache_service: ICacheService[GetUser],
     ) -> LogoutGlobalInteractor:
         return LogoutGlobalInteractor(
             uow, token_provider, access_token, cache_service
@@ -98,7 +99,7 @@ class UseCaseProvider(Provider):
         self,
         interactor: GetUserInteractor,
         token_provider: ITokenProvider,
-        service: ICacheService,
+        service: ICacheService[GetUser],
         access_token: AccessToken,
         uow: IUnitOfWork,
     ) -> GetUserInteractor:
