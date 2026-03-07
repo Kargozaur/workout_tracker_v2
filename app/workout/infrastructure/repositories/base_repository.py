@@ -1,3 +1,4 @@
+import datetime as dt
 from typing import Any
 
 from loguru import logger
@@ -16,9 +17,9 @@ from . import AsyncSession, sa
 
 
 class BaseRepository[
-ModelT,
-CreateSchemaT: BaseModel,
-UpdateSchemaT: BaseModel,
+    ModelT,
+    CreateSchemaT: BaseModel,
+    UpdateSchemaT: BaseModel,
 ](IRepository[ModelT, CreateSchemaT, UpdateSchemaT]):
     """Base repository for all repositories that are using SQLAlchemy sessions.
     CRUD functionality provided by methods:
@@ -98,4 +99,15 @@ UpdateSchemaT: BaseModel,
             return True
         except Exception as exc:
             logger.exception("Failed to delete entity")
+            raise EntityDeletionException() from exc
+
+    async def delete_expired(self) -> bool:
+        """Deletes expired entities from the database."""
+        now: dt.datetime = dt.datetime.now(dt.UTC)
+        query = sa.delete(self.model).where(self.model.expires_at < now)
+        try:
+            await self.session.execute(query)
+            return True
+        except Exception as exc:
+            logger.exception("Failed to delete expired entities")
             raise EntityDeletionException() from exc

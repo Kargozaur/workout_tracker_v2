@@ -28,3 +28,6 @@ class RefreshTokenRepository(
 
     async def revoke_refresh_token(self, **filters) -> bool:
         return await super().delete_entity(**filters)
+
+    async def delete_expired(self) -> bool:
+        return await super().delete_expired()

@@ -4,7 +4,7 @@ from uuid import UUID
 from loguru import logger
 from pydantic import BaseModel
 
-from app.workout.application.auth.get_current_user_interactor import (
+from app.workout.application.auth.queries.get_current_user_interactor import (
     GetUserInteractor,
 )
 from app.workout.application.common.generic_protocols.user_types import (

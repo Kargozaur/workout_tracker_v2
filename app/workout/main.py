@@ -1,17 +1,10 @@
 from contextlib import asynccontextmanager
 
-from dishka import AsyncContainer, make_async_container
-from dishka.integrations.fastapi import FastapiProvider, setup_dishka
+from dishka import AsyncContainer
+from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
 
-from app.workout.core.providers.auth_provider import AuthProvider
-from app.workout.core.providers.database_provider import SQLAlchemyProvider
-from app.workout.core.providers.redis_provider import RedisProvider
-from app.workout.core.providers.security_providers import SecurityProvider
-from app.workout.core.providers.service_provider import ServiceProvider
-from app.workout.core.providers.settings_provider import ConfigProvider
-from app.workout.core.providers.uow_provider import UnitOfWorkProvider
-from app.workout.core.providers.use_case_provider import UseCaseProvider
+from app.workout.core.containers import create_async_containers
 from app.workout.core.settings.log_settings import setup_logger
 from app.workout.presentation.api.api_router import create_api_router
 from app.workout.presentation.exception_handlers import (
@@ -27,17 +20,7 @@ from app.workout.presentation.middleware.request_time import (
 def create_app() -> FastAPI:
     setup_logger(default_level="DEBUG")
     app = FastAPI(lifespan=lifespan)
-    container: AsyncContainer = make_async_container(
-        SQLAlchemyProvider(),
-        ConfigProvider(),
-        SecurityProvider(),
-        UnitOfWorkProvider(),
-        UseCaseProvider(),
-        AuthProvider(),
-        FastapiProvider(),
-        RedisProvider(),
-        ServiceProvider(),
-    )
+    container: AsyncContainer = create_async_containers()
 
     app.state.container = container
     app.add_middleware(ProcessTimeMiddleware)

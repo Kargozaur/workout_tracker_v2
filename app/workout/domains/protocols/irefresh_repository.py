@@ -19,3 +19,6 @@ class IRefreshRepository[
 
     @abstractmethod
     async def revoke_refresh_token(self, **filters) -> bool: ...
+
+    @abstractmethod
+    async def delete_expired(self) -> bool: ...

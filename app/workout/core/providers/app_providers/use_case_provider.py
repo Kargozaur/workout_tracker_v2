@@ -1,22 +1,28 @@
 from dishka import Provider, Scope, decorate, provide
 
-from app.workout.application.auth.get_current_user_cached import (
-    CachedUserInteractor,
+from app.workout.application.auth.commands.login_interactor import (
+    LoginInteractor,
 )
-from app.workout.application.auth.get_current_user_interactor import (
-    GetUserInteractor,
-)
-from app.workout.application.auth.login_interactor import LoginInteractor
-from app.workout.application.auth.logout_global_interactor import (
+from app.workout.application.auth.commands.logout_global_interactor import (
     LogoutGlobalInteractor,
 )
-from app.workout.application.auth.logout_interactor import LogoutInteractor
-from app.workout.application.auth.refresh_token_interactor import (
+from app.workout.application.auth.commands.logout_interactor import (
+    LogoutInteractor,
+)
+from app.workout.application.auth.commands.refresh_token_interactor import (
     RefreshTokenInteractor,
 )
-from app.workout.application.auth.registry_interactor import RegisterUser
-from app.workout.application.auth.update_profile_interactor import (
+from app.workout.application.auth.commands.registry_interactor import (
+    RegisterUser,
+)
+from app.workout.application.auth.commands.update_profile_interactor import (
     UpdateProfileInteractor,
+)
+from app.workout.application.auth.queries.get_current_user_cached import (
+    CachedUserInteractor,
+)
+from app.workout.application.auth.queries.get_current_user_interactor import (
+    GetUserInteractor,
 )
 from app.workout.application.common.types.token_types import (
     AccessToken,
