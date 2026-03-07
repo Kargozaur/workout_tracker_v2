@@ -5,7 +5,6 @@ from loguru import logger
 
 from app.workout.application.common.transactional import transactional
 from app.workout.application.common.types.token_types import RefreshToken
-from app.workout.domains.entities.user_schemas import GetUser
 from app.workout.domains.protocols.icacheservice import ICacheService
 from app.workout.domains.protocols.itoken import ITokenProvider
 from app.workout.domains.protocols.itokenhasher import ITokenHasher
@@ -19,7 +18,7 @@ class LogoutInteractor:
         token_hasher: ITokenHasher,
         refresh_token: RefreshToken,
         token_provider: ITokenProvider,
-        cache_service: ICacheService[GetUser],
+        cache_service: ICacheService,
     ):
         self.UoW = uow
         self.token_hasher = token_hasher

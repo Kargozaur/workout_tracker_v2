@@ -1,5 +1,3 @@
-from uuid import UUID
-
 from pydantic import BaseModel
 from redis.asyncio import Redis
 
