@@ -102,7 +102,7 @@ class UseCaseProvider(Provider):
         access_token: AccessToken,
         uow: IUnitOfWork,
     ) -> GetUserInteractor:
-        """Swapes GetUserInteractor with a cached version."""
+        """Changes GetUserInteractor with a cached version."""
         return CachedUserInteractor(
             interactor, token_provider, service, access_token, uow
         )
