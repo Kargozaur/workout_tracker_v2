@@ -1,5 +1,4 @@
 from abc import abstractmethod
-from uuid import UUID
 
 from pydantic import BaseModel
 
@@ -8,10 +7,12 @@ from . import Protocol
 
 class ICacheService[R: BaseModel](Protocol):
     @abstractmethod
-    async def get_cache(self, user_id: UUID) -> R: ...
+    async def get_cache(self, identifier: object) -> R: ...
 
     @abstractmethod
-    async def set_cache(self, user_id: UUID, cache_attributes: R) -> None: ...
+    async def set_cache(
+        self, identifier: object, cache_attributes: R
+    ) -> None: ...
 
     @abstractmethod
-    async def delete_cache(self, user_id: UUID) -> None: ...
+    async def delete_cache(self, identifier: object) -> None: ...

@@ -81,6 +81,7 @@ UpdateSchemaT: BaseModel,
                     setattr(entity, k, v)
 
             await self.session.flush()
+            await self.session.refresh(entity)
             return entity
         except Exception as exc:
             logger.exception("Failed to update entity")

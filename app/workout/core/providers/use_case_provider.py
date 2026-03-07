@@ -15,11 +15,14 @@ from app.workout.application.auth.refresh_token_interactor import (
     RefreshTokenInteractor,
 )
 from app.workout.application.auth.registry_interactor import RegisterUser
+from app.workout.application.auth.update_profile_interactor import (
+    UpdateProfileInteractor,
+)
 from app.workout.application.common.types.token_types import (
     AccessToken,
     RefreshToken,
 )
-from app.workout.domains.entities.user_schemas import GetUser
+from app.workout.domains.entities.user_schemas import GetUser, UpdateUser
 from app.workout.domains.protocols.icacheservice import ICacheService
 from app.workout.domains.protocols.ihasher import IPasswordHasher
 from app.workout.domains.protocols.itoken import ITokenProvider
@@ -106,4 +109,16 @@ class UseCaseProvider(Provider):
         """Changes GetUserInteractor with a cached version."""
         return CachedUserInteractor(
             interactor, token_provider, service, access_token, uow
+        )
+
+    @provide
+    def update_interactor(
+        self,
+        uow: IUnitOfWork,
+        token_provider: ITokenProvider,
+        service: ICacheService[UpdateUser],
+        access_token: AccessToken,
+    ) -> UpdateProfileInteractor:
+        return UpdateProfileInteractor(
+            uow, token_provider, service, access_token
         )
