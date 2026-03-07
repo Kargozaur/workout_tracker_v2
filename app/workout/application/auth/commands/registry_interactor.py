@@ -3,7 +3,6 @@ import anyio
 from app.workout.application.common.generic_protocols.user_types import (
     NotExistingUser,
 )
-from app.workout.application.common.transactional import transactional
 from app.workout.domains.entities.user_schemas import CreateUser
 from app.workout.domains.exceptions.user_exceptions import (
     UserExistsException,
@@ -17,7 +16,6 @@ class RegisterUser[T: NotExistingUser]:
         self.UoW = uow
         self.hasher = hasher
 
-    @transactional
     async def execute(self, user_data: CreateUser) -> T:
         existing_user: T | None = await self.UoW.user_repository.get_user(
             email=user_data.email
@@ -28,5 +26,7 @@ class RegisterUser[T: NotExistingUser]:
             self.hasher.hash_password, user_data.password
         )
         user_data.password = hashed_password
-        user: T = await self.UoW.user_repository.create_user(user_data)
+        async with self.UoW:
+            user: T = await self.UoW.user_repository.create_user(user_data)
+            await self.UoW.commit()
         return user

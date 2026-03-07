@@ -3,7 +3,6 @@ from uuid import UUID
 
 from loguru import logger
 
-from app.workout.application.common.transactional import transactional
 from app.workout.application.common.types.token_types import (
     AccessToken,
 )
@@ -25,13 +24,16 @@ class LogoutGlobalInteractor:
         self.access_token = access_token
         self.cache_service = cache_service
 
-    @transactional
     async def execute(self) -> None:
         user_data: dict[str, Any] = self.token_provider.decode_token(
             self.access_token
         )
         user_id: UUID = UUID(user_data.get("sub"))
         logger.debug(f"Found user id in token: {user_id}")
-        await self.UoW.refresh_repository.revoke_refresh_token(user_id=user_id)
-        await self.cache_service.delete_cache(user_id)
+        async with self.UoW:
+            await self.UoW.refresh_repository.bulk_delete_refresh_token(
+                user_id=user_id
+            )
+            await self.cache_service.delete_cache(user_id)
+            await self.UoW.commit()
         logger.debug(f"Revoked all tokens: {user_id}")

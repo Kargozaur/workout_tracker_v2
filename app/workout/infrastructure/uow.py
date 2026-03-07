@@ -33,13 +33,9 @@ class UnitOfWork(IUnitOfWork):
     ) -> None:
         if exc_val:
             await self.rollback()
-        await self._close()
 
     async def commit(self) -> None:
         await self.session.commit()
 
     async def rollback(self) -> None:
         await self.session.rollback()
-
-    async def _close(self) -> None:
-        await self.session.close()

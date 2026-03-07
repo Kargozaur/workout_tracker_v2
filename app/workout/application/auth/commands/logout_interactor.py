@@ -3,7 +3,6 @@ from uuid import UUID
 
 from loguru import logger
 
-from app.workout.application.common.transactional import transactional
 from app.workout.application.common.types.token_types import RefreshToken
 from app.workout.domains.protocols.icacheservice import ICacheService
 from app.workout.domains.protocols.itoken import ITokenProvider
@@ -26,12 +25,13 @@ class LogoutInteractor:
         self.token_provider = token_provider
         self.cache_service = cache_service
 
-    @transactional
     async def execute(self) -> None:
         token_hash: str = self.token_hasher.hash(self.refresh_token)
-        await self.UoW.refresh_repository.revoke_refresh_token(
-            token_hash=token_hash
-        )
+        async with self.UoW:
+            await self.UoW.refresh_repository.revoke_refresh_token(
+                token_hash=token_hash
+            )
+            await self.UoW.commit()
         user_data: dict[str, Any] = self.token_provider.decode_token(
             self.refresh_token
         )

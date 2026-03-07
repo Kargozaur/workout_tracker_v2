@@ -6,8 +6,8 @@ from pydantic import BaseModel
 
 
 class IRefreshRepository[
-    ModelT,
-    CreateSchemaT: BaseModel,
+ModelT,
+CreateSchemaT: BaseModel,
 ](Protocol):
     @abstractmethod
     async def get_refresh_token(self, **filters) -> ModelT: ...
@@ -22,3 +22,6 @@ class IRefreshRepository[
 
     @abstractmethod
     async def delete_expired(self) -> bool: ...
+
+    @abstractmethod
+    async def bulk_delete_refresh_token(self, **filters) -> bool: ...

@@ -6,7 +6,11 @@ def transactional[**P, R](
 ) -> Callable[..., Coroutine[Any, Any, R]]:
     """Transactions manager for a UnitOfWork object.
     Commits changes on success, otherwise rollbacks.
-    UnitOfWork attribute must be typed as UoW."""
+    UnitOfWork attribute must be typed as UoW.
+    Decorator should be used only with simple methods that do 1 operation.
+    For example bulk deletion from the database, regardless of
+    the filters. Due to performance issues, it is still better to use
+    context manager on transactional operations."""
 
     @wraps(func)
     async def wrapper(self, *args: P.args, **kwargs: P.kwargs) -> R:

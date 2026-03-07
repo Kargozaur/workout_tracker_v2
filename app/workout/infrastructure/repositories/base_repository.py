@@ -17,9 +17,9 @@ from . import AsyncSession, sa
 
 
 class BaseRepository[
-    ModelT,
-    CreateSchemaT: BaseModel,
-    UpdateSchemaT: BaseModel,
+ModelT,
+CreateSchemaT: BaseModel,
+UpdateSchemaT: BaseModel,
 ](IRepository[ModelT, CreateSchemaT, UpdateSchemaT]):
     """Base repository for all repositories that are using SQLAlchemy sessions.
     CRUD functionality provided by methods:
@@ -110,4 +110,13 @@ class BaseRepository[
             return True
         except Exception as exc:
             logger.exception("Failed to delete expired entities")
+            raise EntityDeletionException() from exc
+
+    async def bulk_deletion(self, **filters: object):
+        query = sa.delete(self.model).filter_by(**filters)
+        try:
+            await self.session.execute(query)
+            return True
+        except Exception as exc:
+            logger.exception("Failed to delete entities")
             raise EntityDeletionException() from exc

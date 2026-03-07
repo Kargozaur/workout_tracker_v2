@@ -10,7 +10,9 @@ from . import Base, CreatedAtMixin, UUIDIdMixin
 class RefreshToken(UUIDIdMixin, CreatedAtMixin, Base):
     __tablename__ = "refresh_tokens"
 
-    token_hash: Mapped[str] = mapped_column(sa.String(100))
+    token_hash: Mapped[str] = mapped_column(
+        sa.String(100), unique=True, index=True
+    )
     expires_at: Mapped[dt.datetime] = mapped_column(
         sa.DateTime(timezone=True),
         nullable=False,
