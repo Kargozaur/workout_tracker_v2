@@ -48,9 +48,9 @@ class RefreshTokenInteractor[T: RefreshTokenT]:
         if not db_token:
             raise TokenExpiredException("Token expired")
 
-        exp_dt = dt.datetime.fromtimestamp(exp, tz=dt.UTC)
+        exp_dt: dt.datetime = dt.datetime.fromtimestamp(exp, tz=dt.UTC)
         left: dt.timedelta = exp_dt - dt.datetime.now(dt.UTC)
-        new_refresh_token: None | str = None
+        new_refresh_token: str | None = None
         if left < dt.timedelta(days=1):
             new_refresh_token: str = self.token_provider.create_refresh_token(
                 user_id

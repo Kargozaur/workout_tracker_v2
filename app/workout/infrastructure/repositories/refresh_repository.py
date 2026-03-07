@@ -15,6 +15,12 @@ class RefreshTokenRepository(
     BaseRepository[RefreshToken, RefreshTokenSchema, None],
     IRefreshRepository[RefreshToken, RefreshTokenSchema],
 ):
+    """Repository for refresh tokens.
+    methods get_refresh_token, create_refresh_token, delete_refresh_token
+    and bulk_delete_refresh_token are used with the interactors.
+    delete_expired is used in the celery worker to cleanup database
+    of expired refresh tokens."""
+
     def __init__(self, session: AsyncSession) -> None:
         super().__init__(session, RefreshToken)
 

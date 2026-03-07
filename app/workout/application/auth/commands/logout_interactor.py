@@ -32,10 +32,10 @@ class LogoutInteractor:
                 token_hash=token_hash
             )
             await self.UoW.commit()
-        user_data: dict[str, Any] = self.token_provider.decode_token(
+        payload: dict[str, Any] = self.token_provider.decode_token(
             self.refresh_token
         )
-        user_id: str = user_data.get("sub")
+        user_id: str = payload.get("sub")
         logger.debug(f"User ID: {user_id}")
         await self.cache_service.delete_cache(UUID(user_id))
         logger.debug(f"Deleted all tokens for: {user_id}")

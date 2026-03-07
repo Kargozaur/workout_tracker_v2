@@ -23,4 +23,5 @@ def clean_db():
 
 @worker_ready.connect
 def worker_ready(*args, **kwargs):
+    """Clean up expired refresh tokens on startup."""
     clean_db.delay()

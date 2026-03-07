@@ -5,6 +5,9 @@ from .iuser_repository import IUserRepository
 
 @runtime_checkable
 class IUnitOfWork(Protocol):
+    """Interface for all IUnitOfWork implementations.
+    Commits must be explicit."""
+
     user_repository: IUserRepository
     refresh_repository: IRefreshRepository
 
@@ -20,5 +23,3 @@ class IUnitOfWork(Protocol):
     async def commit(self) -> None: ...
 
     async def rollback(self) -> None: ...
-
-    async def _close(self) -> None: ...

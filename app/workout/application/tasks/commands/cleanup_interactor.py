@@ -3,6 +3,9 @@ from app.workout.domains.protocols.iuow import IUnitOfWork
 
 
 class CleanupInteractor:
+    """Celery interface for cleanup the database
+     from an expired refresh tokens."""
+
     def __init__(self, uow: IUnitOfWork) -> None:
         self.UoW = uow
 

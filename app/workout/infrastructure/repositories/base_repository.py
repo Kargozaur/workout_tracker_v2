@@ -17,9 +17,9 @@ from . import AsyncSession, sa
 
 
 class BaseRepository[
-    ModelT,
-    CreateSchemaT: BaseModel,
-    UpdateSchemaT: BaseModel,
+ModelT,
+CreateSchemaT: BaseModel,
+UpdateSchemaT: BaseModel,
 ](IRepository[ModelT, CreateSchemaT, UpdateSchemaT]):
     """Base repository for all repositories that are using SQLAlchemy sessions.
     CRUD functionality provided by methods:
@@ -113,6 +113,7 @@ class BaseRepository[
             raise EntityDeletionException() from exc
 
     async def bulk_deletion(self, **filters: object):
+        """Bulk deletion based on filters."""
         query = sa.delete(self.model).filter_by(**filters)
         try:
             await self.session.execute(query)

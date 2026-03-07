@@ -25,15 +25,15 @@ class LogoutGlobalInteractor:
         self.cache_service = cache_service
 
     async def execute(self) -> None:
-        user_data: dict[str, Any] = self.token_provider.decode_token(
+        payload: dict[str, Any] = self.token_provider.decode_token(
             self.access_token
         )
-        user_id: UUID = UUID(user_data.get("sub"))
+        user_id: UUID = UUID(payload.get("sub"))
         logger.debug(f"Found user id in token: {user_id}")
         async with self.UoW:
             await self.UoW.refresh_repository.bulk_delete_refresh_token(
                 user_id=user_id
             )
-            await self.cache_service.delete_cache(user_id)
             await self.UoW.commit()
+        await self.cache_service.delete_cache(user_id)
         logger.debug(f"Revoked all tokens: {user_id}")

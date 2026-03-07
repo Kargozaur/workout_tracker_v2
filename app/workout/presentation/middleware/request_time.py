@@ -7,6 +7,11 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 
 class ProcessTimeMiddleware(BaseHTTPMiddleware):
+    """Middleware to calculate the process time of the request.
+    Any middleware that is based on starlette's BaseHTTPMiddleware
+    must have dispatch method.
+    """
+
     async def dispatch(
         self, request: Request, call_next: Callable
     ) -> Response:

@@ -3,6 +3,9 @@ from uuid import UUID
 
 from pydantic import BaseModel
 
+from app.workout.application.common.generic_protocols.user_types import (
+    ExistingUser,
+)
 from app.workout.application.common.types.token_types import AccessToken
 from app.workout.domains.entities.user_schemas import GetUser
 from app.workout.domains.protocols.icacheservice import ICacheService
@@ -23,13 +26,13 @@ class UpdateProfileInteractor[T: BaseModel]:
         self.cache_service = cache_service
         self.access_token = access_token
 
-    async def execute(self, update_schema: T):
+    async def execute(self, update_schema: T) -> ExistingUser:
         payload: dict[str, Any] = self.token_provider.decode_token(
             self.access_token
         )
         user_id: UUID = UUID(payload.get("sub"))
         async with self.UoW:
-            user = await self.UoW.user_repository.update_user(
+            user: ExistingUser = await self.UoW.user_repository.update_user(
                 update_schema, id=user_id
             )
             await self.UoW.commit()

@@ -24,7 +24,7 @@ class GetUserInteractor[T](IUserInteractor):
         self.token_provider = token_provider
 
     async def execute(self) -> T:
-        logger.debug("Stepped into decorated interactor")
+        logger.debug("Stepped into parent interactor")
         decoded_token: dict[str, Any] = self.token_provider.decode_token(
             self.access_token
         )

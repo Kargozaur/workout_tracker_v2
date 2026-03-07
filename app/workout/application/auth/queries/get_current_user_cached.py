@@ -45,7 +45,7 @@ class CachedUserInteractor[T: CacheUser, R: BaseModel](GetUserInteractor):
         user_data: T = await self.interactor.execute()
         cached_data: R = GetUser(
             **user_data.__dict__
-        )  # passes ORM attributes inside a pydantic model
+        )  # passes ORM attributes inside the GetUser model
         await self.service.set_cache(user_id, cached_data)
-        logger.debug("Set cache.")
+        logger.debug(f"{user_id} cached.")
         return user_data

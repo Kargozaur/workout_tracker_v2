@@ -2,7 +2,6 @@ import datetime as dt
 from typing import Protocol
 from uuid import UUID
 
-
 id_types = int | UUID
 
 
@@ -22,3 +21,6 @@ class ExistingUser(User):
 class CacheUser(ExistingUser):
     created_at: dt.datetime
     updated_at: dt.datetime
+
+
+class ExistingUser(CacheUser): ...

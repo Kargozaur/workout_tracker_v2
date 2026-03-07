@@ -31,7 +31,6 @@ class LoginInteractor[T: ExistingUser]:
         self.token_hasher = token_hasher
         self.password_hasher = password_hasher
 
-    @transactional
     async def execute(self, login: LoginSchema) -> tuple[str, str]:
         user: T | None = await self.UoW.user_repository.get_user(
             email=login.email, fields=("id", "email", "password_hash")
@@ -52,8 +51,13 @@ class LoginInteractor[T: ExistingUser]:
         refresh_schema: RefreshTokenSchema = RefreshTokenSchema(
             user_id=user.id, token_hash=refresh_token_hash
         )
-        await self.UoW.refresh_repository.create_refresh_token(refresh_schema)
+        async with self.UoW:
+            await self.UoW.refresh_repository.create_refresh_token(
+                refresh_schema
+            )
+            await self.UoW.commit()
         logger.debug(
             f"Access: {access_token[:-5]}. Refresh: {refresh_token[:-5]}"
         )
+
         return access_token, refresh_token
