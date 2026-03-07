@@ -30,7 +30,7 @@ def create_user_router() -> APIRouter:
         response_model=GetUser,
         status_code=success_status_codes.ok,
         description="Retrieves user data based on token decrypted data."
-                    "Returns id, email, first name, last name, created at and updated at",
+        "Returns id, email, first name, last name, created at and updated at",
     )
     @inject
     async def get_me(
@@ -74,7 +74,7 @@ def create_user_router() -> APIRouter:
         status_code=success_status_codes.ok,
         response_model=LogoutSchema,
         description="Logout's user from all devices"
-                    "(removes all occurrences of refresh tokens in a database based on user id)",
+        "(removes all occurrences of refresh tokens in a database based on user id)",
     )
     @inject
     async def logout_all(

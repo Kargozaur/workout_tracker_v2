@@ -28,8 +28,8 @@ def create_auth_router() -> APIRouter:
         response_model=GetUser,
         status_code=success_status_codes.success,
         description="created user based on provided data."
-                    "first name and last name may be skipped."
-                    "They will be parsed from an email if skipped",
+        "first name and last name may be skipped."
+        "They will be parsed from an email if skipped",
     )
     @inject
     async def register_user(
@@ -43,8 +43,8 @@ def create_auth_router() -> APIRouter:
         status_code=success_status_codes.success,
         response_model=TokenResponse,
         description="Logins user based on provided email and password."
-                    "Sets access and refresh tokens in both headers and cookies."
-                    "Returns access token and token type",
+        "Sets access and refresh tokens in both headers and cookies."
+        "Returns access token and token type",
     )
     @inject
     async def login_user(
@@ -78,7 +78,7 @@ def create_auth_router() -> APIRouter:
         # include_in_schema=False,
         status_code=success_status_codes.success,
         description="Endpoint to refresh access token"
-                    "(and refresh token if there is small ttl remaining).",
+        "(and refresh token if there is small ttl remaining).",
     )
     @inject
     async def get_token(
