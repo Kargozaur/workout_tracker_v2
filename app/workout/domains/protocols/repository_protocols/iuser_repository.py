@@ -1,10 +1,18 @@
-from . import BaseModel, IRepository, abstractmethod
+from abc import abstractmethod
+
+from app.workout.domains.protocols.repository_protocols.irepository import (
+    IRepository,
+)
+
+from . import (
+    BaseModel,
+)
 
 
 class IUserRepository[
-UserModelT,
-CreateUserSchemaT: BaseModel,
-UpdateUserSchemaT: BaseModel | None = None,
+    UserModelT,
+    CreateUserSchemaT: BaseModel,
+    UpdateUserSchemaT: BaseModel | None = None,
 ](IRepository[UserModelT, CreateUserSchemaT, UpdateUserSchemaT]):
     @abstractmethod
     async def create_user(self, schema: CreateUserSchemaT) -> UserModelT: ...
@@ -14,5 +22,5 @@ UpdateUserSchemaT: BaseModel | None = None,
 
     @abstractmethod
     async def update_user(
-            self, attributes: UpdateUserSchemaT, **filters: object
+        self, attributes: UpdateUserSchemaT, **filters: object
     ) -> UserModelT: ...

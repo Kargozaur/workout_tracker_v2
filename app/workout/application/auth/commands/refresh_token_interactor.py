@@ -14,9 +14,11 @@ from app.workout.domains.entities.refresh_token_schema import (
 from app.workout.domains.exceptions.auth_exceptions import (
     TokenExpiredException,
 )
-from app.workout.domains.protocols.itoken import ITokenProvider
-from app.workout.domains.protocols.itokenhasher import ITokenHasher
-from app.workout.domains.protocols.iuow import IUnitOfWork
+from app.workout.domains.protocols.auth_protocols.itoken import ITokenProvider
+from app.workout.domains.protocols.auth_protocols.itokenhasher import (
+    ITokenHasher,
+)
+from app.workout.domains.protocols.uow_protocol.iuow import IUnitOfWork
 
 
 class RefreshTokenInteractor[T: RefreshTokenT]:

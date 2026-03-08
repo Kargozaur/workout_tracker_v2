@@ -3,7 +3,9 @@ from redis.asyncio import Redis
 
 from app.workout.application.common.types.redis_key import RedisKey
 from app.workout.domains.entities.user_schemas import GetUser, UpdateUser
-from app.workout.domains.protocols.icacheservice import ICacheService
+from app.workout.domains.protocols.service_protocols.icacheservice import (
+    ICacheService,
+)
 from app.workout.domains.services.cache_service import CacheService
 
 

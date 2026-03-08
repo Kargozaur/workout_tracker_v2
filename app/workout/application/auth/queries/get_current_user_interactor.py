@@ -7,9 +7,11 @@ from app.workout.application.common.types.token_types import AccessToken
 from app.workout.domains.exceptions.user_exceptions import (
     UserNotFoundException,
 )
-from app.workout.domains.protocols.itoken import ITokenProvider
-from app.workout.domains.protocols.iuow import IUnitOfWork
-from app.workout.domains.protocols.iuserinteractor import IUserInteractor
+from app.workout.domains.protocols.auth_protocols.itoken import ITokenProvider
+from app.workout.domains.protocols.auth_protocols.iuserinteractor import (
+    IUserInteractor,
+)
+from app.workout.domains.protocols.uow_protocol.iuow import IUnitOfWork
 
 
 class GetUserInteractor[T](IUserInteractor):

@@ -1,6 +1,8 @@
 import hashlib
 
-from app.workout.domains.protocols.itokenhasher import ITokenHasher
+from app.workout.domains.protocols.auth_protocols.itokenhasher import (
+    ITokenHasher,
+)
 
 
 class TokenHasher(ITokenHasher):

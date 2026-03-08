@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.workout.domains.entities.refresh_token_schema import (
     RefreshTokenSchema,
 )
-from app.workout.domains.protocols.irefresh_repository import (
+from app.workout.domains.protocols.auth_protocols.irefresh_repository import (
     IRefreshRepository,
 )
 from app.workout.infrastructure.db.models.refresh_token import RefreshToken

@@ -2,7 +2,9 @@ from pydantic import BaseModel
 from redis.asyncio import Redis
 
 from app.workout.application.common.types.redis_key import RedisKey
-from app.workout.domains.protocols.icacheservice import ICacheService
+from app.workout.domains.protocols.service_protocols.icacheservice import (
+    ICacheService,
+)
 
 
 class CacheService[R: BaseModel](ICacheService[R]):

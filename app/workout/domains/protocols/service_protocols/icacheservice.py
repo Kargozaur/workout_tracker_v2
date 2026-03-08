@@ -1,8 +1,7 @@
 from abc import abstractmethod
+from typing import Protocol
 
 from pydantic import BaseModel
-
-from . import Protocol
 
 
 class ICacheService[R: BaseModel](Protocol):

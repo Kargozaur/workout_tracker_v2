@@ -4,10 +4,14 @@ from uuid import UUID
 from loguru import logger
 
 from app.workout.application.common.types.token_types import RefreshToken
-from app.workout.domains.protocols.icacheservice import ICacheService
-from app.workout.domains.protocols.itoken import ITokenProvider
-from app.workout.domains.protocols.itokenhasher import ITokenHasher
-from app.workout.domains.protocols.iuow import IUnitOfWork
+from app.workout.domains.protocols.auth_protocols.itoken import ITokenProvider
+from app.workout.domains.protocols.auth_protocols.itokenhasher import (
+    ITokenHasher,
+)
+from app.workout.domains.protocols.service_protocols.icacheservice import (
+    ICacheService,
+)
+from app.workout.domains.protocols.uow_protocol.iuow import IUnitOfWork
 
 
 class LogoutInteractor:

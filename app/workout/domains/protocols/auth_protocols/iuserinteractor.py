@@ -1,5 +1,6 @@
 from abc import abstractmethod
-from typing import Protocol
+
+from . import Protocol
 
 
 class IUserInteractor(Protocol):

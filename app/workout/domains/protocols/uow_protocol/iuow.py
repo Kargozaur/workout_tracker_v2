@@ -1,6 +1,11 @@
-from . import Protocol, runtime_checkable
-from .irefresh_repository import IRefreshRepository
-from .iuser_repository import IUserRepository
+from typing import Protocol, runtime_checkable
+
+from app.workout.domains.protocols.auth_protocols.irefresh_repository import (
+    IRefreshRepository,
+)
+from app.workout.domains.protocols.repository_protocols.iuser_repository import (
+    IUserRepository,
+)
 
 
 @runtime_checkable

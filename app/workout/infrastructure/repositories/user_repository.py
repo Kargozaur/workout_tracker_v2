@@ -1,5 +1,7 @@
 from app.workout.domains.entities.user_schemas import CreateUser, UpdateUser
-from app.workout.domains.protocols.iuser_repository import IUserRepository
+from app.workout.domains.protocols.repository_protocols.iuser_repository import (
+    IUserRepository,
+)
 from app.workout.infrastructure.db.models.user import User
 
 from . import AsyncSession, BaseRepository

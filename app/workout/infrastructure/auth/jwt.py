@@ -5,7 +5,7 @@ from uuid import UUID
 import jwt
 
 from app.workout.core.settings.jwt_settings import JWTSettings
-from app.workout.domains.protocols.itoken import ITokenProvider
+from app.workout.domains.protocols.auth_protocols.itoken import ITokenProvider
 
 
 class TokenProvider(ITokenProvider):

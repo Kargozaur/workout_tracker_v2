@@ -2,7 +2,7 @@ from typing import Self
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.workout.domains.protocols.iuow import IUnitOfWork
+from app.workout.domains.protocols.uow_protocol.iuow import IUnitOfWork
 from app.workout.infrastructure.repositories.refresh_repository import (
     RefreshTokenRepository,
 )

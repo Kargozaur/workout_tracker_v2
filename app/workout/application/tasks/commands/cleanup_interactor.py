@@ -1,5 +1,5 @@
 from app.workout.application.common.transactional import transactional
-from app.workout.domains.protocols.iuow import IUnitOfWork
+from app.workout.domains.protocols.uow_protocol.iuow import IUnitOfWork
 
 
 class CleanupInteractor:

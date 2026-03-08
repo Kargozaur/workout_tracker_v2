@@ -7,8 +7,10 @@ from app.workout.domains.entities.user_schemas import CreateUser
 from app.workout.domains.exceptions.user_exceptions import (
     UserExistsException,
 )
-from app.workout.domains.protocols.ihasher import IPasswordHasher
-from app.workout.domains.protocols.iuow import IUnitOfWork
+from app.workout.domains.protocols.auth_protocols.ihasher import (
+    IPasswordHasher,
+)
+from app.workout.domains.protocols.uow_protocol.iuow import IUnitOfWork
 
 
 class RegisterUser[T: NotExistingUser]:

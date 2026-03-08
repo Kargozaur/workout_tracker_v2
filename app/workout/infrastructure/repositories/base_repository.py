@@ -11,7 +11,9 @@ from app.workout.domains.exceptions.entity_exceptions import (
     EntityNotFoundException,
     EntityUpdateException,
 )
-from app.workout.domains.protocols.irepository import IRepository
+from app.workout.domains.protocols.repository_protocols.irepository import (
+    IRepository,
+)
 
 from . import AsyncSession, sa
 

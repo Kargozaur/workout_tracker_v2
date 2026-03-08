@@ -1,4 +1,4 @@
-from typing import Protocol
+from . import Protocol
 
 
 class ITokenHasher(Protocol):

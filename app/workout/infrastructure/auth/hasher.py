@@ -1,7 +1,9 @@
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError
 
-from app.workout.domains.protocols.ihasher import IPasswordHasher
+from app.workout.domains.protocols.auth_protocols.ihasher import (
+    IPasswordHasher,
+)
 
 
 class Hasher(IPasswordHasher):

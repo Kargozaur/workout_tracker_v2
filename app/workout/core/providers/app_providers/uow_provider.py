@@ -1,7 +1,7 @@
 from dishka import Provider, Scope, provide
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.workout.domains.protocols.iuow import IUnitOfWork
+from app.workout.domains.protocols.uow_protocol.iuow import IUnitOfWork
 from app.workout.infrastructure.uow import UnitOfWork
 
 

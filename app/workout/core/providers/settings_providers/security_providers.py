@@ -2,9 +2,13 @@ from argon2 import PasswordHasher
 from dishka import Provider, Scope, provide
 
 from app.workout.core.settings.settings import AppConfig, JWTSettings
-from app.workout.domains.protocols.ihasher import IPasswordHasher
-from app.workout.domains.protocols.itoken import ITokenProvider
-from app.workout.domains.protocols.itokenhasher import ITokenHasher
+from app.workout.domains.protocols.auth_protocols.ihasher import (
+    IPasswordHasher,
+)
+from app.workout.domains.protocols.auth_protocols.itoken import ITokenProvider
+from app.workout.domains.protocols.auth_protocols.itokenhasher import (
+    ITokenHasher,
+)
 from app.workout.infrastructure.auth.hasher import Hasher
 from app.workout.infrastructure.auth.jwt import TokenProvider
 from app.workout.infrastructure.auth.token_hasher import TokenHasher

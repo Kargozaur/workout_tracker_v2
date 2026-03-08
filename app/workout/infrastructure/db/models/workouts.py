@@ -9,7 +9,8 @@ from app.workout.application.common.enums.workout_statuses import (
     WorkoutStatuses,
 )
 
-from . import Base, CreatedAtMixin, UUIDIdMixin, timestamp
+from . import Base, CreatedAtMixin, UUIDIdMixin, date_time_column
+
 
 class Workout(UUIDIdMixin, CreatedAtMixin, Base):
     __tablename__ = "workouts"
@@ -21,9 +22,9 @@ class Workout(UUIDIdMixin, CreatedAtMixin, Base):
     status: Mapped[WorkoutStatuses] = mapped_column(
         sa.Enum(WorkoutStatuses), nullable=False
     )
-    scheduled_at: Mapped[timestamp()]
-    started_at: Mapped[timestamp()]
-    finished_at: Mapped[timestamp()]
+    scheduled_at: Mapped[date_time_column()]
+    started_at: Mapped[date_time_column()]
+    finished_at: Mapped[date_time_column()]
     note: Mapped[str] = mapped_column(
         sa.String(255), nullable=False, default=""
     )
