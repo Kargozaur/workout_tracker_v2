@@ -9,3 +9,4 @@ from app.workout.infrastructure.db.models.mixins.id_mixin import (
 from app.workout.infrastructure.db.models.mixins.updated_at_mixin import (
     UpdatedAtMixin,
 )
+from app.workout.infrastructure.db.models.mixins.annotated_datetime import timestamp

@@ -9,20 +9,7 @@ from app.workout.application.common.enums.workout_statuses import (
     WorkoutStatuses,
 )
 
-from . import Base, CreatedAtMixin, UUIDIdMixin
-
-
-def timestamp(nullable: bool = True) -> mapped_column:
-    return Annotated[
-        dt.datetime,
-        mapped_column(
-            sa.DateTime(timezone=True),
-            nullable=nullable,
-            server_default=sa.func.now(),
-            default=lambda: dt.datetime.now(dt.UTC),
-        ),
-    ]
-
+from . import Base, CreatedAtMixin, UUIDIdMixin, timestamp
 
 class Workout(UUIDIdMixin, CreatedAtMixin, Base):
     __tablename__ = "workouts"

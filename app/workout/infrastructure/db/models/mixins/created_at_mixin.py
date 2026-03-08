@@ -1,11 +1,6 @@
-import datetime as dt
-
-from . import Mapped, mapped_column, sa
+from . import Mapped
+from .annotated_datetime import date_time_column
 
 
 class CreatedAtMixin:
-    created_at: Mapped[dt.datetime] = mapped_column(
-        sa.DateTime(timezone=True),
-        server_default=sa.func.now(),
-        default=lambda: dt.datetime.now(dt.UTC),
-    )
+    created_at: Mapped[date_time_column(False)]
