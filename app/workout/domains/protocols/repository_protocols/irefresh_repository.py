@@ -1,6 +1,6 @@
 from abc import abstractmethod
 
-from . import BaseModel, Protocol
+from app.workout.domains.protocols.auth_protocols import BaseModel, Protocol
 
 
 class IRefreshRepository[

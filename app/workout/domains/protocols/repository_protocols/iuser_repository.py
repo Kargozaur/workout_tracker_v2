@@ -1,19 +1,13 @@
 from abc import abstractmethod
 
-from app.workout.domains.protocols.repository_protocols.irepository import (
-    IRepository,
-)
-
-from . import (
-    BaseModel,
-)
+from . import BaseModel, Protocol
 
 
 class IUserRepository[
     UserModelT,
     CreateUserSchemaT: BaseModel,
     UpdateUserSchemaT: BaseModel | None = None,
-](IRepository[UserModelT, CreateUserSchemaT, UpdateUserSchemaT]):
+](Protocol):
     @abstractmethod
     async def create_user(self, schema: CreateUserSchemaT) -> UserModelT: ...
 

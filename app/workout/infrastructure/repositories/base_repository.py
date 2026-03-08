@@ -21,7 +21,7 @@ from . import AsyncSession, sa
 class BaseRepository[
     ModelT,
     CreateSchemaT: BaseModel,
-    UpdateSchemaT: BaseModel,
+    UpdateSchemaT: BaseModel | None,
 ](IRepository[ModelT, CreateSchemaT, UpdateSchemaT]):
     """Base repository for all repositories that are using SQLAlchemy sessions.
     CRUD functionality provided by methods:
