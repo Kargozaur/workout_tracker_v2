@@ -1,26 +1,32 @@
 from app.workout.application.common.status_codes import failed_status_codes
 
-
-class UserException(Exception):
-    status_code = failed_status_codes.server_error
-    message = "User exception"
+from .app_base_exception import AppBaseException
 
 
-class UserExistsException(UserException):
+class UserExistsException(AppBaseException):
     status_code = failed_status_codes.conflict
     message = "User already exists"
 
+    def __init__(self, message: str = "User already exists") -> None:
+        super().__init__(message)
 
-class UserFailedToCreateException(UserException):
+
+class UserFailedToCreateException(AppBaseException):
     status_code = failed_status_codes.bad_request
-    message = "Failed to create user"
+
+    def __init__(self, message: str = "Failed to create user") -> None:
+        super().__init__(message)
 
 
-class UserNotFoundException(UserException):
+class UserNotFoundException(AppBaseException):
     status_code = failed_status_codes.not_found
-    message = "User not found"
+
+    def __init__(self, message: str = "User not found") -> None:
+        super().__init__(message)
 
 
-class UserUpdateFail(UserException):
+class UserUpdateFail(AppBaseException):
     status_code = failed_status_codes.unprocessable_content
-    message = "Failed to update user"
+
+    def __init__(self, message: str = "Failed to update user") -> None:
+        super().__init__(message)

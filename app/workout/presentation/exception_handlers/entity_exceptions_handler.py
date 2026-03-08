@@ -1,8 +1,8 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
+from app.workout.domains.exceptions.app_base_exception import AppBaseException
 from app.workout.domains.exceptions.entity_exceptions import (
-    EntityBaseException,
     EntityCreationException,
     EntityDeletionException,
     EntityNotFoundException,
@@ -11,9 +11,9 @@ from app.workout.domains.exceptions.entity_exceptions import (
 
 
 def create_entity_exception_handler(app: FastAPI) -> None:
-    @app.exception_handler(EntityBaseException)
+    @app.exception_handler(AppBaseException)
     async def entity_exception_handler(
-        _: Request, exc: EntityBaseException
+        _: Request, exc: AppBaseException
     ) -> JSONResponse:
         return JSONResponse(
             status_code=exc.status_code, content={"detail": exc.message}
@@ -24,7 +24,8 @@ def create_entity_exception_handler(app: FastAPI) -> None:
         _: Request, exc: EntityCreationException
     ) -> JSONResponse:
         return JSONResponse(
-            status_code=exc.status_code, content={"detail": exc.message}
+            status_code=exc.status_code,
+            content={"detail": exc.message},
         )
 
     @app.exception_handler(EntityDeletionException)

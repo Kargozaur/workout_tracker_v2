@@ -4,7 +4,6 @@ from loguru import logger
 from app.workout.application.common.generic_protocols.user_types import (
     ExistingUser,
 )
-from app.workout.application.common.transactional import transactional
 from app.workout.domains.entities.refresh_token_schema import (
     RefreshTokenSchema,
 )

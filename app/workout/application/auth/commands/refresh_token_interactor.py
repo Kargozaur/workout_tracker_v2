@@ -2,6 +2,8 @@ import datetime as dt
 from typing import Any
 from uuid import UUID
 
+from loguru import logger
+
 from app.workout.application.common.generic_protocols.refresh_token import (
     RefreshTokenT,
 )
@@ -46,9 +48,13 @@ class RefreshTokenInteractor[T: RefreshTokenT]:
             fields=("id", "token_hash"),
         )
         if not db_token:
-            raise TokenExpiredException("Token expired")
+            raise TokenExpiredException("Token nod found")
 
         exp_dt: dt.datetime = dt.datetime.fromtimestamp(exp, tz=dt.UTC)
+        now: dt.datetime = dt.datetime.now(dt.UTC)
+        if exp_dt < now:
+            raise TokenExpiredException("Token expired")
+
         left: dt.timedelta = exp_dt - dt.datetime.now(dt.UTC)
         new_refresh_token: str | None = None
         if left < dt.timedelta(days=1):
@@ -60,6 +66,7 @@ class RefreshTokenInteractor[T: RefreshTokenT]:
                 user_id=user_id, token_hash=token_hash
             )
             async with self.UoW:
+                logger.debug("Entered refresh context")
                 await self.UoW.refresh_repository.revoke_refresh_token(
                     token_hash=current_token_hash
                 )
@@ -67,5 +74,6 @@ class RefreshTokenInteractor[T: RefreshTokenT]:
                     token_schema
                 )
                 await self.UoW.commit()
+            logger.debug("Updated token")
         access_token: str = self.token_provider.create_access_token(user_id)
         return access_token, new_refresh_token or self.refresh_token

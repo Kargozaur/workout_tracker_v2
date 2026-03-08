@@ -22,6 +22,3 @@ class ExistingUser(User):
 class CacheUser(ExistingUser):
     created_at: dt.datetime
     updated_at: dt.datetime
-
-
-class ExistingUser(CacheUser): ...
