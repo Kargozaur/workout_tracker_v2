@@ -7,7 +7,7 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from app.workout.core.settings.settings import AppConfig
-from app.workout.infrastructure.db import Base, RefreshToken, User
+from app.workout.infrastructure.db import Base, RefreshToken, User, Workout
 
 
 settings = AppConfig()
