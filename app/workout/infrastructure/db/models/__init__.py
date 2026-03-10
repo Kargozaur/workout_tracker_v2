@@ -1,6 +1,6 @@
 from app.workout.infrastructure.db.models.base import Base
-from app.workout.infrastructure.db.models.mixins.annotated_datetime import (
-    date_time_column,
+from app.workout.infrastructure.db.models.mixins.annotated_timestamp import (
+    DateTime,
 )
 from app.workout.infrastructure.db.models.mixins.created_at_mixin import (
     CreatedAtMixin,

@@ -1,3 +1,4 @@
+import datetime as dt
 from uuid import UUID
 
 import sqlalchemy as sa
@@ -7,7 +8,7 @@ from app.workout.application.common.enums.workout_statuses import (
     WorkoutStatuses,
 )
 
-from . import Base, CreatedAtMixin, UUIDIdMixin, date_time_column
+from . import Base, CreatedAtMixin, UUIDIdMixin
 
 
 class Workout(UUIDIdMixin, CreatedAtMixin, Base):
@@ -23,9 +24,15 @@ class Workout(UUIDIdMixin, CreatedAtMixin, Base):
         ),
         nullable=False,
     )
-    scheduled_at: Mapped[date_time_column()]
-    started_at: Mapped[date_time_column()]
-    finished_at: Mapped[date_time_column()]
+    scheduled_at: Mapped[dt.datetime] = mapped_column(
+        sa.DateTime(timezone=True), nullable=False
+    )
+    started_at: Mapped[dt.datetime | None] = mapped_column(
+        sa.DateTime(timezone=True), nullable=True
+    )
+    finished_at: Mapped[dt.datetime | None] = mapped_column(
+        sa.DateTime(timezone=True), nullable=True
+    )
     note: Mapped[str] = mapped_column(
         sa.String(255), nullable=False, default=""
     )
