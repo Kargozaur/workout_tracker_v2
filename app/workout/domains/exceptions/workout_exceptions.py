@@ -16,7 +16,9 @@ class WorkoutEndException(AppBaseException):
     def __init__(self, message: str = "Failed to end workout") -> None:
         super().__init__(message)
 
+
 class WorkoutNotFoundException(AppBaseException):
     status_code = failed_status_codes.not_found
+
     def __init__(self, message: str = "Workout not found") -> None:
         super().__init__(message)

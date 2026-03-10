@@ -18,7 +18,10 @@ class Workout(UUIDIdMixin, CreatedAtMixin, Base):
     )
     name: Mapped[str] = mapped_column(sa.String(255), nullable=False)
     status: Mapped[WorkoutStatuses] = mapped_column(
-        sa.Enum(WorkoutStatuses), nullable=False
+        sa.Enum(
+            WorkoutStatuses, values_callable=lambda x: [e.value for e in x]
+        ),
+        nullable=False,
     )
     scheduled_at: Mapped[date_time_column()]
     started_at: Mapped[date_time_column()]

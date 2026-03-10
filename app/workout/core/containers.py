@@ -17,6 +17,9 @@ from app.workout.core.providers.app_providers.uow_provider import (
 from app.workout.core.providers.app_providers.use_case_provider import (
     UseCaseProvider,
 )
+from app.workout.core.providers.app_providers.workout_provider import (
+    WorkoutProvider,
+)
 from app.workout.core.providers.celery_providers.cleanup_provider import (
     CleanupProvider,
 )
@@ -43,4 +46,5 @@ def create_async_containers() -> AsyncContainer:
         RedisProvider(),
         ServiceProvider(),
         CleanupProvider(),
+        WorkoutProvider(),
     )

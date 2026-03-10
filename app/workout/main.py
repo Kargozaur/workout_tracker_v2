@@ -12,6 +12,9 @@ from app.workout.presentation.exception_handlers import (
     create_entity_exception_handler,
     create_user_exception_handler,
 )
+from app.workout.presentation.exception_handlers.workout_handlers import (
+    create_workout_exceptions_handler,
+)
 from app.workout.presentation.middleware.request_time import (
     ProcessTimeMiddleware,
 )
@@ -27,6 +30,7 @@ def create_app() -> FastAPI:
     create_user_exception_handler(app)
     create_entity_exception_handler(app)
     create_auth_exception_handler(app)
+    create_workout_exceptions_handler(app)
     app.include_router(create_api_router())
     setup_dishka(container, app)
 

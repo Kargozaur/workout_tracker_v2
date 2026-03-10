@@ -8,8 +8,8 @@ from . import AsyncSession, BaseRepository
 
 
 class UserRepository(
-    IUserRepository[User, CreateUser, UpdateUser],
     BaseRepository[User, CreateUser, UpdateUser],
+    IUserRepository[User, CreateUser, UpdateUser],
 ):
     def __init__(self, session: AsyncSession) -> None:
         super().__init__(session, User)

@@ -48,7 +48,7 @@ def create_user_router() -> APIRouter:
         _: OAuth2,
         interactor: FromDishka[UpdateProfileInteractor],
         new_data: UpdateUser,
-    ) -> GetUser:
+    ):
         return await interactor.execute(new_data)
 
     @router.post(

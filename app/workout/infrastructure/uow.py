@@ -9,6 +9,9 @@ from app.workout.infrastructure.repositories.refresh_repository import (
 from app.workout.infrastructure.repositories.user_repository import (
     UserRepository,
 )
+from app.workout.infrastructure.repositories.workout_repository import (
+    WorkoutRepository,
+)
 
 
 class UnitOfWork(IUnitOfWork):
@@ -22,6 +25,7 @@ class UnitOfWork(IUnitOfWork):
         self.refresh_repository: RefreshTokenRepository = (
             RefreshTokenRepository(session)
         )
+        self.workout_repository: WorkoutRepository = WorkoutRepository(session)
 
     async def __aenter__(self) -> Self:
         return self

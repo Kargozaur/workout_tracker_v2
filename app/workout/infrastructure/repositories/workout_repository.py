@@ -34,6 +34,10 @@ class WorkoutRepository(
     def __init__(self, session: AsyncSession) -> None:
         super().__init__(session, Workout)
 
+
+    async def get_workout(self, workout_id: UUID, user_id: UUID) -> Workout | None:
+        return await super().get_entity(id=workout_id, user_id=user_id)
+
     async def create_workout(self, workout: CreateWorkout) -> Workout:
         return await super().create_entity(workout)
 
@@ -93,7 +97,7 @@ class WorkoutRepository(
             raise WorkoutEndException(
                 "Failed to cancel workout. Workout already finished."
             )
-        
+
         cancel: CancelWorkout = CancelWorkout()
         await super().update_entity(cancel, id=workout.id, user_id=user_id)
         return True
