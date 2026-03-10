@@ -1,6 +1,7 @@
 from typing import Any
 from uuid import UUID
 
+from app.workout.application.common.pagination import Slice
 from app.workout.application.common.types.token_types import AccessToken
 from app.workout.domains.protocols.auth_protocols.itoken import ITokenProvider
 from app.workout.domains.protocols.uow_protocol.iuow import IUnitOfWork
@@ -17,9 +18,12 @@ class GetAllWorkouts[T]:
         self.token_provider = token_provider
         self.access_token = access_token
 
-    async def execute(self) -> T:
+    async def execute(self, page: int, size: int) -> Slice[T]:
         user_data: dict[str, Any] = self.token_provider.decode_token(
             self.access_token
         )
         user_id: UUID = UUID(user_data.get("sub"))
-        return await self.UoW.workout_repository.get_all_workouts(user_id)
+        limit = min(size, 20)
+        return await self.UoW.workout_repository.get_all_workouts(
+            page, limit, user_id
+        )

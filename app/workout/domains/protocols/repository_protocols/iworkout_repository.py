@@ -1,6 +1,7 @@
 from abc import abstractmethod
-from collections.abc import Sequence
 from uuid import UUID
+
+from app.workout.application.common.pagination import Slice
 
 from . import BaseModel, Protocol
 
@@ -11,7 +12,9 @@ class IWorkoutRepository[
     UpdateSchemaT: BaseModel,
 ](Protocol):
     @abstractmethod
-    async def get_all_workouts(self, user_id: UUID) -> Sequence[ModelT]: ...
+    async def get_all_workouts(
+        self, page: int, size: int, user_id: UUID
+    ) -> Slice[ModelT]: ...
 
     @abstractmethod
     async def create_workout(self, schema: CreateSchemaT) -> ModelT: ...

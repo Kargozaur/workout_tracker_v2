@@ -1,4 +1,3 @@
-from collections.abc import Sequence
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -6,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.workout.application.common.enums.workout_statuses import (
     WorkoutStatuses,
 )
+from app.workout.application.common.pagination import Slice
 from app.workout.domains.entities.workout_schema import (
     CancelWorkout,
     CreateWorkout,
@@ -35,8 +35,12 @@ class WorkoutRepository(
     def __init__(self, session: AsyncSession) -> None:
         super().__init__(session, Workout)
 
-    async def get_all_workouts(self, user_id: UUID) -> Sequence[Workout]:
+    async def get_all_workouts(
+        self, page: int, size: int, user_id: UUID
+    ) -> Slice[Workout]:
         return await super().get_all_records(
+            page=page,
+            size=size,
             user_id=user_id,
             fields=(
                 "id",
@@ -47,6 +51,7 @@ class WorkoutRepository(
                 "finished_at",
                 "note",
             ),
+            order_by=("name", "status"),
         )
 
     async def get_workout(

@@ -6,6 +6,7 @@ from loguru import logger
 from pydantic import BaseModel
 from sqlalchemy.orm import load_only
 
+from app.workout.application.common.pagination import Slice
 from app.workout.domains.exceptions.entity_exceptions import (
     EntityCreationException,
     EntityDeletionException,
@@ -42,7 +43,10 @@ class BaseRepository[
 
     def _get_query(self, **filters: object) -> sa.Select:
         fields = filters.pop("fields", None)
+        order_by = filters.pop("order_by", None)
         query = sa.select(self.model).filter_by(**filters)
+        if order_by:
+            query = query.order_by(*order_by)
         if fields is not None and isinstance(fields, tuple):
             load_fields = [
                 attr
@@ -56,13 +60,22 @@ class BaseRepository[
         )
         return query
 
-    async def get_all_records(self, **filters: object) -> Sequence[ModelT]:
+    async def get_all_records(
+        self, page: int, size: int, **filters: object
+    ) -> Slice[ModelT]:
         """Generic method to get all records based on filters. Loaded fields
         may be applied by passing tuple fields as a keyword argument.
         When passed, fields should look like: (...other kwargs, fields=("id", "name", etc.)).
         fields must be passed as tuple."""
-        result = await self.session.execute(self._get_query(**filters))
-        return result.scalars().all()
+        query = self._get_query(**filters)
+        skip = (page - 1) * size
+        query = query.offset(skip).limit(size)
+        result = await self.session.execute(query)
+        items = list(result.scalars().all())
+        has_next = len(items) > size
+        if has_next:
+            items = items[:-1]
+        return Slice(items=items, page=page, size=size, has_next=has_next)
 
     async def get_entity(self, **filters: object) -> ModelT | None:
         """Generic method to get an entity based on filters. It is possible to

@@ -15,6 +15,12 @@ from app.workout.application.workouts.queries.get_single_workout import (
 )
 from app.workout.domains.entities.workout_schema import CreateWorkout
 from app.workout.presentation.api.annotated.oauth import OAuth2
+from app.workout.presentation.api.annotated.pagination import (
+    PaginationAnnotated,
+)
+from app.workout.presentation.schemas.pagination_schema import (
+    PaginatedResponse,
+)
 from app.workout.presentation.schemas.workout_schemas import WorkoutResponse
 
 
@@ -37,13 +43,15 @@ def create_workout_router() -> APIRouter:
     @router.get(
         "/workouts",
         status_code=success_status_codes.ok,
-        response_model=list[WorkoutResponse],
+        response_model=PaginatedResponse[WorkoutResponse],
     )
     @inject
     async def get_all_workouts(
-        _: OAuth2, interactor: FromDishka[GetAllWorkouts]
+        _: OAuth2,
+        interactor: FromDishka[GetAllWorkouts],
+        pagination: PaginationAnnotated,
     ):
-        return await interactor.execute()
+        return await interactor.execute(pagination.page, pagination.size)
 
     @router.get(
         "/workouts/{workout_id}",
