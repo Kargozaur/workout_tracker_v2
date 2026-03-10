@@ -1,5 +1,4 @@
 import datetime as dt
-from collections.abc import Sequence
 from typing import Any
 
 from loguru import logger
@@ -42,6 +41,7 @@ class BaseRepository[
         self.model = model
 
     def _get_query(self, **filters: object) -> sa.Select:
+        """Gets SQLAlchemy query. Supports both loaded fields and ordering."""
         fields = filters.pop("fields", None)
         order_by = filters.pop("order_by", None)
         query = sa.select(self.model).filter_by(**filters)

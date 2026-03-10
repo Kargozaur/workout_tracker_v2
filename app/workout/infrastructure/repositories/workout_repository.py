@@ -38,6 +38,9 @@ class WorkoutRepository(
     async def get_all_workouts(
         self, page: int, size: int, user_id: UUID
     ) -> Slice[Workout]:
+        """Gets slice of workouts.
+        fields and order_by may be passed as keyword arguments.
+        """
         return await super().get_all_records(
             page=page,
             size=size,
@@ -51,7 +54,7 @@ class WorkoutRepository(
                 "finished_at",
                 "note",
             ),
-            order_by=("name", "status"),
+            order_by=("status", "name"),
         )
 
     async def get_workout(

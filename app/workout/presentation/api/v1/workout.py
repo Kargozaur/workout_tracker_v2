@@ -31,6 +31,7 @@ def create_workout_router() -> APIRouter:
         "/create_workout",
         status_code=success_status_codes.success,
         response_model=WorkoutResponse,
+        description="Create a new workout.",
     )
     @inject
     async def create_workout(
@@ -44,6 +45,7 @@ def create_workout_router() -> APIRouter:
         "/workouts",
         status_code=success_status_codes.ok,
         response_model=PaginatedResponse[WorkoutResponse],
+        description="Get a slice of the workouts.",
     )
     @inject
     async def get_all_workouts(
@@ -57,6 +59,7 @@ def create_workout_router() -> APIRouter:
         "/workouts/{workout_id}",
         status_code=success_status_codes.ok,
         response_model=WorkoutResponse,
+        description="get a single workout by its ID.",
     )
     @inject
     async def get_single_workout(
