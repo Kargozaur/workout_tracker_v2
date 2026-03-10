@@ -40,27 +40,27 @@ class BaseRepository[
         self.session = session
         self.model = model
 
+    def _get_fields(self, fields: object) -> list[Any]:
+        if not (fields and isinstance(fields, tuple)):
+            return []
+        return [
+            attr
+            for f in fields
+            if (attr := getattr(self.model, f, None)) is not None
+        ]
+
     def _get_query(self, **filters: object) -> sa.Select:
         """Gets SQLAlchemy query. Supports both loaded fields and ordering."""
         fields = filters.pop("fields", None)
         order_by = filters.pop("order_by", None)
-        query = sa.select(self.model).filter_by(**filters)
-        if order_by and isinstance(order_by, tuple):
-            order_fields = [
-                attr
-                for f in order_by
-                if (attr := getattr(self.model, f, None)) is not None
-            ]
-            if order_fields:
-                query = query.order_by(*order_fields)
-        if fields and isinstance(fields, tuple):
-            load_fields = [
-                attr
-                for f in fields
-                if (attr := getattr(self.model, f, None)) is not None
-            ]
-            if load_fields:
-                query = query.options(load_only(*load_fields))
+        existing_fields: dict = {
+            k: v for k, v in filters.items() if hasattr(self.model, k)
+        }
+        query = sa.select(self.model).filter_by(**existing_fields)
+        if load_fields := self._get_fields(fields):
+            query = query.options(load_only(*load_fields))
+        if order_fields := self._get_fields(order_by):
+            query = query.order_by(*order_fields)
         logger.debug(
             f"SQL: {query.compile(compile_kwargs={'literal_binds': True})}"
         )
@@ -76,12 +76,12 @@ class BaseRepository[
         (order_by must be a tuple, non-existing fields will be omitted)."""
         query = self._get_query(**filters)
         skip = (page - 1) * size
-        query = query.offset(skip).limit(size)
+        query = query.offset(skip).limit(size + 1)
         result = await self.session.execute(query)
         items = list(result.scalars().all())
         has_next = len(items) > size
         if has_next:
-            items = items[:-1]
+            items = items[:size]
         return Slice(items=items, page=page, size=size, has_next=has_next)
 
     async def get_entity(self, **filters: object) -> ModelT | None:
