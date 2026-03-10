@@ -45,9 +45,15 @@ class BaseRepository[
         fields = filters.pop("fields", None)
         order_by = filters.pop("order_by", None)
         query = sa.select(self.model).filter_by(**filters)
-        if order_by:
-            query = query.order_by(*order_by)
-        if fields is not None and isinstance(fields, tuple):
+        if order_by and isinstance(order_by, tuple):
+            order_fields = [
+                attr
+                for f in order_by
+                if (attr := getattr(self.model, f, None)) is not None
+            ]
+            if order_fields:
+                query = query.order_by(*order_fields)
+        if fields and isinstance(fields, tuple):
             load_fields = [
                 attr
                 for f in fields
@@ -66,7 +72,8 @@ class BaseRepository[
         """Generic method to get all records based on filters. Loaded fields
         may be applied by passing tuple fields as a keyword argument.
         When passed, fields should look like: (...other kwargs, fields=("id", "name", etc.)).
-        fields must be passed as tuple."""
+        fields must be passed as tuple. Same rules apply for the ordering
+        (order_by must be a tuple, non-existing fields will be omitted)."""
         query = self._get_query(**filters)
         skip = (page - 1) * size
         query = query.offset(skip).limit(size)
