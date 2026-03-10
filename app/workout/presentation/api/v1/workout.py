@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from dishka.integrations.fastapi import FromDishka, inject
 from fastapi import APIRouter
 
@@ -7,6 +9,9 @@ from app.workout.application.workouts.commands.schedule_workout import (
 )
 from app.workout.application.workouts.queries.get_all_workouts import (
     GetAllWorkouts,
+)
+from app.workout.application.workouts.queries.get_single_workout import (
+    GetSingleWorkout,
 )
 from app.workout.domains.entities.workout_schema import CreateWorkout
 from app.workout.presentation.api.annotated.oauth import OAuth2
@@ -39,5 +44,16 @@ def create_workout_router() -> APIRouter:
         _: OAuth2, interactor: FromDishka[GetAllWorkouts]
     ):
         return await interactor.execute()
+
+    @router.get(
+        "/workouts/{workout_id}",
+        status_code=success_status_codes.ok,
+        response_model=WorkoutResponse,
+    )
+    @inject
+    async def get_single_workout(
+        _: OAuth2, workout_id: UUID, interactor: FromDishka[GetSingleWorkout]
+    ):
+        return await interactor.execute(workout_id)
 
     return router

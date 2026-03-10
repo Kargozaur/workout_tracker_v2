@@ -7,6 +7,9 @@ from app.workout.application.workouts.commands.schedule_workout import (
 from app.workout.application.workouts.queries.get_all_workouts import (
     GetAllWorkouts,
 )
+from app.workout.application.workouts.queries.get_single_workout import (
+    GetSingleWorkout,
+)
 from app.workout.domains.protocols.auth_protocols.itoken import ITokenProvider
 from app.workout.domains.protocols.uow_protocol.iuow import IUnitOfWork
 
@@ -31,3 +34,12 @@ class WorkoutProvider(Provider):
         access_token: AccessToken,
     ) -> GetAllWorkouts:
         return GetAllWorkouts(uow, token_provider, access_token)
+
+    @provide
+    def get_single_workout_interactor(
+        self,
+        uow: IUnitOfWork,
+        token_provider: ITokenProvider,
+        access_token: AccessToken,
+    ) -> GetSingleWorkout:
+        return GetSingleWorkout(uow, token_provider, access_token)

@@ -52,7 +52,19 @@ class WorkoutRepository(
     async def get_workout(
         self, workout_id: UUID, user_id: UUID
     ) -> Workout | None:
-        return await super().get_entity(id=workout_id, user_id=user_id)
+        return await super().get_entity(
+            id=workout_id,
+            user_id=user_id,
+            fields=(
+                "id",
+                "name",
+                "status",
+                "scheduled_at",
+                "started_at",
+                "finished_at",
+                "note",
+            ),
+        )
 
     async def create_workout(self, workout: CreateWorkout) -> Workout:
         return await super().create_entity(workout)
