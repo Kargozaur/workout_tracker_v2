@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from collections.abc import Sequence
 from uuid import UUID
 
 from . import BaseModel, Protocol
@@ -9,6 +10,9 @@ class IWorkoutRepository[
     CreateSchemaT: BaseModel,
     UpdateSchemaT: BaseModel,
 ](Protocol):
+    @abstractmethod
+    async def get_all_workouts(self, user_id: UUID) -> Sequence[ModelT]: ...
+
     @abstractmethod
     async def create_workout(self, schema: CreateSchemaT) -> ModelT: ...
 

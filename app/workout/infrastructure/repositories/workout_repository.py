@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -34,8 +35,23 @@ class WorkoutRepository(
     def __init__(self, session: AsyncSession) -> None:
         super().__init__(session, Workout)
 
+    async def get_all_workouts(self, user_id: UUID) -> Sequence[Workout]:
+        return await super().get_all_records(
+            user_id=user_id,
+            fields=(
+                "id",
+                "name",
+                "status",
+                "scheduled_at",
+                "started_at",
+                "finished_at",
+                "note",
+            ),
+        )
 
-    async def get_workout(self, workout_id: UUID, user_id: UUID) -> Workout | None:
+    async def get_workout(
+        self, workout_id: UUID, user_id: UUID
+    ) -> Workout | None:
         return await super().get_entity(id=workout_id, user_id=user_id)
 
     async def create_workout(self, workout: CreateWorkout) -> Workout:

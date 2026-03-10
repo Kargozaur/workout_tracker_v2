@@ -2,7 +2,9 @@ import datetime as dt
 from typing import Annotated
 from uuid import UUID
 
-from pydantic import BaseModel, BeforeValidator, ConfigDict
+from pydantic import BeforeValidator, ConfigDict
+
+from . import GenericId
 
 
 def replace_none(v: str) -> BeforeValidator:
@@ -17,8 +19,7 @@ NotFinished = Annotated[
 ]
 
 
-class WorkoutResponse(BaseModel):
-    id: UUID
+class WorkoutResponse(GenericId[UUID]):
     name: str
     status: str
     note: str

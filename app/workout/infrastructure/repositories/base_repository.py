@@ -1,4 +1,5 @@
 import datetime as dt
+from collections.abc import Sequence
 from typing import Any
 
 from loguru import logger
@@ -25,21 +26,21 @@ class BaseRepository[
 ](IRepository[ModelT, CreateSchemaT, UpdateSchemaT]):
     """Base repository for all repositories that are using SQLAlchemy sessions.
     CRUD functionality provided by methods:
-    get_entity
-    create_entity
-    update_entity
-    delete_entity
+    get_all_records: returns all records based on filters.
+    get_entity: returns entity based on filters.
+    create_entity: creates entity based on pydantic schema.
+    update_entity: updates entity based on pydantic schema.
+    delete_entity: deletes entity based on filters.
+    delete_expired: deletes expired entities from the database.
+    bulk_delete: bulk delete entities based on filters. Should be used either with celery worker or
+    in the specified method.
     """
 
     def __init__(self, session: AsyncSession, model: type[ModelT]) -> None:
         self.session = session
         self.model = model
 
-    async def get_entity(self, **filters: object) -> ModelT | None:
-        """Generic method to get an entity based on filters. It is possible to
-        provide fields to load via fields keyword parameter.
-        When passed, fields should look like: (...other kwargs, fields=("id", "name", etc.)).
-        fields must be passed as tuple."""
+    def _get_query(self, **filters: object) -> sa.Select:
         fields = filters.pop("fields", None)
         query = sa.select(self.model).filter_by(**filters)
         if fields is not None and isinstance(fields, tuple):
@@ -53,7 +54,22 @@ class BaseRepository[
         logger.debug(
             f"SQL: {query.compile(compile_kwargs={'literal_binds': True})}"
         )
-        result = await self.session.execute(query)
+        return query
+
+    async def get_all_records(self, **filters: object) -> Sequence[ModelT]:
+        """Generic method to get all records based on filters. Loaded fields
+        may be applied by passing tuple fields as a keyword argument.
+        When passed, fields should look like: (...other kwargs, fields=("id", "name", etc.)).
+        fields must be passed as tuple."""
+        result = await self.session.execute(self._get_query(**filters))
+        return result.scalars().all()
+
+    async def get_entity(self, **filters: object) -> ModelT | None:
+        """Generic method to get an entity based on filters. It is possible to
+        provide fields to load via fields keyword parameter.
+        When passed, fields should look like: (...other kwargs, fields=("id", "name", etc.)).
+        fields must be passed as tuple."""
+        result = await self.session.execute(self._get_query(**filters))
         return result.scalar_one_or_none()
 
     async def create_entity(self, attributes: CreateSchemaT) -> ModelT | None:
@@ -115,7 +131,8 @@ class BaseRepository[
             raise EntityDeletionException() from exc
 
     async def bulk_deletion(self, **filters: object):
-        """Bulk deletion based on filters."""
+        """Bulk deletion based on filters. Should be used either with the Celery worker or
+        in specified method of the repository. This is not soft deletes."""
         query = sa.delete(self.model).filter_by(**filters)
         try:
             await self.session.execute(query)
