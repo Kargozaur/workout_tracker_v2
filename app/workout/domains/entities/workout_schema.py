@@ -58,6 +58,7 @@ class UpdateStartedAt(BaseModel):
 
 
 class UpdateFinishedAt(BaseModel):
+    status: WorkoutStatuses = Field(default=WorkoutStatuses.FINISHED)
     finished_at: dt.datetime = Field(
         default_factory=lambda: dt.datetime.now(dt.UTC) + dt.timedelta(hours=1)
     )
