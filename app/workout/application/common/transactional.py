@@ -9,10 +9,7 @@ def transactional[**P, R](
     UnitOfWork attribute must be typed as UoW.
     Decorator should be used only with simple methods that do 1 operation.
     For example bulk deletion from the database, regardless of
-    the filters.
-    Due to the performance issue( f.e. to refresh an access token
-    took 0.5s on a cold start vs 0.25s without the decorator),
-    it is still better to use context manager on transactional operations."""
+    the filters."""
 
     @wraps(func)
     async def wrapper(self, *args: P.args, **kwargs: P.kwargs) -> R:
