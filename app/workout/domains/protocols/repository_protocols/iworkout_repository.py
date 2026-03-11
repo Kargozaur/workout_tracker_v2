@@ -36,3 +36,8 @@ class IWorkoutRepository[
     async def finish_workout(
         self, user_id: UUID, workout_id: UUID
     ) -> ModelT: ...
+
+    @abstractmethod
+    async def add_note(
+        self, note: UpdateSchemaT, user_id: UUID, workout_id: UUID
+    ) -> ModelT: ...

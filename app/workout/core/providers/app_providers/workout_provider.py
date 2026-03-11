@@ -1,13 +1,16 @@
 from dishka import Provider, Scope, decorate, provide
 
 from app.workout.application.common.types.token_types import AccessToken
+from app.workout.application.workouts.commands.add_note import (
+    AddNoteInteractor,
+)
 from app.workout.application.workouts.commands.end_workout import (
     FinishWorkoutInteractor,
 )
 from app.workout.application.workouts.commands.schedule_workout import (
     CreateWorkoutInteractor,
 )
-from app.workout.application.workouts.commands.start_workout_interactor import (
+from app.workout.application.workouts.commands.start_workout import (
     StartWorkoutInteractor,
 )
 from app.workout.application.workouts.queries.get_all_workouts import (
@@ -80,6 +83,16 @@ class WorkoutProvider(Provider):
         return FinishWorkoutInteractor(
             uow, token_provider, service, access_token
         )
+
+    @provide
+    def get_note_interactor(
+        self,
+        uow: IUnitOfWork,
+        token_provider: ITokenProvider,
+        service: ICacheService[WorkoutCache],
+        access_token: AccessToken,
+    ) -> AddNoteInteractor:
+        return AddNoteInteractor(uow, token_provider, service, access_token)
 
     @decorate
     def get_single_workout_cache(

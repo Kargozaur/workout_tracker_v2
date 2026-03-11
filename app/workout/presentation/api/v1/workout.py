@@ -4,13 +4,16 @@ from dishka.integrations.fastapi import FromDishka, inject
 from fastapi import APIRouter
 
 from app.workout.application.common.status_codes import success_status_codes
+from app.workout.application.workouts.commands.add_note import (
+    AddNoteInteractor,
+)
 from app.workout.application.workouts.commands.end_workout import (
     FinishWorkoutInteractor,
 )
 from app.workout.application.workouts.commands.schedule_workout import (
     CreateWorkoutInteractor,
 )
-from app.workout.application.workouts.commands.start_workout_interactor import (
+from app.workout.application.workouts.commands.start_workout import (
     StartWorkoutInteractor,
 )
 from app.workout.application.workouts.queries.get_all_workouts import (
@@ -19,7 +22,7 @@ from app.workout.application.workouts.queries.get_all_workouts import (
 from app.workout.application.workouts.queries.get_single_workout import (
     GetSingleWorkout,
 )
-from app.workout.domains.entities.workout_schema import CreateWorkout
+from app.workout.domains.entities.workout_schema import AddNote, CreateWorkout
 from app.workout.presentation.api.annotated.oauth import OAuth2
 from app.workout.presentation.api.annotated.pagination import (
     PaginationAnnotated,
@@ -94,5 +97,18 @@ def create_workout_router() -> APIRouter:
         interactor: FromDishka[FinishWorkoutInteractor],
     ) -> dict[str, str]:
         return await interactor.execute(workout_id)
+
+    @router.put(
+        "/workouts/{workout_id}/note",
+        status_code=success_status_codes.ok,
+        response_model=WorkoutResponse)
+    @inject
+    async def update_workout(
+        _: OAuth2,
+        workout_id: UUID,
+        note: AddNote,
+        interactor: FromDishka[AddNoteInteractor],
+    ):
+        return await interactor.execute(workout_id, note)
 
     return router

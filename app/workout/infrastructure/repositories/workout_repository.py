@@ -7,6 +7,7 @@ from app.workout.application.common.enums.workout_statuses import (
 )
 from app.workout.application.common.pagination import Slice
 from app.workout.domains.entities.workout_schema import (
+    AddNote,
     CancelWorkout,
     CreateWorkout,
     UpdateFinishedAt,
@@ -27,7 +28,9 @@ from app.workout.infrastructure.repositories.base_repository import (
 
 
 class WorkoutRepository(
-    BaseRepository[Workout, CreateWorkout, UpdateStartedAt | UpdateFinishedAt],
+    BaseRepository[
+        Workout, CreateWorkout, UpdateStartedAt | UpdateFinishedAt | AddNote
+    ],
     IWorkoutRepository[
         Workout, CreateWorkout, UpdateStartedAt | UpdateFinishedAt
     ],
@@ -147,5 +150,28 @@ class WorkoutRepository(
             )
 
         cancel: CancelWorkout = CancelWorkout()
-        await super().update_entity(cancel, id=workout.id, user_id=user_id)
-        return True
+        result = await super().update_entity(
+            cancel, id=workout.id, user_id=user_id
+        )
+        return result
+
+    async def add_note(
+        self,
+        note: AddNote,
+        user_id: UUID,
+        workout_id: UUID,
+    ) -> Workout:
+        return await super().update_entity(
+            note,
+            id=workout_id,
+            user_id=user_id,
+            fields=(
+                "id",
+                "name",
+                "status",
+                "scheduled_at",
+                "started_at",
+                "finished_at",
+                "note",
+            ),
+        )

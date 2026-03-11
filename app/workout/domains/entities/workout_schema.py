@@ -66,3 +66,7 @@ class UpdateFinishedAt(BaseModel):
 
 class CancelWorkout(BaseModel):
     status: WorkoutStatuses = Field(default=WorkoutStatuses.CANCELLED)
+
+
+class AddNote(BaseModel):
+    note: str = Field(default="", min_length=0, max_length=255)
