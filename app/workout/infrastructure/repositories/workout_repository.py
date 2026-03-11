@@ -77,11 +77,19 @@ class WorkoutRepository(
     async def create_workout(self, workout: CreateWorkout) -> Workout:
         return await super().create_entity(workout)
 
-    async def start_workout(self, user_id: UUID, workout_id: UUID) -> bool:
+    async def start_workout(self, user_id: UUID, workout_id: UUID) -> Workout:
         workout: Workout | None = await super().get_entity(
             id=workout_id,
             user_id=user_id,
-            fields=("id", "started_at", "finished_at"),
+            fields=(
+                "id",
+                "name",
+                "status",
+                "scheduled_at",
+                "started_at",
+                "finished_at",
+                "note",
+            ),
         )
         if not workout:
             raise WorkoutNotFoundException()
@@ -94,8 +102,10 @@ class WorkoutRepository(
                 "Failed to start workout. Workout already finished."
             )
         start: UpdateStartedAt = UpdateStartedAt()
-        await super().update_entity(start, id=workout.id, user_id=user_id)
-        return True
+        result = await super().update_entity(
+            start, id=workout.id, user_id=user_id
+        )
+        return result
 
     async def finish_workout(self, user_id: UUID, workout_id: UUID) -> bool:
         workout: Workout | None = await super().get_entity(

@@ -4,6 +4,9 @@ from app.workout.application.common.types.token_types import AccessToken
 from app.workout.application.workouts.commands.schedule_workout import (
     CreateWorkoutInteractor,
 )
+from app.workout.application.workouts.commands.start_workout_interactor import (
+    StartWorkoutInteractor,
+)
 from app.workout.application.workouts.queries.get_all_workouts import (
     GetAllWorkouts,
 )
@@ -50,6 +53,18 @@ class WorkoutProvider(Provider):
         access_token: AccessToken,
     ) -> GetSingleWorkout:
         return GetSingleWorkout(uow, token_provider, access_token)
+
+    @provide
+    def get_workout_starter(
+        self,
+        uow: IUnitOfWork,
+        token_provider: ITokenProvider,
+        service: ICacheService[WorkoutCache],
+        access_token: AccessToken,
+    ) -> StartWorkoutInteractor:
+        return StartWorkoutInteractor(
+            uow, token_provider, service, access_token
+        )
 
     @decorate
     def get_single_workout_cache(

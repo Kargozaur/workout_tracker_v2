@@ -47,8 +47,11 @@ class CreateWorkoutDB(WorkoutBase):
 class WorkoutCache(WorkoutBase):
     id: UUID
 
+    model_config = ConfigDict(from_attributes=True)
+
 
 class UpdateStartedAt(BaseModel):
+    status: WorkoutStatuses = Field(default=WorkoutStatuses.IN_PROGRESS)
     started_at: dt.datetime = Field(
         default_factory=lambda: dt.datetime.now(dt.UTC)
     )

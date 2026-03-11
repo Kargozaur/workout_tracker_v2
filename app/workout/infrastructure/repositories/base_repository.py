@@ -112,7 +112,7 @@ class BaseRepository[
         if entity is None:
             raise EntityNotFoundException("Entity not found")
         data: dict[str, Any] = attributes.model_dump(
-            exclude_unset=True, by_alias=True
+            exclude_none=True, by_alias=True
         )
         try:
             for k, v in data.items():
@@ -120,7 +120,7 @@ class BaseRepository[
                     setattr(entity, k, v)
 
             await self.session.flush()
-            await self.session.refresh(entity)
+            # await self.session.refresh(entity)
             return entity
         except Exception as exc:
             logger.exception("Failed to update entity")

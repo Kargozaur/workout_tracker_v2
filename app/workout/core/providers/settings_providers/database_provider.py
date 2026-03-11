@@ -18,7 +18,10 @@ class SQLAlchemyProvider(Provider):
         self, db_cfg: AbstractDbConfig, orm_cfg: ORMConfig
     ) -> AsyncIterable[AsyncEngine]:
         """Dishka takes responsibility of SQLAlchemy engine lifetime."""
-        engine = create_async_engine(url=db_cfg.dsn, **orm_cfg.model_dump())
+        engine = create_async_engine(
+            url=db_cfg.dsn, #echo=True,
+            **orm_cfg.model_dump()
+        )
         yield engine
         await engine.dispose()
 

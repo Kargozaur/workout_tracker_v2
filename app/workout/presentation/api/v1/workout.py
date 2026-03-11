@@ -7,6 +7,9 @@ from app.workout.application.common.status_codes import success_status_codes
 from app.workout.application.workouts.commands.schedule_workout import (
     CreateWorkoutInteractor,
 )
+from app.workout.application.workouts.commands.start_workout_interactor import (
+    StartWorkoutInteractor,
+)
 from app.workout.application.workouts.queries.get_all_workouts import (
     GetAllWorkouts,
 )
@@ -65,6 +68,17 @@ def create_workout_router() -> APIRouter:
     async def get_single_workout(
         _: OAuth2, workout_id: UUID, interactor: FromDishka[GetSingleWorkout]
     ):
+        return await interactor.execute(workout_id)
+
+    @router.patch(
+        "/workouts/{workout_id}", status_code=success_status_codes.ok
+    )
+    @inject
+    async def start_workout(
+        _: OAuth2,
+        workout_id: UUID,
+        interactor: FromDishka[StartWorkoutInteractor],
+    ) -> dict[str, str]:
         return await interactor.execute(workout_id)
 
     return router
