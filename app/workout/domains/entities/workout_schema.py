@@ -44,6 +44,10 @@ class CreateWorkoutDB(WorkoutBase):
     user_id: UUID
 
 
+class WorkoutCache(WorkoutBase):
+    id: UUID
+
+
 class UpdateStartedAt(BaseModel):
     started_at: dt.datetime = Field(
         default_factory=lambda: dt.datetime.now(dt.UTC)

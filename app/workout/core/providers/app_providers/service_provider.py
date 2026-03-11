@@ -3,6 +3,7 @@ from redis.asyncio import Redis
 
 from app.workout.application.common.types.redis_key import RedisKey
 from app.workout.domains.entities.user_schemas import GetUser, UpdateUser
+from app.workout.domains.entities.workout_schema import WorkoutCache
 from app.workout.domains.protocols.service_protocols.icacheservice import (
     ICacheService,
 )
@@ -23,3 +24,10 @@ class ServiceProvider(Provider):
     ) -> ICacheService[UpdateUser]:
         key = RedisKey("user")
         return CacheService(redis, UpdateUser, key)
+
+    @provide
+    def get_cache_service_cache(
+        self, redis: Redis
+    ) -> ICacheService[WorkoutCache]:
+        key = RedisKey("user")
+        return CacheService(redis, WorkoutCache, key)
