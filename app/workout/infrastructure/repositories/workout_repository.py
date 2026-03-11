@@ -107,7 +107,7 @@ class WorkoutRepository(
         )
         return result
 
-    async def finish_workout(self, user_id: UUID, workout_id: UUID) -> bool:
+    async def finish_workout(self, user_id: UUID, workout_id: UUID) -> Workout:
         workout: Workout | None = await super().get_entity(
             id=workout_id,
             user_id=user_id,
@@ -124,8 +124,10 @@ class WorkoutRepository(
                 "Failed to finish workout. Workout already finished."
             )
         finish: UpdateFinishedAt = UpdateFinishedAt()
-        await super().update_entity(finish, id=workout.id, user_id=user_id)
-        return True
+        result = await super().update_entity(
+            finish, id=workout.id, user_id=user_id
+        )
+        return result
 
     async def cancel_workout(self, user_id: UUID, workout_id: UUID) -> bool:
         workout: Workout = await super().get_entity(

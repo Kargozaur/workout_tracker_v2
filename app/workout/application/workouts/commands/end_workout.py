@@ -10,7 +10,7 @@ from app.workout.domains.protocols.service_protocols.icacheservice import (
 from app.workout.domains.protocols.uow_protocol.iuow import IUnitOfWork
 
 
-class StartWorkoutInteractor:
+class FinishWorkoutInteractor:
     def __init__(
         self,
         uow: IUnitOfWork,
@@ -30,10 +30,10 @@ class StartWorkoutInteractor:
         user_id: str = user_data.get("sub")
         await self.service.delete_cache(f"{user_id}:{workout_id}")
         async with self.UoW:
-            result = await self.UoW.workout_repository.start_workout(
+            result = await self.UoW.workout_repository.finish_workout(
                 UUID(user_id), workout_id
             )
             await self.UoW.commit()
-        cache_data: WorkoutCache = WorkoutCache(**result.__dict__)
-        await self.service.set_cache(f"{user_id}:{workout_id}", cache_data)
-        return {"Success": f"Your workout {result.name} has started."}
+        new_cache: WorkoutCache = WorkoutCache(**result.__dict__)
+        await self.service.set_cache(f"{user_id}:{workout_id}", new_cache)
+        return {"Success": f"You have finished {result.name} workout"}

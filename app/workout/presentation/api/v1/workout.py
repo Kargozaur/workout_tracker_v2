@@ -4,6 +4,9 @@ from dishka.integrations.fastapi import FromDishka, inject
 from fastapi import APIRouter
 
 from app.workout.application.common.status_codes import success_status_codes
+from app.workout.application.workouts.commands.end_workout import (
+    FinishWorkoutInteractor,
+)
 from app.workout.application.workouts.commands.schedule_workout import (
     CreateWorkoutInteractor,
 )
@@ -71,13 +74,24 @@ def create_workout_router() -> APIRouter:
         return await interactor.execute(workout_id)
 
     @router.patch(
-        "/workouts/{workout_id}", status_code=success_status_codes.ok
+        "/workouts/{workout_id}/start", status_code=success_status_codes.ok
     )
     @inject
     async def start_workout(
         _: OAuth2,
         workout_id: UUID,
         interactor: FromDishka[StartWorkoutInteractor],
+    ) -> dict[str, str]:
+        return await interactor.execute(workout_id)
+
+    @router.patch(
+        "/workouts/{workout_id}/finish", status_code=success_status_codes.ok
+    )
+    @inject
+    async def finish_workout(
+        _: OAuth2,
+        workout_id: UUID,
+        interactor: FromDishka[FinishWorkoutInteractor],
     ) -> dict[str, str]:
         return await interactor.execute(workout_id)
 

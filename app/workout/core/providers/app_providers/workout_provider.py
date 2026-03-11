@@ -1,6 +1,9 @@
 from dishka import Provider, Scope, decorate, provide
 
 from app.workout.application.common.types.token_types import AccessToken
+from app.workout.application.workouts.commands.end_workout import (
+    FinishWorkoutInteractor,
+)
 from app.workout.application.workouts.commands.schedule_workout import (
     CreateWorkoutInteractor,
 )
@@ -63,6 +66,18 @@ class WorkoutProvider(Provider):
         access_token: AccessToken,
     ) -> StartWorkoutInteractor:
         return StartWorkoutInteractor(
+            uow, token_provider, service, access_token
+        )
+
+    @provide
+    def get_workout_finisher(
+        self,
+        uow: IUnitOfWork,
+        token_provider: ITokenProvider,
+        service: ICacheService[WorkoutCache],
+        access_token: AccessToken,
+    ) -> FinishWorkoutInteractor:
+        return FinishWorkoutInteractor(
             uow, token_provider, service, access_token
         )
 
