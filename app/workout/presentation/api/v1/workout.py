@@ -101,7 +101,8 @@ def create_workout_router() -> APIRouter:
     @router.put(
         "/workouts/{workout_id}/note",
         status_code=success_status_codes.ok,
-        response_model=WorkoutResponse)
+        response_model=WorkoutResponse,
+    )
     @inject
     async def update_workout(
         _: OAuth2,
