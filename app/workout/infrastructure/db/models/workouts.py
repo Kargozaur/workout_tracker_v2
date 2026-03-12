@@ -2,7 +2,7 @@ import datetime as dt
 from uuid import UUID
 
 import sqlalchemy as sa
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.workout.application.common.enums.workout_statuses import (
     WorkoutStatuses,
@@ -35,4 +35,11 @@ class Workout(UUIDIdMixin, CreatedAtMixin, Base):
     )
     note: Mapped[str] = mapped_column(
         sa.String(255), nullable=False, default=""
+    )
+
+    exercises = relationship(
+        "ExerciseSets",
+        back_populates="workout",
+        secondary="workout_items",
+        cascade="all, delete-orphan",
     )

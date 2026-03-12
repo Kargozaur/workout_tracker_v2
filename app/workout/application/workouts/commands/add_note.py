@@ -30,6 +30,7 @@ class AddNoteInteractor[T]:
 
     @transactional_workout_cached
     async def execute(self, workout_id: UUID, note: AddNote) -> T:
+        logger.debug(f"Adding note {note.note} to workout {workout_id}")
         user_data: dict[str, Any] = self.token_provider.decode_token(
             self.access_token
         )

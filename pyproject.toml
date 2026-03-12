@@ -19,7 +19,11 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["pytest>=9.0.2", "ruff>=0.15.4"]
+dev = [
+    "aiosqlite>=0.22.1",
+    "pytest>=9.0.2",
+    "ruff>=0.15.4",
+]
 
 [tool.ruff]
 target-version = "py314"
