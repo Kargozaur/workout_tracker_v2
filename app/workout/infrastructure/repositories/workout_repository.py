@@ -2,10 +2,10 @@ from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.workout.application.common.dataclasses.pagination import Slice
 from app.workout.application.common.enums.workout_statuses import (
     WorkoutStatuses,
 )
-from app.workout.application.common.pagination import Slice
 from app.workout.domains.entities.workout_schema import (
     AddNote,
     CancelWorkout,

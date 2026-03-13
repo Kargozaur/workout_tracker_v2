@@ -31,7 +31,6 @@ class Exercises(UUIDIdMixin, Base):
         "Workout",
         back_populates="exercises",
         secondary="workout_items",
-        cascade="all, delete-orphan",
     )
     category = relationship("Category", back_populates="exercises")
-    muscle_group = relationship("MuscleGroup", back_populates="exercises")
+    muscle_groups = relationship("MuscleGroups", back_populates="exercises")

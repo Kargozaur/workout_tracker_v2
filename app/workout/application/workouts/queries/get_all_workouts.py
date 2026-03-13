@@ -1,7 +1,7 @@
 from typing import Any
 from uuid import UUID
 
-from app.workout.application.common.pagination import Slice
+from app.workout.application.common.dataclasses.pagination import Slice
 from app.workout.application.common.types.token_types import AccessToken
 from app.workout.domains.protocols.auth_protocols.itoken import ITokenProvider
 from app.workout.domains.protocols.uow_protocol.iuow import IUnitOfWork

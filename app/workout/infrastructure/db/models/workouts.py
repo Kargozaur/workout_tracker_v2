@@ -38,8 +38,8 @@ class Workout(UUIDIdMixin, CreatedAtMixin, Base):
     )
 
     exercises = relationship(
-        "ExerciseSets",
+        "Exercises",
         back_populates="workout",
         secondary="workout_items",
-        cascade="all, delete-orphan",
+        cascade="all",
     )

@@ -5,7 +5,7 @@ from loguru import logger
 from pydantic import BaseModel
 from sqlalchemy.orm import load_only
 
-from app.workout.application.common.pagination import Slice
+from app.workout.application.common.dataclasses.pagination import Slice
 from app.workout.domains.exceptions.entity_exceptions import (
     EntityCreationException,
     EntityDeletionException,

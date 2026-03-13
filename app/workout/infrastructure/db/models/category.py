@@ -15,4 +15,4 @@ class Category(IntIdMixin, Base):
         sa.Enum(CategoryEnum, values_callable=lambda x: [e.value for e in x]),
         nullable=False,
     )
-    exercises = relationship("Exercise", back_populates="category")
+    exercises = relationship("Exercises", back_populates="category")

@@ -16,7 +16,7 @@ class WorkoutItems(UpdatedAtMixin, Base):
         primary_key=True,
     )
     exercise_id: Mapped[UUID] = mapped_column(
-        sa.ForeignKey("exercises.id", ondelete="CASCADE"),
+        sa.ForeignKey("exercises.id"),
         index=True,
         primary_key=True,
     )

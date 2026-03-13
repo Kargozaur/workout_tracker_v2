@@ -11,6 +11,9 @@ from app.workout.core.providers.app_providers.redis_provider import (
 from app.workout.core.providers.app_providers.service_provider import (
     ServiceProvider,
 )
+from app.workout.core.providers.app_providers.static_providers import (
+    StaticProvider,
+)
 from app.workout.core.providers.app_providers.uow_provider import (
     UnitOfWorkProvider,
 )
@@ -47,4 +50,5 @@ def create_async_containers() -> AsyncContainer:
         ServiceProvider(),
         CleanupProvider(),
         WorkoutProvider(),
+        StaticProvider(),
     )

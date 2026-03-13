@@ -3,7 +3,12 @@ from contextlib import asynccontextmanager
 from dishka import AsyncContainer
 from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
-
+from app.workout.application.common.dataclasses.categories_dc import (
+    CategoryToId,
+)
+from app.workout.application.common.dataclasses.groups_dc import (
+    MuscleGroupToId,
+)
 from app.workout.core.containers import create_async_containers
 from app.workout.core.settings.log_settings import setup_logger
 from app.workout.presentation.api.api_router import create_api_router
@@ -43,5 +48,7 @@ def create_app() -> FastAPI:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    await app.state.container.get(MuscleGroupToId)
+    await app.state.container.get(CategoryToId)
     yield
     await app.state.container.close()

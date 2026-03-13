@@ -16,7 +16,7 @@ def transactional_workout_cached[**P, R](
     the following attributes:\n
     - token_provider;\n
     - Unit of Work(UoW, must be written exactly like this);\n
-    - service(in this case cache service) \n
+    - service(in this case cache service); \n
     - access_token(access_token that will be provide by the dishka).\n
     Doesn't work if function returns anything other than
     DB model. Should be used with the interactors, that will be used

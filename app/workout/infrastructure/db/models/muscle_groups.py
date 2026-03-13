@@ -16,4 +16,4 @@ class MuscleGroups(IntIdMixin, Base):
             MuscleGroupEnum, values_callable=lambda x: [e.value for e in x]
         )
     )
-    exercises = relationship("Exercise", back_populates="muscle_groups")
+    exercises = relationship("Exercises", back_populates="muscle_groups")

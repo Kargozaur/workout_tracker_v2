@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from uuid import UUID
 
-from app.workout.application.common.pagination import Slice
+from app.workout.application.common.dataclasses.pagination import Slice
 
 from . import BaseModel, Protocol
 
