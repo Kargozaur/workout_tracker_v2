@@ -28,7 +28,7 @@ class StaticProvider(Provider):
         new_d = {name: index for name, index in result.all()}
         logger.info("Loaded static content: categories map")
 
-        logger.info(f"Loaded keys (Muscle Group) {new_d.keys()}")
+        logger.info(f"Loaded keys (Categories) {new_d.keys()}")
         return CategoryToId(new_d)
 
     @provide
@@ -42,5 +42,5 @@ class StaticProvider(Provider):
             )
         new_d = {name: index for name, index in result.all()}
         logger.info("Loaded static content: muscle groups map")
-        logger.info(f"Loaded keys(Categories) {new_d.keys()}")
+        logger.info(f"Loaded keys(Muscle Groups) {new_d.keys()}")
         return MuscleGroupToId(new_d)
