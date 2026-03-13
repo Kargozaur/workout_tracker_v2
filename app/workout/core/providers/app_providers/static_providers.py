@@ -40,7 +40,7 @@ class StaticProvider(Provider):
             result = await session.execute(
                 sa.select(MuscleGroups.groups, MuscleGroups.id)
             )
-        new_d = {name: index for name, index in result.mappings().all()}
+        new_d = {name: index for name, index in result.all()}
         logger.info("Loaded static content: muscle groups map")
         logger.info(f"Loaded keys(Categories) {new_d.keys()}")
         return MuscleGroupToId(new_d)

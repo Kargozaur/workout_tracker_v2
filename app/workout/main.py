@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from dishka import AsyncContainer
 from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
+
 from app.workout.application.common.dataclasses.categories_dc import (
     CategoryToId,
 )
