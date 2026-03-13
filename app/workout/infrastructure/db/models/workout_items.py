@@ -2,7 +2,7 @@ from decimal import Decimal
 from uuid import UUID
 
 import sqlalchemy as sa
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from . import Base, UpdatedAtMixin
 
@@ -26,6 +26,9 @@ class WorkoutItems(UpdatedAtMixin, Base):
     is_completed: Mapped[bool] = mapped_column(
         sa.BOOLEAN(), default=False, nullable=False, server_default=sa.false()
     )
+
+    workout = relationship("Workout", back_populates="workout_items")
+    items = relationship("Exercises", back_populates="workout_items")
 
     __table_args__ = (
         sa.UniqueConstraint(workout_id, exercise_id, name="workout_items_uc"),

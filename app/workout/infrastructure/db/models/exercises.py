@@ -27,10 +27,8 @@ class Exercises(UUIDIdMixin, Base):
         sa.ForeignKey("muscle_groups.id"), nullable=True
     )
 
-    workout = relationship(
-        "Workout",
-        back_populates="exercises",
-        secondary="workout_items",
+    workout_items = relationship(
+        "WorkoutItems", back_populates="items", lazy="selectin"
     )
     category = relationship("Category", back_populates="exercises")
     muscle_groups = relationship("MuscleGroups", back_populates="exercises")

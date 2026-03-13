@@ -50,13 +50,13 @@ class BaseRepository[
             if order and isinstance(field, str) and field.startswith("-"):
                 desc = True
                 field = field[1:]
-            attr = getattr(self.model, field, None)
-            if attr:
+            if attr := getattr(self.model, field, None):
                 result.append(attr.desc() if desc else attr)
         return result
 
     def _get_query(self, **filters: object) -> sa.Select:
-        """Gets SQLAlchemy query. Supports both loaded fields and ordering."""
+        """Gets SQLAlchemy query. Supports both loaded fields and ordering.
+        If descending order is required, you should prefix attribute with -."""
         fields = filters.pop("fields", None)
         order_by = filters.pop("order_by", None)
         existing_fields: dict = {

@@ -37,9 +37,9 @@ class Workout(UUIDIdMixin, CreatedAtMixin, Base):
         sa.String(255), nullable=False, default=""
     )
 
-    exercises = relationship(
-        "Exercises",
+    workout_items = relationship(
+        "WorkoutItems",
         back_populates="workout",
-        secondary="workout_items",
+        lazy="selectin",
         cascade="all",
     )
