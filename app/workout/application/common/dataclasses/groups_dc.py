@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(frozen=True)
 class MuscleGroupToId:
-    group_to_id: dict[str, int]
+    _group_to_id: dict[str, int]
+
+    def get(self, name: str) -> int | None:
+        return self._group_to_id.get(name, None)
