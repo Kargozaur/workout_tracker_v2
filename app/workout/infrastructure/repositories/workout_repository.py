@@ -57,7 +57,7 @@ class WorkoutRepository(
                 "finished_at",
                 "note",
             ),
-            order_by=("status", "name"),
+            order_by=("-scheduled_at",),
         )
 
     async def get_workout(

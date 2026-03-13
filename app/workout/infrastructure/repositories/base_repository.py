@@ -40,14 +40,20 @@ class BaseRepository[
         self.session = session
         self.model = model
 
-    def _get_fields(self, fields: object) -> list[Any]:
+    def _get_fields(self, fields: object, order: bool = False) -> list[Any]:
         if not (fields and isinstance(fields, tuple)):
             return []
-        return [
-            attr
-            for f in fields
-            if (attr := getattr(self.model, f, None)) is not None
-        ]
+
+        result = []
+        for field in fields:
+            desc = False
+            if order and isinstance(field, str) and field.startswith("-"):
+                desc = True
+                field = field[1:]
+            attr = getattr(self.model, field, None)
+            if attr:
+                result.append(attr.desc() if desc else attr)
+        return result
 
     def _get_query(self, **filters: object) -> sa.Select:
         """Gets SQLAlchemy query. Supports both loaded fields and ordering."""
@@ -59,7 +65,7 @@ class BaseRepository[
         query = sa.select(self.model).filter_by(**existing_fields)
         if load_fields := self._get_fields(fields):
             query = query.options(load_only(*load_fields))
-        if order_fields := self._get_fields(order_by):
+        if order_fields := self._get_fields(order_by, True):
             query = query.order_by(*order_fields)
         logger.debug(
             f"SQL: {query.compile(compile_kwargs={'literal_binds': True})}"
