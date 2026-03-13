@@ -3,7 +3,7 @@ from typing import Any
 
 from loguru import logger
 from pydantic import BaseModel
-from sqlalchemy.orm import load_only
+from sqlalchemy.orm import load_only, raiseload
 
 from app.workout.application.common.dataclasses.pagination import Slice
 from app.workout.domains.exceptions.entity_exceptions import (
@@ -64,7 +64,9 @@ class BaseRepository[
         }
         query = sa.select(self.model).filter_by(**existing_fields)
         if load_fields := self._get_fields(fields):
-            query = query.options(load_only(*load_fields))
+            query = query.options(
+                load_only(*load_fields), raiseload("*")
+            )  # raiseload restricts lazy loading of fields if they are not loaded initially
         if order_fields := self._get_fields(order_by, True):
             query = query.order_by(*order_fields)
         logger.debug(
