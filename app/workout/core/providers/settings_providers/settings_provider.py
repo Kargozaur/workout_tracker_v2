@@ -5,7 +5,7 @@ from app.workout.core.settings.jwt_settings import JWTSettings
 from app.workout.core.settings.orm_settings import ORMConfig
 from app.workout.core.settings.redis_settings import RedisConfig
 from app.workout.core.settings.settings import AppConfig
-
+from app.workout.core.settings.api_settings import APISettings
 
 class ConfigProvider(Provider):
     scope = Scope.APP
@@ -29,3 +29,7 @@ class ConfigProvider(Provider):
     @provide
     def get_jwt_config(self, config: AppConfig) -> JWTSettings:
         return config.jwt
+
+    @provide
+    def get_api_key(self, config: AppConfig) -> APISettings:
+        return config.api
