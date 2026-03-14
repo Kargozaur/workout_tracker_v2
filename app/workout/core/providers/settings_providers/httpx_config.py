@@ -9,5 +9,7 @@ class HttpxProvider(Provider):
 
     @provide
     async def get_client(self) -> AsyncIterator[AsyncClient]:
-        async with AsyncClient(timeout=10) as client:
+        async with AsyncClient(
+            headers={"Accept": "application/json"}, timeout=10
+        ) as client:
             yield client
