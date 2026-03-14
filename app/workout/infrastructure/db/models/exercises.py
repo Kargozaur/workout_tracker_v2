@@ -1,5 +1,3 @@
-from decimal import Decimal
-
 import sqlalchemy as sa
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -11,22 +9,15 @@ class Exercises(UUIDIdMixin, Base):
 
     name: Mapped[str] = mapped_column(sa.String(100), nullable=False)
     description: Mapped[str] = mapped_column(
-        sa.String(255), nullable=True, default=""
+        sa.String(500), nullable=True, default=""
     )
-    reps: Mapped[int] = mapped_column(sa.Integer, nullable=True)
-    distance_km: Mapped[Decimal] = mapped_column(
-        sa.DECIMAL(precision=5, scale=2), nullable=True
-    )
-    duration_seconds: Mapped[Decimal] = mapped_column(
-        sa.DECIMAL(precision=5, scale=2), nullable=True
-    )
+    exercise_slug: Mapped[str] = mapped_column(sa.String(100), nullable=True)
     category_id: Mapped[int] = mapped_column(
         sa.ForeignKey("categories.id"), nullable=True
     )
     muscle_group_id: Mapped[int] = mapped_column(
         sa.ForeignKey("muscle_groups.id"), nullable=True
     )
-
     workout_items = relationship(
         "WorkoutItems", back_populates="items", lazy="selectin"
     )

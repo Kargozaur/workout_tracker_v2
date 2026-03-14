@@ -26,6 +26,13 @@ class WorkoutItems(UpdatedAtMixin, Base):
     is_completed: Mapped[bool] = mapped_column(
         sa.BOOLEAN(), default=False, nullable=False, server_default=sa.false()
     )
+    reps: Mapped[int] = mapped_column(sa.Integer, nullable=True)
+    distance_km: Mapped[Decimal] = mapped_column(
+        sa.DECIMAL(precision=5, scale=2), nullable=True
+    )
+    duration_seconds: Mapped[Decimal] = mapped_column(
+        sa.DECIMAL(precision=5, scale=2), nullable=True
+    )
 
     workout = relationship("Workout", back_populates="workout_items")
     items = relationship("Exercises", back_populates="workout_items")
