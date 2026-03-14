@@ -16,7 +16,9 @@ from . import (
 )
 
 
-GenericStr = Annotated[str | None, Field(default=None, min_length=1)]
+GenericStr = Annotated[
+    str | None, Field(default=None, min_length=1, max_length=100)
+]
 PasswordField = Annotated[str, BeforeValidator(verify_password)]
 
 
@@ -28,33 +30,15 @@ class CreateUser(BaseModel):
     first_name: GenericStr
     last_name: GenericStr
 
-    model_config = ConfigDict(populate_by_name=True)
+    model_config = ConfigDict(validate_by_alias=True)
 
     @model_validator(mode="after")
     def set_name_if_not_provided(self) -> Self:
-        if not self.first_name and self.last_name:
-            self.first_name = (
-                self.email.split("@")[0][: len(self.email) // 2]
-                .replace("_", "")
-                .replace(".", "")
-            )
-            self.last_name: str = (
-                self.email.split("@")[0][len(self.email) // 2 :]
-                .replace("_", "")
-                .replace(".", "")
-            )
+        split: str = self.email.split("@")[0].replace("_", "").replace(".", "")
         if not self.first_name:
-            self.first_name: str = (
-                self.email.split("@")[0][: len(self.email) // 2]
-                .replace("_", "")
-                .replace(".", "")
-            )
+            self.first_name: str = split[: len(split) // 2]
         if not self.last_name:
-            self.last_name: str = (
-                self.email.split("@")[0][len(self.email) // 2 :]
-                .replace("_", "")
-                .replace(".", "")
-            )
+            self.last_name: str = split[len(split) // 2 :]
 
         return self
 
