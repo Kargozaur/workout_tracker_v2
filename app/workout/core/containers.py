@@ -29,6 +29,9 @@ from app.workout.core.providers.celery_providers.cleanup_provider import (
 from app.workout.core.providers.settings_providers.database_provider import (
     SQLAlchemyProvider,
 )
+from app.workout.core.providers.settings_providers.httpx_config import (
+    HttpxProvider,
+)
 from app.workout.core.providers.settings_providers.security_providers import (
     SecurityProvider,
 )
@@ -51,4 +54,5 @@ def create_async_containers() -> AsyncContainer:
         CleanupProvider(),
         WorkoutProvider(),
         StaticProvider(),
+        HttpxProvider(),
     )
