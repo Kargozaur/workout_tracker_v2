@@ -50,7 +50,7 @@ class BaseRepository[
             if order and isinstance(field, str) and field.startswith("-"):
                 desc = True
                 field = field[1:]
-            if attr := getattr(self.model, field, None):  # type: ignore
+            if attr := getattr(self.model, field, None):
                 result.append(attr.desc() if desc else attr)
         return result
 
@@ -120,7 +120,7 @@ class BaseRepository[
         entity: ModelT | None = await self.get_entity(**filters)
         if entity is None:
             raise EntityNotFoundError("Entity not found")
-        data: dict[str, Any] = attributes.model_dump(exclude_none=True, by_alias=True)  # type: ignore
+        data: dict[str, Any] = attributes.model_dump(exclude_none=True, by_alias=True)
         try:
             for k, v in data.items():
                 if hasattr(entity, k):
@@ -149,7 +149,7 @@ class BaseRepository[
     async def delete_expired(self) -> bool:
         """Deletes expired entities from the database."""
         now: dt.datetime = dt.datetime.now(dt.UTC)
-        query = sa.delete(self.model).where(self.model.expires_at < now)  # type: ignore
+        query = sa.delete(self.model).where(self.model.expires_at < now)
         try:
             await self.session.execute(query)
             return True

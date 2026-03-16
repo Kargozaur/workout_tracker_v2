@@ -30,7 +30,7 @@ class GetCachedWorkout[T](GetSingleWorkout):
 
     async def execute(self, workout_id: UUID) -> WorkoutCache:
         user_data: dict[str, Any] = self.token_provider.decode_token(self.access_token)
-        user_id: str = user_data.get("sub")  # type: ignore
+        user_id: str = user_data.get("sub")
         cached: WorkoutCache | None = await self.service.get_cache(
             f"{user_id}:{workout_id}"
         )

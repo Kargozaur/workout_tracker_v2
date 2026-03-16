@@ -33,7 +33,7 @@ class UpdateProfileInteractor[T: BaseModel]:
         user_id: UUID = UUID(payload.get("sub"))
         async with self.UoW:
             user: ExistingUser = await self.UoW.user_repository.update_user(
-                update_schema,  # type: ignore
+                update_schema,
                 id=user_id,
             )
             await self.UoW.commit()

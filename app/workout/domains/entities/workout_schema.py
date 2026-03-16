@@ -31,9 +31,11 @@ class CreateWorkout(WorkoutBase):
         if self.started_at and self.started_at < self.scheduled_at:
             raise ValueError("You can't start workout before scheduling it")
 
-        if self.finished_at and self.started_at:
-            if self.finished_at < self.started_at:
-                raise ValueError("You can't finish workout before starting it")
+        if self.finished_at < self.scheduled_at:
+            raise ValueError("You can't finish workout before scheduled date")
+
+        if self.finished_at < self.started_at:
+            raise ValueError("You can't finish workout before starting it")
 
         return self
 

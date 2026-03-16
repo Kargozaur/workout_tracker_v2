@@ -30,7 +30,7 @@ class GetUserInteractor[T](IUserInteractor):
         decoded_token: dict[str, Any] = self.token_provider.decode_token(
             self.access_token
         )
-        user_id: str = decoded_token.get("sub")  # type: ignore
+        user_id: str = decoded_token.get("sub")
         user_data: T | None = await self.UoW.user_repository.get_user(
             id=UUID(user_id),
             fields=(

@@ -1,4 +1,5 @@
 import asyncio
+from collections.abc import Mapping, Sequence
 from typing import cast
 
 from celery import Celery
@@ -11,7 +12,7 @@ from app.workout.core.containers import create_async_containers
 from app.workout.core.settings.redis_settings import RedisConfig
 
 
-redis_cfg = RedisConfig()  # type: ignore
+redis_cfg = RedisConfig()
 
 client = Celery(
     "workout",
@@ -39,7 +40,7 @@ setup_dishka(cast(Container, containers), client)
 
 
 @worker_shutdown.connect
-def shutdown_container(*args, **kwargs) -> None:
+def shutdown_container() -> None:
     try:
         asyncio.run(containers.close())
     except Exception:

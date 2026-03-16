@@ -10,18 +10,18 @@ from app.workout.application.tasks.commands.cleanup_interactor import (
 from .celery_client import client, containers
 
 
-async def run_clean_db():
+async def run_clean_db() -> None:
     async with containers() as request_container:
         interactor = await request_container.get(CleanupInteractor)
         await interactor.execute()
 
 
 @client.task(ignore_result=True)
-def clean_db():
+def clean_db() -> None:
     asyncio.run(run_clean_db())
 
 
 @worker_ready.connect
-def worker_ready(*args, **kwargs):
+def worker_ready() -> None:
     """Clean up expired refresh tokens on startup."""
     clean_db.delay()

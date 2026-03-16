@@ -28,8 +28,8 @@ def transactional_workout_cached[**P, R](
      or to remove it."""
 
     @wraps(func)
-    async def wrapper(self, *args: P.args, **kwargs: P.kwargs) -> R:  # noqa: ANN001
-        workout_id: UUID = kwargs.get("workout_id")  # type: ignore
+    async def wrapper(self: object, *args: P.args, **kwargs: P.kwargs) -> R:
+        workout_id: UUID = kwargs.get("workout_id")
         user_data: dict[str, Any] = self.token_provider.decode_token(self.access_token)
         user_id: str = user_data.get("sub")
         cache_key: str = f"{user_id}:{workout_id}"
