@@ -1,5 +1,5 @@
-# import asyncio
 import time
+from collections.abc import AsyncGenerator
 from urllib.parse import urlparse
 
 from httpx import AsyncClient
@@ -21,33 +21,36 @@ class APIData:
     def _get_domain(url: str) -> str:
         return urlparse(url).netloc
 
-    @property
-    def api(self) -> str:
-        return self.__api_url
-
-    @api.setter
-    def api(self, new_url: str) -> None:
-        domain = self._get_domain(new_url)
-        if domain != self.__base_domain:
-            raise ValueError(
-                f"Domain {self.__base_domain} expected, instead got: {domain}"
-            )
-        self.__api_url = new_url
-
-    async def get_data(self, offset: int = 0, limit: int = 10) -> ResponseSchema | None:
-        logger.info(f"requesting {self.api}")
-        start = time.perf_counter()
-        response = await self.client.get(
-            self.api, params={"offset": offset, "limit": limit}
-        )
-        if response.status_code == 200:
-            logger.info(
-                f"response status code: {response.status_code}.\n"
-                f"Response_time: {time.perf_counter() - start:.2f}ms"
-            )
-            data: ResponseSchema = ResponseSchema.model_validate_json(response.text)
-            return data
+    async def get_data(
+        self, url: str, params: dict[str, int] | None = None
+    ) -> ResponseSchema | None:
+        self._validate_domain(url)
+        try:
+            logger.info(f"requesting {self.api}")
+            start = time.perf_counter()
+            response = await self.client.get(self.api, params=params, timeout=10)
+            if response.status_code == 200:
+                logger.info(
+                    f"response status code: {response.status_code}.\n"
+                    f"Response_time: {time.perf_counter() - start:.2f}ms"
+                )
+                data: ResponseSchema = ResponseSchema.model_validate_json(response.text)
+                return data
+        except Exception as exc:
+            logger.error(f"Request failed for {url}: {exc}")
         return None
+
+    async def fetch_all(self, limit: int = 10) -> AsyncGenerator[ResponseSchema]:
+        current_url: str = self.__api_url
+        params: dict[str, int] = {"offset": 0, "limit": limit}
+        while current_url:
+            data: ResponseSchema = await self.get_data(current_url, params)
+            if not data:
+                break
+
+            yield data
+            current_url = data.metatada.next_page
+            params = None
 
 
 # async def get_data() -> ResponseSchema:
