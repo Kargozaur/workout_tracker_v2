@@ -45,16 +45,16 @@ class APIData:
                 f"response status code: {response.status_code}.\n"
                 f"Response_time: {time.perf_counter() - start:.2f}ms"
             )
-            data = ResponseSchema.model_validate_json(response.text)
+            data: ResponseSchema = ResponseSchema.model_validate_json(response.text)
             return data
         return None
 
 
-# async def get_data():
+# async def get_data() -> ResponseSchema:
 #     async with AsyncClient() as aclient:
 #         new_data = APIData(aclient)
 #         res = await new_data.get_data()
 #     return res
-#
-#
+
+
 # print(asyncio.run(get_data()))

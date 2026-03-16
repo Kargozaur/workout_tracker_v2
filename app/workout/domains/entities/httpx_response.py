@@ -16,11 +16,11 @@ class Metadata(ResponseBaseSchema):
 
 
 class Data(ResponseBaseSchema):
-    exercise_id: str
+    exercise_slug: str = Field(validation_alias="exerciseId")
     name: str
     target_muscles: list[str]
     body_parts: list[str]
-    description: list[str] = Field(serialization_alias="instructions")
+    description: list[str] = Field(validation_alias="instructions")
 
 
 class ResponseSchema(ResponseBaseSchema):
