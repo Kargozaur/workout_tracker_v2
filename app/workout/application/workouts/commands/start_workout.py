@@ -24,10 +24,8 @@ class StartWorkoutInteractor:
         self.access_token = access_token
 
     async def execute(self, workout_id: UUID) -> dict[str, str]:
-        user_data: dict[str, Any] = self.token_provider.decode_token(
-            self.access_token
-        )
-        user_id: str = user_data.get("sub")
+        user_data: dict[str, Any] = self.token_provider.decode_token(self.access_token)
+        user_id: str = user_data.get("sub")  # type: ignore
         await self.service.delete_cache(f"{user_id}:{workout_id}")
         async with self.UoW:
             result = await self.UoW.workout_repository.start_workout(

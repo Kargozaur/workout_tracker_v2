@@ -24,18 +24,18 @@ class RefreshTokenRepository(
     def __init__(self, session: AsyncSession) -> None:
         super().__init__(session, RefreshToken)
 
-    async def get_refresh_token(self, **filters) -> RefreshToken:
+    async def get_refresh_token(self, **filters: object) -> RefreshToken | None:
         return await super().get_entity(**filters)
 
     async def create_refresh_token(
-        self, data: RefreshTokenSchema
+        self, create_schema: RefreshTokenSchema
     ) -> RefreshToken:
-        return await super().create_entity(data)
+        return await super().create_entity(create_schema)
 
-    async def revoke_refresh_token(self, **filters) -> bool:
+    async def revoke_refresh_token(self, **filters: object) -> bool:
         return await super().delete_entity(**filters)
 
-    async def bulk_delete_refresh_token(self, **filters) -> None:
+    async def bulk_delete_refresh_token(self, **filters: object) -> None:
         await super().bulk_deletion(**filters)
 
     async def delete_expired(self) -> bool:

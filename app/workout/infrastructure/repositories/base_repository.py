@@ -32,8 +32,8 @@ class BaseRepository[
     update_entity: updates entity based on pydantic schema.
     delete_entity: deletes entity based on filters.
     delete_expired: deletes expired entities from the database.
-    bulk_delete: bulk delete entities based on filters. Should be used either with celery worker or
-    in the specified method.
+    bulk_delete: bulk delete entities based on filters. Should be used either with
+    celery worker or in the specified method.
     """
 
     def __init__(self, session: AsyncSession, model: type[ModelT]) -> None:
@@ -50,7 +50,7 @@ class BaseRepository[
             if order and isinstance(field, str) and field.startswith("-"):
                 desc = True
                 field = field[1:]
-            if attr := getattr(self.model, field, None):
+            if attr := getattr(self.model, field, None):  # type: ignore
                 result.append(attr.desc() if desc else attr)
         return result
 
@@ -66,12 +66,11 @@ class BaseRepository[
         if load_fields := self._get_fields(fields):
             query = query.options(
                 load_only(*load_fields), raiseload("*")
-            )  # raiseload restricts lazy loading of fields if they are not loaded initially
+            )  # raiseload restricts lazy loading of fields if they are not loaded
+            # initially
         if order_fields := self._get_fields(order_by, True):
             query = query.order_by(*order_fields)
-        logger.debug(
-            f"SQL: {query.compile(compile_kwargs={'literal_binds': True})}"
-        )
+        logger.debug(f"SQL: {query.compile(compile_kwargs={'literal_binds': True})}")
         return query
 
     async def get_all_records(
@@ -79,7 +78,8 @@ class BaseRepository[
     ) -> Slice[ModelT]:
         """Generic method to get all records based on filters. Loaded fields
         may be applied by passing tuple fields as a keyword argument.
-        When passed, fields should look like: (...other kwargs, fields=("id", "name", etc.)).
+        When passed, fields should look like:
+        (...other kwargs, fields=("id", "name", etc.)).
         fields must be passed as tuple. Same rules apply for the ordering
         (order_by must be a tuple, non-existing fields will be omitted)."""
         query = self._get_query(**filters)
@@ -95,14 +95,15 @@ class BaseRepository[
     async def get_entity(self, **filters: object) -> ModelT | None:
         """Generic method to get an entity based on filters. It is possible to
         provide fields to load via fields keyword parameter.
-        When passed, fields should look like: (...other kwargs, fields=("id", "name", etc.)).
+        When passed, fields should look like: (...other kwargs,
+        fields=("id", "name", etc.)).
         fields must be passed as tuple."""
         result = await self.session.execute(self._get_query(**filters))
         return result.scalar_one_or_none()
 
-    async def create_entity(self, attributes: CreateSchemaT) -> ModelT | None:
+    async def create_entity(self, schema: CreateSchemaT) -> ModelT:
         """Creates entity based on pydantic schema provided."""
-        model: ModelT = self.model(**attributes.model_dump(by_alias=True))
+        model: ModelT = self.model(**schema.model_dump(by_alias=True))
         try:
             self.session.add(model)
             await self.session.flush()
@@ -119,9 +120,7 @@ class BaseRepository[
         entity: ModelT | None = await self.get_entity(**filters)
         if entity is None:
             raise EntityNotFoundException("Entity not found")
-        data: dict[str, Any] = attributes.model_dump(
-            exclude_none=True, by_alias=True
-        )
+        data: dict[str, Any] = attributes.model_dump(exclude_none=True, by_alias=True)  # type: ignore
         try:
             for k, v in data.items():
                 if hasattr(entity, k):
@@ -150,7 +149,7 @@ class BaseRepository[
     async def delete_expired(self) -> bool:
         """Deletes expired entities from the database."""
         now: dt.datetime = dt.datetime.now(dt.UTC)
-        query = sa.delete(self.model).where(self.model.expires_at < now)
+        query = sa.delete(self.model).where(self.model.expires_at < now)  # type: ignore
         try:
             await self.session.execute(query)
             return True
@@ -158,9 +157,9 @@ class BaseRepository[
             logger.exception("Failed to delete expired entities")
             raise EntityDeletionException() from exc
 
-    async def bulk_deletion(self, **filters: object):
-        """Bulk deletion based on filters. Should be used either with the Celery worker or
-        in specified method of the repository. This is not soft deletes."""
+    async def bulk_deletion(self, **filters: object) -> bool:
+        """Bulk deletion based on filters. Should be used either with the Celery
+        worker or in specified method of the repository. This is not soft deletes."""
         query = sa.delete(self.model).filter_by(**filters)
         try:
             await self.session.execute(query)

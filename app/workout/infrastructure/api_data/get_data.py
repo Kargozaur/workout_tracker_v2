@@ -12,10 +12,9 @@ class APIData:
     def __init__(
         self,
         client: AsyncClient,
-        url: str = "https://exercisedb.dev/api/v1/exercises",
     ) -> None:
         self.client = client
-        self.__api_url = url
+        self.__api_url = "https://exercisedb.dev/api/v1/exercises"
         self.__base_domain = self._get_domain(self.__api_url)
 
     @staticmethod

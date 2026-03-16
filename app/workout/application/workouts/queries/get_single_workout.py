@@ -6,7 +6,7 @@ from app.workout.domains.protocols.auth_protocols.itoken import ITokenProvider
 from app.workout.domains.protocols.uow_protocol.iuow import IUnitOfWork
 
 
-class GetSingleWorkout[T]:
+class GetSingleWorkout:
     def __init__(
         self,
         uow: IUnitOfWork,
@@ -17,7 +17,7 @@ class GetSingleWorkout[T]:
         self.token_provider = token_provider
         self.access_token = access_token
 
-    async def execute(self, workout_id: UUID) -> T:
+    async def execute(self, workout_id: UUID):  # noqa: ANN201
         user_data: dict[str, Any] = self.token_provider.decode_token(self.access_token)
         user_id: UUID = UUID(user_data.get("sub"))
         return await self.UoW.workout_repository.get_workout(

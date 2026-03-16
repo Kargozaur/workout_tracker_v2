@@ -14,13 +14,11 @@ class UserRepository(
     def __init__(self, session: AsyncSession) -> None:
         super().__init__(session, User)
 
-    async def get_user(self, **filters: object) -> User:
+    async def get_user(self, **filters: object) -> User | None:
         return await super().get_entity(**filters)
 
-    async def create_user(self, attributes: CreateUser) -> User:
-        return await super().create_entity(attributes)
+    async def create_user(self, schema: CreateUser) -> User:
+        return await super().create_entity(schema)
 
-    async def update_user(
-        self, attributes: UpdateUser, **filters: object
-    ) -> User:
+    async def update_user(self, attributes: UpdateUser, **filters: object) -> User:
         return await super().update_entity(attributes, **filters)

@@ -2,6 +2,7 @@ from abc import abstractmethod
 from uuid import UUID
 
 from app.workout.application.common.dataclasses.pagination import Slice
+from app.workout.domains.entities.workout_schema import AddNote
 
 from . import BaseModel, Protocol
 
@@ -20,24 +21,18 @@ class IWorkoutRepository[
     async def create_workout(self, schema: CreateSchemaT) -> ModelT: ...
 
     @abstractmethod
-    async def get_workout(self, user_id: UUID, workout_id: UUID) -> ModelT: ...
+    async def get_workout(self, user_id: UUID, workout_id: UUID) -> ModelT | None: ...
 
     @abstractmethod
-    async def start_workout(
-        self, user_id: UUID, workout_id: UUID
-    ) -> ModelT: ...
+    async def start_workout(self, user_id: UUID, workout_id: UUID) -> ModelT: ...
 
     @abstractmethod
-    async def cancel_workout(
-        self, user_id: UUID, workout_id: UUID
-    ) -> bool: ...
+    async def cancel_workout(self, user_id: UUID, workout_id: UUID) -> ModelT: ...
 
     @abstractmethod
-    async def finish_workout(
-        self, user_id: UUID, workout_id: UUID
-    ) -> ModelT: ...
+    async def finish_workout(self, user_id: UUID, workout_id: UUID) -> ModelT: ...
 
     @abstractmethod
     async def add_note(
-        self, note: UpdateSchemaT, user_id: UUID, workout_id: UUID
-    ) -> ModelT: ...
+        self, note: AddNote, user_id: UUID, workout_id: UUID
+    ) -> ModelT | None: ...

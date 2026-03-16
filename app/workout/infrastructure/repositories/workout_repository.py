@@ -29,11 +29,11 @@ from app.workout.infrastructure.repositories.base_repository import (
 
 class WorkoutRepository(
     BaseRepository[
-        Workout, CreateWorkout, UpdateStartedAt | UpdateFinishedAt | AddNote
+        Workout,
+        CreateWorkout,
+        UpdateStartedAt | UpdateFinishedAt | AddNote | CancelWorkout,
     ],
-    IWorkoutRepository[
-        Workout, CreateWorkout, UpdateStartedAt | UpdateFinishedAt
-    ],
+    IWorkoutRepository[Workout, CreateWorkout, UpdateStartedAt | UpdateFinishedAt],
 ):
     def __init__(self, session: AsyncSession) -> None:
         super().__init__(session, Workout)
@@ -60,9 +60,7 @@ class WorkoutRepository(
             order_by=("-scheduled_at",),
         )
 
-    async def get_workout(
-        self, workout_id: UUID, user_id: UUID
-    ) -> Workout | None:
+    async def get_workout(self, user_id: UUID, workout_id: UUID) -> Workout | None:
         return await super().get_entity(
             id=workout_id,
             user_id=user_id,
@@ -77,8 +75,8 @@ class WorkoutRepository(
             ),
         )
 
-    async def create_workout(self, workout: CreateWorkout) -> Workout:
-        return await super().create_entity(workout)
+    async def create_workout(self, schema: CreateWorkout) -> Workout:
+        return await super().create_entity(schema)
 
     async def start_workout(self, user_id: UUID, workout_id: UUID) -> Workout:
         workout: Workout | None = await super().get_entity(
@@ -105,9 +103,7 @@ class WorkoutRepository(
                 "Failed to start workout. Workout already finished."
             )
         start: UpdateStartedAt = UpdateStartedAt()
-        result = await super().update_entity(
-            start, id=workout.id, user_id=user_id
-        )
+        result = await super().update_entity(start, id=workout.id, user_id=user_id)
         return result
 
     async def finish_workout(self, user_id: UUID, workout_id: UUID) -> Workout:
@@ -119,21 +115,17 @@ class WorkoutRepository(
         if not workout:
             raise WorkoutNotFoundException()
         if not workout.started_at:
-            raise WorkoutEndException(
-                "Failed to finish workout. Workout not started."
-            )
+            raise WorkoutEndException("Failed to finish workout. Workout not started.")
         if workout.finished_at:
             raise WorkoutEndException(
                 "Failed to finish workout. Workout already finished."
             )
         finish: UpdateFinishedAt = UpdateFinishedAt()
-        result = await super().update_entity(
-            finish, id=workout.id, user_id=user_id
-        )
+        result = await super().update_entity(finish, id=workout.id, user_id=user_id)
         return result
 
-    async def cancel_workout(self, user_id: UUID, workout_id: UUID) -> bool:
-        workout: Workout = await super().get_entity(
+    async def cancel_workout(self, user_id: UUID, workout_id: UUID) -> Workout:
+        workout: Workout | None = await super().get_entity(
             id=workout_id,
             user_id=user_id,
             fields=("id", "started_at", "finished_at", "status"),
@@ -150,17 +142,12 @@ class WorkoutRepository(
             )
 
         cancel: CancelWorkout = CancelWorkout()
-        result = await super().update_entity(
-            cancel, id=workout.id, user_id=user_id
-        )
+        result = await super().update_entity(cancel, id=workout.id, user_id=user_id)
         return result
 
     async def add_note(
-        self,
-        note: AddNote,
-        user_id: UUID,
-        workout_id: UUID,
-    ) -> Workout:
+        self, note: AddNote, user_id: UUID, workout_id: UUID
+    ) -> Workout | None:
         return await super().update_entity(
             note,
             id=workout_id,
