@@ -167,3 +167,14 @@ class BaseRepository[
         except Exception as exc:
             logger.exception("Failed to delete entities")
             raise EntityDeletionError() from exc
+
+    async def bulk_insert(self, schemas: list[CreateSchemaT]) -> int:
+        to_insert: list[dict[str, Any]] = [ins.to_dict() for ins in schemas]
+        query = sa.insert(self.model).values(to_insert)
+        try:
+            result = await self.session.execute(query)
+            await self.session.flush()
+            return len(result)
+        except Exception as exc:
+            logger.exception(f"Exception is raised: {exc}")
+            raise EntityCreationError() from exc

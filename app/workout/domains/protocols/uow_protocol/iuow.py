@@ -1,5 +1,8 @@
 from typing import Protocol, Self, runtime_checkable
 
+from app.workout.domains.protocols.repository_protocols.iexerciserepository import (
+    IExerciseRepository,
+)
 from app.workout.domains.protocols.repository_protocols.irefresh_repository import (
     IRefreshRepository,
 )
@@ -19,6 +22,7 @@ class IUnitOfWork(Protocol):
     user_repository: IUserRepository
     refresh_repository: IRefreshRepository
     workout_repository: IWorkoutRepository
+    exercise_repository: IExerciseRepository
 
     async def __aenter__(self) -> Self: ...
 
