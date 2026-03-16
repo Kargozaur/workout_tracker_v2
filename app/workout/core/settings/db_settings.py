@@ -48,9 +48,7 @@ class PostgresConfig(AbstractDbConfig):
                 scheme=f"postgresql+{self.driver}",
                 username=self.user.get_secret_value(),
                 password=self.password.get_secret_value(),
-                host=self.host.get_secret_value()
-                if self.host
-                else "localhost",
+                host=self.host.get_secret_value() if self.host else "localhost",
                 port=self.port,
                 path=self.database,
             )

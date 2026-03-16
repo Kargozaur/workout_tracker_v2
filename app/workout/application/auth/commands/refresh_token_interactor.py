@@ -12,7 +12,7 @@ from app.workout.domains.entities.refresh_token_schema import (
     RefreshTokenSchema,
 )
 from app.workout.domains.exceptions.auth_exceptions import (
-    TokenExpiredException,
+    TokenExpiredError,
 )
 from app.workout.domains.protocols.auth_protocols.itoken import ITokenProvider
 from app.workout.domains.protocols.auth_protocols.itokenhasher import (
@@ -46,12 +46,12 @@ class RefreshTokenInteractor[T: RefreshTokenT]:
             fields=("id", "token_hash"),
         )
         if not db_token:
-            raise TokenExpiredException("Token nod found")
+            raise TokenExpiredError("Token nod found")
 
         exp_dt: dt.datetime = dt.datetime.fromtimestamp(exp, tz=dt.UTC)
         now: dt.datetime = dt.datetime.now(dt.UTC)
         if exp_dt < now:
-            raise TokenExpiredException("Token expired")
+            raise TokenExpiredError("Token expired")
 
         left: dt.timedelta = exp_dt - dt.datetime.now(dt.UTC)
         new_refresh_token: str | None = None

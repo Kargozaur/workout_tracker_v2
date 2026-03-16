@@ -59,9 +59,7 @@ class UseCaseProvider(Provider):
         token_hasher: ITokenHasher,
         password_hasher: IPasswordHasher,
     ) -> LoginInteractor:
-        return LoginInteractor(
-            uow, token_provider, token_hasher, password_hasher
-        )
+        return LoginInteractor(uow, token_provider, token_hasher, password_hasher)
 
     @provide
     def current_user_provider(
@@ -93,9 +91,7 @@ class UseCaseProvider(Provider):
         access_token: AccessToken,
         cache_service: ICacheService[GetUser],
     ) -> LogoutGlobalInteractor:
-        return LogoutGlobalInteractor(
-            uow, token_provider, access_token, cache_service
-        )
+        return LogoutGlobalInteractor(uow, token_provider, access_token, cache_service)
 
     @provide
     def refresh_token_provider(
@@ -105,9 +101,7 @@ class UseCaseProvider(Provider):
         token_hasher: ITokenHasher,
         refresh_token: RefreshToken,
     ) -> RefreshTokenInteractor:
-        return RefreshTokenInteractor(
-            uow, token_provider, token_hasher, refresh_token
-        )
+        return RefreshTokenInteractor(uow, token_provider, token_hasher, refresh_token)
 
     @decorate
     def cached_interactor(
@@ -131,6 +125,4 @@ class UseCaseProvider(Provider):
         service: ICacheService[UpdateUser],
         access_token: AccessToken,
     ) -> UpdateProfileInteractor:
-        return UpdateProfileInteractor(
-            uow, token_provider, service, access_token
-        )
+        return UpdateProfileInteractor(uow, token_provider, service, access_token)

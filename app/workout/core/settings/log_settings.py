@@ -52,5 +52,6 @@ def setup_logger(*, default_level: str = "INFO") -> None:
         compression="zip",
         level="INFO",
         encoding="utf-8",
-        format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} | {name}:{function}:{line} - {message}",
+        format="{time:YYYY-MM-DD HH:mm:ss.SSS} | {level: <8} |"
+        "{name}:{function}:{line} - {message}",
     )

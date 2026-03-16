@@ -5,7 +5,7 @@ from app.workout.application.common.generic_protocols.user_types import (
 )
 from app.workout.domains.entities.user_schemas import CreateUser
 from app.workout.domains.exceptions.user_exceptions import (
-    UserExistsException,
+    UserExistsError,
 )
 from app.workout.domains.protocols.auth_protocols.ihasher import (
     IPasswordHasher,
@@ -23,7 +23,7 @@ class RegisterUser[T: NotExistingUser]:
             email=user_data.email
         )
         if existing_user:
-            raise UserExistsException("Failed to create user")
+            raise UserExistsError("Failed to create user")
         hashed_password: str = await asyncio.to_thread(
             self.hasher.hash_password, user_data.password
         )

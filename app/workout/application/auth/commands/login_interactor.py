@@ -10,7 +10,7 @@ from app.workout.domains.entities.refresh_token_schema import (
 )
 from app.workout.domains.entities.user_schemas import LoginSchema
 from app.workout.domains.exceptions.user_exceptions import (
-    UserNotFoundException,
+    UserNotFoundError,
 )
 from app.workout.domains.protocols.auth_protocols.ihasher import (
     IPasswordHasher,
@@ -40,14 +40,14 @@ class LoginInteractor[T: ExistingUser]:
             email=login.email, fields=("id", "email", "password_hash")
         )
         if not user:
-            raise UserNotFoundException("User with such email does not exist")
+            raise UserNotFoundError("User with such email does not exist")
         is_correct_password: bool = await asyncio.to_thread(
             self.password_hasher.verify_password,
             login.password,
             user.password_hash,
         )
         if not is_correct_password:
-            raise UserNotFoundException("User with such email does not exist")
+            raise UserNotFoundError("User with such email does not exist")
 
         access_token: str = self.token_provider.create_access_token(user.id)
         refresh_token: str = self.token_provider.create_refresh_token(user.id)

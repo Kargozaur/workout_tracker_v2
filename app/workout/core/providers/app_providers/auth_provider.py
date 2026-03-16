@@ -5,7 +5,7 @@ from app.workout.application.common.types.token_types import (
     AccessToken,
     RefreshToken,
 )
-from app.workout.domains.exceptions.auth_exceptions import AuthException
+from app.workout.domains.exceptions.auth_exceptions import AuthError
 
 
 class AuthProvider(Provider):
@@ -18,12 +18,12 @@ class AuthProvider(Provider):
             return AccessToken(auth_header[len("Bearer ") :])
         auth_token: str | None = request.cookies.get("access_token")
         if not auth_token:
-            raise AuthException("Unauthorized access")
+            raise AuthError("Unauthorized access")
         return AccessToken(auth_token)
 
     @provide
     def get_refresh_token(self, request: Request) -> RefreshToken:
         auth_token: str | None = request.cookies.get("refresh_token")
         if not auth_token:
-            raise AuthException("Unauthorized access")
+            raise AuthError("Unauthorized access")
         return RefreshToken(auth_token)

@@ -5,7 +5,7 @@ from loguru import logger
 
 from app.workout.application.common.types.token_types import AccessToken
 from app.workout.domains.exceptions.user_exceptions import (
-    UserNotFoundException,
+    UserNotFoundError,
 )
 from app.workout.domains.protocols.auth_protocols.itoken import ITokenProvider
 from app.workout.domains.protocols.auth_protocols.iuserinteractor import (
@@ -43,5 +43,5 @@ class GetUserInteractor[T](IUserInteractor):
             ),
         )
         if not user_data:
-            raise UserNotFoundException("User not found")
+            raise UserNotFoundError("User not found")
         return user_data

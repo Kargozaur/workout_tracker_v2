@@ -39,7 +39,7 @@ setup_dishka(cast(Container, containers), client)
 
 
 @worker_shutdown.connect
-def shutdown_container(*args, **kwargs):
+def shutdown_container(*args, **kwargs) -> None:
     try:
         asyncio.run(containers.close())
     except Exception:

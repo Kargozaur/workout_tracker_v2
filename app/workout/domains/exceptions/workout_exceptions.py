@@ -1,23 +1,23 @@
 from app.workout.application.common.status_codes import failed_status_codes
 
-from .app_base_exception import AppBaseException
+from .app_base_exception import AppBaseError
 
 
-class WorkoutStartException(AppBaseException):
+class WorkoutStartError(AppBaseError):
     status_code = failed_status_codes.bad_request
 
     def __init__(self, message: str = "Failed to start workout") -> None:
         super().__init__(message)
 
 
-class WorkoutEndException(AppBaseException):
+class WorkoutEndError(AppBaseError):
     status_code = failed_status_codes.bad_request
 
     def __init__(self, message: str = "Failed to end workout") -> None:
         super().__init__(message)
 
 
-class WorkoutNotFoundException(AppBaseException):
+class WorkoutNotFoundError(AppBaseError):
     status_code = failed_status_codes.not_found
 
     def __init__(self, message: str = "Workout not found") -> None:

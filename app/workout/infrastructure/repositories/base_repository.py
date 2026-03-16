@@ -7,10 +7,10 @@ from sqlalchemy.orm import load_only, raiseload
 
 from app.workout.application.common.dataclasses.pagination import Slice
 from app.workout.domains.exceptions.entity_exceptions import (
-    EntityCreationException,
-    EntityDeletionException,
-    EntityNotFoundException,
-    EntityUpdateException,
+    EntityCreationError,
+    EntityDeletionError,
+    EntityNotFoundError,
+    EntityUpdateError,
 )
 from app.workout.domains.protocols.repository_protocols.irepository import (
     IRepository,
@@ -110,7 +110,7 @@ class BaseRepository[
             return model
         except Exception as exc:
             logger.exception("Failed to create entity")
-            raise EntityCreationException() from exc
+            raise EntityCreationError() from exc
 
     async def update_entity(
         self, attributes: UpdateSchemaT, **filters: object
@@ -119,7 +119,7 @@ class BaseRepository[
         based on given kwargs."""
         entity: ModelT | None = await self.get_entity(**filters)
         if entity is None:
-            raise EntityNotFoundException("Entity not found")
+            raise EntityNotFoundError("Entity not found")
         data: dict[str, Any] = attributes.model_dump(exclude_none=True, by_alias=True)  # type: ignore
         try:
             for k, v in data.items():
@@ -131,7 +131,7 @@ class BaseRepository[
             return entity
         except Exception as exc:
             logger.exception("Failed to update entity")
-            raise EntityUpdateException() from exc
+            raise EntityUpdateError() from exc
 
     async def delete_entity(self, **filters: object) -> bool:
         """Deletes entity from the database based on filters."""
@@ -144,7 +144,7 @@ class BaseRepository[
             return True
         except Exception as exc:
             logger.exception("Failed to delete entity")
-            raise EntityDeletionException() from exc
+            raise EntityDeletionError() from exc
 
     async def delete_expired(self) -> bool:
         """Deletes expired entities from the database."""
@@ -155,7 +155,7 @@ class BaseRepository[
             return True
         except Exception as exc:
             logger.exception("Failed to delete expired entities")
-            raise EntityDeletionException() from exc
+            raise EntityDeletionError() from exc
 
     async def bulk_deletion(self, **filters: object) -> bool:
         """Bulk deletion based on filters. Should be used either with the Celery
@@ -166,4 +166,4 @@ class BaseRepository[
             return True
         except Exception as exc:
             logger.exception("Failed to delete entities")
-            raise EntityDeletionException() from exc
+            raise EntityDeletionError() from exc

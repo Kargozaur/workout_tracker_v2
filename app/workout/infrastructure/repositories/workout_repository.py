@@ -14,9 +14,9 @@ from app.workout.domains.entities.workout_schema import (
     UpdateStartedAt,
 )
 from app.workout.domains.exceptions.workout_exceptions import (
-    WorkoutEndException,
-    WorkoutNotFoundException,
-    WorkoutStartException,
+    WorkoutEndError,
+    WorkoutNotFoundError,
+    WorkoutStartError,
 )
 from app.workout.domains.protocols.repository_protocols.iworkout_repository import (
     IWorkoutRepository,
@@ -93,13 +93,11 @@ class WorkoutRepository(
             ),
         )
         if not workout:
-            raise WorkoutNotFoundException()
+            raise WorkoutNotFoundError()
         if workout.started_at:
-            raise WorkoutStartException(
-                "Failed to start workout. Workout already started."
-            )
+            raise WorkoutStartError("Failed to start workout. Workout already started.")
         if workout.finished_at:
-            raise WorkoutStartException(
+            raise WorkoutStartError(
                 "Failed to start workout. Workout already finished."
             )
         start: UpdateStartedAt = UpdateStartedAt()
@@ -113,13 +111,11 @@ class WorkoutRepository(
             fields=("id", "started_at", "finished_at"),
         )
         if not workout:
-            raise WorkoutNotFoundException()
+            raise WorkoutNotFoundError()
         if not workout.started_at:
-            raise WorkoutEndException("Failed to finish workout. Workout not started.")
+            raise WorkoutEndError("Failed to finish workout. Workout not started.")
         if workout.finished_at:
-            raise WorkoutEndException(
-                "Failed to finish workout. Workout already finished."
-            )
+            raise WorkoutEndError("Failed to finish workout. Workout already finished.")
         finish: UpdateFinishedAt = UpdateFinishedAt()
         result = await super().update_entity(finish, id=workout.id, user_id=user_id)
         return result
@@ -131,15 +127,13 @@ class WorkoutRepository(
             fields=("id", "started_at", "finished_at", "status"),
         )
         if not workout:
-            raise WorkoutNotFoundException()
+            raise WorkoutNotFoundError()
 
         if workout.status == WorkoutStatuses.CANCELLED:
-            raise WorkoutEndException("Workout already cancelled")
+            raise WorkoutEndError("Workout already cancelled")
 
         if workout.finished_at:
-            raise WorkoutEndException(
-                "Failed to cancel workout. Workout already finished."
-            )
+            raise WorkoutEndError("Failed to cancel workout. Workout already finished.")
 
         cancel: CancelWorkout = CancelWorkout()
         result = await super().update_entity(cancel, id=workout.id, user_id=user_id)
