@@ -1,3 +1,4 @@
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from dishka import AsyncContainer
@@ -32,7 +33,7 @@ def create_app() -> FastAPI:
     container: AsyncContainer = create_async_containers()
 
     app.state.container = container
-    app.add_middleware(ProcessTimeMiddleware)
+    app.add_middleware(ProcessTimeMiddleware)  # ty:ignore[invalid-argument-type]
     create_user_exception_handler(app)
     create_entity_exception_handler(app)
     create_auth_exception_handler(app)
@@ -48,7 +49,7 @@ def create_app() -> FastAPI:
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncIterator:
     await app.state.container.get(MuscleGroupToId)
     await app.state.container.get(CategoryToId)
     yield

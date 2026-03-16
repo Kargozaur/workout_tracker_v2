@@ -1,4 +1,4 @@
-import anyio
+import asyncio
 
 from app.workout.application.common.generic_protocols.user_types import (
     NotExistingUser,
@@ -24,7 +24,7 @@ class RegisterUser[T: NotExistingUser]:
         )
         if existing_user:
             raise UserExistsException("Failed to create user")
-        hashed_password: str = await anyio.to_thread.run_sync(
+        hashed_password: str = await asyncio.to_thread(
             self.hasher.hash_password, user_data.password
         )
         user_data.password = hashed_password

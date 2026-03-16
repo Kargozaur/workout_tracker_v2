@@ -10,6 +10,4 @@ class TokenHasher(ITokenHasher):
         return hashlib.sha256(token.encode("utf-8")).hexdigest()
 
     def verify(self, token: str, hashed_token: str) -> bool:
-        return (
-            hashlib.sha256(token.encode("utf-8")).hexdigest() == hashed_token
-        )
+        return hashlib.sha256(token.encode("utf-8")).hexdigest() == hashed_token

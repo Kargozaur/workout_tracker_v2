@@ -12,7 +12,7 @@ def transactional[**P, R](
     the filters."""
 
     @wraps(func)
-    async def wrapper(self, *args: P.args, **kwargs: P.kwargs) -> R:
+    async def wrapper(self, *args: P.args, **kwargs: P.kwargs) -> R:  # noqa: ANN001
         uow: IUnitOfWork | None = getattr(self, "UoW", None)
         if not uow:
             raise AttributeError("Unit of work must be provided")

@@ -10,6 +10,7 @@ from dishka.integrations.celery import DishkaTask, setup_dishka
 from app.workout.core.containers import create_async_containers
 from app.workout.core.settings.redis_settings import RedisConfig
 
+
 redis_cfg = RedisConfig()  # type: ignore
 
 client = Celery(

@@ -15,7 +15,7 @@ class TokenProvider(ITokenProvider):
     def _encode(self, user_id: UUID, expire: dt.timedelta) -> str:
         u_id: str = str(user_id)
         to_encode: dict[str, Any] = {"sub": u_id}
-        exp: dt.datetime = dt.datetime.utcnow() + expire
+        exp: dt.datetime = dt.datetime.now(dt.UTC) + expire
         to_encode.update({"exp": exp})
         encoded: str = jwt.encode(
             payload=to_encode,
@@ -25,9 +25,7 @@ class TokenProvider(ITokenProvider):
         return encoded
 
     def create_access_token(self, user_id: UUID) -> str:
-        encoded: str = self._encode(
-            user_id=user_id, expire=self.jwt_config.expire
-        )
+        encoded: str = self._encode(user_id=user_id, expire=self.jwt_config.expire)
         return encoded
 
     def create_refresh_token(self, user_id: UUID) -> str:
@@ -44,5 +42,5 @@ class TokenProvider(ITokenProvider):
                 algorithms=[self.jwt_config.alg],
             )
             return payload
-        except jwt.ExpiredSignatureError:
-            raise jwt.ExpiredSignatureError()
+        except jwt.ExpiredSignatureError as exc:
+            raise jwt.ExpiredSignatureError() from exc

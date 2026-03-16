@@ -1,4 +1,5 @@
-import anyio
+import asyncio
+
 from loguru import logger
 
 from app.workout.application.common.generic_protocols.user_types import (
@@ -40,7 +41,7 @@ class LoginInteractor[T: ExistingUser]:
         )
         if not user:
             raise UserNotFoundException("User with such email does not exist")
-        is_correct_password: bool = await anyio.to_thread.run_sync(
+        is_correct_password: bool = await asyncio.to_thread(
             self.password_hasher.verify_password,
             login.password,
             user.password_hash,
@@ -55,12 +56,8 @@ class LoginInteractor[T: ExistingUser]:
             user_id=user.id, token_hash=refresh_token_hash
         )
         async with self.UoW:
-            await self.UoW.refresh_repository.create_refresh_token(
-                refresh_schema
-            )
+            await self.UoW.refresh_repository.create_refresh_token(refresh_schema)
             await self.UoW.commit()
-        logger.debug(
-            f"Access: {access_token[:-5]}. Refresh: {refresh_token[:-5]}"
-        )
+        logger.debug(f"Access: {access_token[:-5]}. Refresh: {refresh_token[:-5]}")
 
         return access_token, refresh_token

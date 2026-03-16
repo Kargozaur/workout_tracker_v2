@@ -11,7 +11,7 @@ wheels/
 
 *.env
 .idea
-
+.vscode
 plotter.py
 
 */logs/

@@ -36,18 +36,16 @@ class CachedUserInteractor[T: CacheUser, R: BaseModel](GetUserInteractor):
         self.service = service
 
     async def execute(self) -> T:
-        decoded: dict[str, Any] = self.token_provider.decode_token(
-            self.access_token
-        )
+        decoded: dict[str, Any] = self.token_provider.decode_token(self.access_token)
         user_id: UUID = UUID(decoded.get("sub"))
-        cached_user: T | None = await self.service.get_cache(user_id)
+        cached_user: T | None = await self.service.get_cache(user_id)  # type: ignore
         if cached_user:
             logger.debug(f"Cache hit: {cached_user}")
             return cached_user
         user_data: T = await self.interactor.execute()
         cached_data: R = GetUser(
             **user_data.__dict__
-        )  # passes ORM attributes inside the GetUser model
+        )  # passes ORM attributes inside the GetUser model # type: ignore
         await self.service.set_cache(user_id, cached_data)
         logger.debug(f"{user_id} cached.")
         return user_data

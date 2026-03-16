@@ -22,8 +22,8 @@ class UnitOfWork(IUnitOfWork):
     def __init__(self, session: AsyncSession) -> None:
         self.session = session
         self.user_repository: UserRepository = UserRepository(session)
-        self.refresh_repository: RefreshTokenRepository = (
-            RefreshTokenRepository(session)
+        self.refresh_repository: RefreshTokenRepository = RefreshTokenRepository(
+            session
         )
         self.workout_repository: WorkoutRepository = WorkoutRepository(session)
 

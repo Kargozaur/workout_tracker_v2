@@ -1,4 +1,4 @@
-from typing import Protocol, runtime_checkable
+from typing import Protocol, Self, runtime_checkable
 
 from app.workout.domains.protocols.repository_protocols.irefresh_repository import (
     IRefreshRepository,
@@ -20,9 +20,9 @@ class IUnitOfWork(Protocol):
     refresh_repository: IRefreshRepository
     workout_repository: IWorkoutRepository
 
-    def __aenter__(self) -> None: ...
+    async def __aenter__(self) -> Self: ...
 
-    def __aexit__(
+    async def __aexit__(
         self,
         exc_type: type[BaseException] | None,
         exc_val: BaseException | None,

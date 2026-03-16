@@ -35,17 +35,13 @@ class RefreshTokenInteractor[T: RefreshTokenT]:
         self.refresh_token = refresh_token
 
     async def execute(self) -> tuple[str, str]:
-        payload: dict[str, Any] = self.token_provider.decode_token(
-            self.refresh_token
-        )
+        payload: dict[str, Any] = self.token_provider.decode_token(self.refresh_token)
 
         user_id: UUID = UUID(payload.get("sub"))
-        exp: int = payload.get("exp")
+        exp: int = payload.get("exp")  # type: ignore
         current_token_hash: str = self.token_hasher.hash(self.refresh_token)
 
-        db_token: (
-            T | None
-        ) = await self.UoW.refresh_repository.get_refresh_token(
+        db_token: T | None = await self.UoW.refresh_repository.get_refresh_token(
             token_hash=current_token_hash,
             fields=("id", "token_hash"),
         )
@@ -60,9 +56,7 @@ class RefreshTokenInteractor[T: RefreshTokenT]:
         left: dt.timedelta = exp_dt - dt.datetime.now(dt.UTC)
         new_refresh_token: str | None = None
         if left < dt.timedelta(days=1):
-            new_refresh_token: str = self.token_provider.create_refresh_token(
-                user_id
-            )
+            new_refresh_token: str = self.token_provider.create_refresh_token(user_id)
             token_hash: str = self.token_hasher.hash(new_refresh_token)
             token_schema: RefreshTokenSchema = RefreshTokenSchema(
                 user_id=user_id, token_hash=token_hash
@@ -72,9 +66,7 @@ class RefreshTokenInteractor[T: RefreshTokenT]:
                 await self.UoW.refresh_repository.revoke_refresh_token(
                     token_hash=current_token_hash
                 )
-                await self.UoW.refresh_repository.create_refresh_token(
-                    token_schema
-                )
+                await self.UoW.refresh_repository.create_refresh_token(token_schema)
                 await self.UoW.commit()
             logger.debug("Updated token")
         access_token: str = self.token_provider.create_access_token(user_id)

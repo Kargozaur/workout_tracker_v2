@@ -22,10 +22,8 @@ class StaticProvider(Provider):
     ) -> CategoryToId:
         async with session_maker() as session:
             logger.info("Entered in context for categories map")
-            result = await session.execute(
-                sa.select(Category.category, Category.id)
-            )
-        new_d = {name: index for name, index in result.all()}
+            result = await session.execute(sa.select(Category.category, Category.id))
+        new_d = {name: index for name, index in result.all()}  # noqa: C416
         logger.info("Loaded static content: categories map")
 
         logger.info(f"Loaded keys (Categories) {new_d.keys()}")
@@ -40,7 +38,7 @@ class StaticProvider(Provider):
             result = await session.execute(
                 sa.select(MuscleGroups.groups, MuscleGroups.id)
             )
-        new_d = {name: index for name, index in result.all()}
+        new_d = {name: index for name, index in result.all()}  # noqa: C416
         logger.info("Loaded static content: muscle groups map")
         logger.info(f"Loaded keys(Muscle Groups) {new_d.keys()}")
         return MuscleGroupToId(new_d)

@@ -6,7 +6,7 @@ class OAuth2HeaderOrCookie(OAuth2PasswordBearer):
     """Custom OAuth2 class to allow both cookie and header authentication
     for the OAuth2PasswordRequestForm."""
 
-    async def __call__(self, request: Request):
+    async def __call__(self, request: Request):  # noqa: ANN204
         header = request.headers.get("Authorization")
         cookie = request.cookies.get("access_token")
         if header and " " in header:

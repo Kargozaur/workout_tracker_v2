@@ -7,9 +7,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 
 class ProcessTimeMiddleware(BaseHTTPMiddleware):
-    async def dispatch(
-        self, request: Request, call_next: Callable
-    ) -> Response:
+    async def dispatch(self, request: Request, call_next: Callable) -> Response:
         start_time = time.perf_counter()
 
         response = await call_next(request)
@@ -21,6 +19,7 @@ class ProcessTimeMiddleware(BaseHTTPMiddleware):
         response.headers["X-Process-Time"] = time_str
 
         logger.info(
-            f"Completed {request.method} {request.url} | Status: {response.status_code} | Time: {time_str}"
+            f"Completed {request.method} {request.url} | Status: {response.status_code}"
+            f"| Time: {time_str}"
         )
         return response

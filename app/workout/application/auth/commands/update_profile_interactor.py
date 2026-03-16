@@ -29,13 +29,12 @@ class UpdateProfileInteractor[T: BaseModel]:
         self.access_token = access_token
 
     async def execute(self, update_schema: T) -> ExistingUser:
-        payload: dict[str, Any] = self.token_provider.decode_token(
-            self.access_token
-        )
+        payload: dict[str, Any] = self.token_provider.decode_token(self.access_token)
         user_id: UUID = UUID(payload.get("sub"))
         async with self.UoW:
             user: ExistingUser = await self.UoW.user_repository.update_user(
-                update_schema, id=user_id
+                update_schema,  # type: ignore
+                id=user_id,
             )
             await self.UoW.commit()
         cached_user: GetUser = GetUser(**user.__dict__)

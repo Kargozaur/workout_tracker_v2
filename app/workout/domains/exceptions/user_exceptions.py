@@ -5,7 +5,6 @@ from .app_base_exception import AppBaseException
 
 class UserExistsException(AppBaseException):
     status_code = failed_status_codes.conflict
-    message = "User already exists"
 
     def __init__(self, message: str = "User already exists") -> None:
         super().__init__(message)

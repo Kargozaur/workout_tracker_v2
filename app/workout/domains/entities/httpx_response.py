@@ -20,7 +20,7 @@ class Data(ResponseBaseSchema):
     name: str
     target_muscles: list[str]
     body_parts: list[str]
-    instructions: list[str]
+    description: list[str] = Field(serialization_alias="instructions")
 
 
 class ResponseSchema(ResponseBaseSchema):

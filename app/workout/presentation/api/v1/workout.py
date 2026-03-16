@@ -3,6 +3,7 @@ from uuid import UUID
 from dishka.integrations.fastapi import FromDishka, inject
 from fastapi import APIRouter
 
+from app.workout.application.common.dataclasses.pagination import Slice
 from app.workout.application.common.status_codes import success_status_codes
 from app.workout.application.workouts.commands.add_note import (
     AddNoteInteractor,
@@ -43,7 +44,7 @@ def create_workout_router() -> APIRouter:
         description="Create a new workout.",
     )
     @inject
-    async def create_workout(
+    async def create_workout(  # noqa: ANN202
         _: OAuth2,
         interactor: FromDishka[CreateWorkoutInteractor],
         workout_data: CreateWorkout,
@@ -57,7 +58,7 @@ def create_workout_router() -> APIRouter:
         description="Get a slice of the workouts.",
     )
     @inject
-    async def get_all_workouts(
+    async def get_all_workouts(  # noqa: ANN202
         _: OAuth2,
         interactor: FromDishka[GetAllWorkouts],
         pagination: PaginationAnnotated,
@@ -71,14 +72,12 @@ def create_workout_router() -> APIRouter:
         description="get a single workout by its ID.",
     )
     @inject
-    async def get_single_workout(
+    async def get_single_workout(  # noqa: ANN202
         _: OAuth2, workout_id: UUID, interactor: FromDishka[GetSingleWorkout]
     ):
         return await interactor.execute(workout_id)
 
-    @router.patch(
-        "/workouts/{workout_id}/start", status_code=success_status_codes.ok
-    )
+    @router.patch("/workouts/{workout_id}/start", status_code=success_status_codes.ok)
     @inject
     async def start_workout(
         _: OAuth2,
@@ -87,9 +86,7 @@ def create_workout_router() -> APIRouter:
     ) -> dict[str, str]:
         return await interactor.execute(workout_id)
 
-    @router.patch(
-        "/workouts/{workout_id}/finish", status_code=success_status_codes.ok
-    )
+    @router.patch("/workouts/{workout_id}/finish", status_code=success_status_codes.ok)
     @inject
     async def finish_workout(
         _: OAuth2,
@@ -104,7 +101,7 @@ def create_workout_router() -> APIRouter:
         response_model=WorkoutResponse,
     )
     @inject
-    async def update_workout(
+    async def update_workout(  # noqa: ANN202
         _: OAuth2,
         workout_id: UUID,
         note: AddNote,

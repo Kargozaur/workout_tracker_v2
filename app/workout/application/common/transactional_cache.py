@@ -24,14 +24,13 @@ def transactional_workout_cached[**P, R](
     rather than dictionary with some message).
     Works only with user_id+workout_id key pair
     (at least for now).\n
-    TODO: to consider to leave it as it is, modify it to be more generic, or to remove it."""
+    TODO: to consider to leave it as it is, modify it to be more generic,
+     or to remove it."""
 
     @wraps(func)
-    async def wrapper(self, *args: P.args, **kwargs: P.kwargs) -> R:
-        workout_id: UUID = kwargs.get("workout_id")
-        user_data: dict[str, Any] = self.token_provider.decode_token(
-            self.access_token
-        )
+    async def wrapper(self, *args: P.args, **kwargs: P.kwargs) -> R:  # noqa: ANN001
+        workout_id: UUID = kwargs.get("workout_id")  # type: ignore
+        user_data: dict[str, Any] = self.token_provider.decode_token(self.access_token)
         user_id: str = user_data.get("sub")
         cache_key: str = f"{user_id}:{workout_id}"
         await self.service.delete_cache(cache_key)

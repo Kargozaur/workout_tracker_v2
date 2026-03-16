@@ -44,7 +44,7 @@ def create_user_router() -> APIRouter:
         response_model=GetUser,
     )
     @inject
-    async def update_profile(
+    async def update_profile(  # noqa: ANN202
         _: OAuth2,
         interactor: FromDishka[UpdateProfileInteractor],
         new_data: UpdateUser,
@@ -76,7 +76,8 @@ def create_user_router() -> APIRouter:
         status_code=success_status_codes.ok,
         response_model=LogoutSchema,
         description="Logout's user from all devices"
-        "(removes all occurrences of refresh tokens in a database based on user id)",
+        "(removes all occurrences of refresh tokens in a database based"
+        "on user id)",
     )
     @inject
     async def logout_all(

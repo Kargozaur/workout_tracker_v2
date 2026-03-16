@@ -16,17 +16,13 @@ from . import (
 )
 
 
-GenericStr = Annotated[
-    str | None, Field(default=None, min_length=1, max_length=100)
-]
+GenericStr = Annotated[str | None, Field(default=None, min_length=1, max_length=100)]
 PasswordField = Annotated[str, BeforeValidator(verify_password)]
 
 
 class CreateUser(BaseModel):
     email: EmailStr
-    password: PasswordField = Field(
-        validation_alias="password", alias="password_hash"
-    )
+    password: PasswordField = Field(validation_alias="password", alias="password_hash")
     first_name: GenericStr
     last_name: GenericStr
 

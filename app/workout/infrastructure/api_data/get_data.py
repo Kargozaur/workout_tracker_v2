@@ -35,9 +35,7 @@ class APIData:
             )
         self.__api_url = new_url
 
-    async def get_data(
-        self, offset: int = 0, limit: int = 10
-    ) -> ResponseSchema | None:
+    async def get_data(self, offset: int = 0, limit: int = 10) -> ResponseSchema | None:
         logger.info(f"requesting {self.api}")
         start = time.perf_counter()
         response = await self.client.get(

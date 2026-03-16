@@ -1,5 +1,7 @@
 from app.workout.application.common.status_codes import failed_status_codes
+
 from .app_base_exception import AppBaseException
+
 
 class AuthException(AppBaseException):
     status_code = failed_status_codes.unauthorized

@@ -13,9 +13,7 @@ class WorkoutBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)
     status: WorkoutStatuses = Field(default=WorkoutStatuses.SCHEDULED)
     scheduled_at: dt.datetime = Field(
-        default_factory=lambda: (
-            dt.datetime.now(dt.UTC) + dt.timedelta(hours=24)
-        )
+        default_factory=lambda: dt.datetime.now(dt.UTC) + dt.timedelta(hours=24)
     )
     started_at: dt.datetime | None = Field(default=None)
     finished_at: dt.datetime | None = Field(default=None)
@@ -52,9 +50,7 @@ class WorkoutCache(WorkoutBase):
 
 class UpdateStartedAt(BaseModel):
     status: WorkoutStatuses = Field(default=WorkoutStatuses.IN_PROGRESS)
-    started_at: dt.datetime = Field(
-        default_factory=lambda: dt.datetime.now(dt.UTC)
-    )
+    started_at: dt.datetime = Field(default_factory=lambda: dt.datetime.now(dt.UTC))
 
 
 class UpdateFinishedAt(BaseModel):

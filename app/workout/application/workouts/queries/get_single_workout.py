@@ -18,9 +18,7 @@ class GetSingleWorkout[T]:
         self.access_token = access_token
 
     async def execute(self, workout_id: UUID) -> T:
-        user_data: dict[str, Any] = self.token_provider.decode_token(
-            self.access_token
-        )
+        user_data: dict[str, Any] = self.token_provider.decode_token(self.access_token)
         user_id: UUID = UUID(user_data.get("sub"))
         return await self.UoW.workout_repository.get_workout(
             user_id=user_id, workout_id=workout_id

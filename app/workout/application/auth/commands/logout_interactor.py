@@ -22,7 +22,7 @@ class LogoutInteractor:
         refresh_token: RefreshToken,
         token_provider: ITokenProvider,
         cache_service: ICacheService,
-    ):
+    ) -> None:
         self.UoW = uow
         self.token_hasher = token_hasher
         self.refresh_token = refresh_token
@@ -36,9 +36,7 @@ class LogoutInteractor:
                 token_hash=token_hash
             )
             await self.UoW.commit()
-        payload: dict[str, Any] = self.token_provider.decode_token(
-            self.refresh_token
-        )
+        payload: dict[str, Any] = self.token_provider.decode_token(self.refresh_token)
         user_id: UUID = UUID(payload.get("sub"))
         logger.debug(f"User ID: {user_id}")
         await self.cache_service.delete_cache(user_id)
