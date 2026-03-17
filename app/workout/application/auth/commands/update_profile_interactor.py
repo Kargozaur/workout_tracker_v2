@@ -33,9 +33,9 @@ class UpdateProfileInteractor[T: BaseModel]:
         user_id: UUID = UUID(payload.get("sub"))
         async with self.UoW:
             user: ExistingUser = await self.UoW.user_repository.update_user(
-                update_schema,
+                update_schema,  # ty:ignore[invalid-argument-type]
                 id=user_id,
-            )
+            )  # ty:ignore[invalid-assignment]
             await self.UoW.commit()
         cached_user: GetUser = GetUser(**user.__dict__)
         await self.cache_service.delete_cache(user_id)

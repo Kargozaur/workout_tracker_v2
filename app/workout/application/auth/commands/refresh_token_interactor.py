@@ -1,5 +1,5 @@
 import datetime as dt
-from typing import Any
+from typing import Any, cast
 from uuid import UUID
 
 from loguru import logger
@@ -38,7 +38,7 @@ class RefreshTokenInteractor[T: RefreshTokenT]:
         payload: dict[str, Any] = self.token_provider.decode_token(self.refresh_token)
 
         user_id: UUID = UUID(payload.get("sub"))
-        exp: int = payload.get("exp")
+        exp: int = cast(int, payload.get("exp"))
         current_token_hash: str = self.token_hasher.hash(self.refresh_token)
 
         db_token: T | None = await self.UoW.refresh_repository.get_refresh_token(
