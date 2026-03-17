@@ -24,11 +24,12 @@ class APIData:
     async def get_data(
         self, url: str, params: dict[str, int] | None = None
     ) -> ResponseSchema | None:
-        self._validate_domain(url)
+        if not self._get_domain(url) == self.__base_domain:
+            raise
         try:
-            logger.info(f"requesting {self.api}")
+            logger.info(f"requesting {url}")
             start = time.perf_counter()
-            response = await self.client.get(self.api, params=params, timeout=10)
+            response = await self.client.get(url, params=params, timeout=10)
             if response.status_code == 200:
                 logger.info(
                     f"response status code: {response.status_code}.\n"
@@ -42,14 +43,14 @@ class APIData:
 
     async def fetch_all(self, limit: int = 10) -> AsyncGenerator[ResponseSchema]:
         current_url: str = self.__api_url
-        params: dict[str, int] = {"offset": 0, "limit": limit}
+        params: dict[str, int] | None = {"offset": 0, "limit": limit}
         while current_url:
-            data: ResponseSchema = await self.get_data(current_url, params)
+            data: ResponseSchema | None = await self.get_data(current_url, params)
             if not data:
                 break
 
             yield data
-            current_url = data.metatada.next_page
+            current_url: str = data.metadata.next_page
             params = None
 
 

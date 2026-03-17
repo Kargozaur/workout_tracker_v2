@@ -12,7 +12,7 @@ class Metadata(ResponseBaseSchema):
     total_pages: int
     current_page: int
     previous_page: str | None
-    next_page: str | int
+    next_page: str
 
 
 class Data(ResponseBaseSchema):

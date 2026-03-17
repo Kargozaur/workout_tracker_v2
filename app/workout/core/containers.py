@@ -5,6 +5,7 @@ from dishka import (
 from dishka.integrations.fastapi import FastapiProvider
 
 from app.workout.core.providers.app_providers.auth_provider import AuthProvider
+from app.workout.core.providers.app_providers.polling import PollingProvider
 from app.workout.core.providers.app_providers.redis_provider import (
     RedisProvider,
 )
@@ -55,4 +56,5 @@ def create_async_containers() -> AsyncContainer:
         WorkoutProvider(),
         StaticProvider(),
         HttpxProvider(),
+        PollingProvider(),
     )
