@@ -36,7 +36,7 @@ def create_celery_client() -> tuple[Celery, AsyncContainer]:
         },
         "get_data": {
             "task": "app.workout.infrastructure.tasks.worker.get_data",
-            "schedule": crontab(minute=7),
+            "schedule": crontab(hour=16),
         },
     }
 

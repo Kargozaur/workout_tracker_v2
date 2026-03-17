@@ -48,7 +48,7 @@ class APIData:
         while current_url:
             await asyncio.sleep(3)
             data: ResponseSchema | None = await self.get_data(current_url, params)
-            if not data or current_url is None:
+            if not data:
                 break
 
             yield data
