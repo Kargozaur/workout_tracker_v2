@@ -25,7 +25,7 @@ class APIData:
     async def get_data(
         self, url: str, params: dict[str, int] | None = None
     ) -> ResponseSchema | None:
-        if not self._get_domain(url) == self.__base_domain:
+        if self._get_domain(url) != self.__base_domain:
             raise
         try:
             logger.info(f"requesting {url}")
