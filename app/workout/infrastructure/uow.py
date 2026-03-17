@@ -29,6 +29,7 @@ class UnitOfWork(IUnitOfWork):
             session
         )
         self.workout_repository: WorkoutRepository = WorkoutRepository(session)
+        self.exercise_repository = ExerciseRepository(session)
 
     async def __aenter__(self) -> Self:
         return self

@@ -14,5 +14,5 @@ class Category(IntIdMixin, Base):
     category: Mapped[CategoryEnum] = sa.Column(
         sa.Enum(CategoryEnum, values_callable=lambda x: [e.value for e in x]),
         nullable=False,
-    )
+    )  # ty:ignore[invalid-assignment]
     exercises = relationship("Exercises", back_populates="category")

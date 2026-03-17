@@ -1,3 +1,4 @@
+import asyncio
 import time
 from collections.abc import AsyncGenerator
 from urllib.parse import urlparse
@@ -45,20 +46,11 @@ class APIData:
         current_url: str = self.__api_url
         params: dict[str, int] | None = {"offset": 0, "limit": limit}
         while current_url:
+            await asyncio.sleep(3)
             data: ResponseSchema | None = await self.get_data(current_url, params)
-            if not data:
+            if not data or current_url is None:
                 break
 
             yield data
             current_url: str = data.metadata.next_page
             params = None
-
-
-# async def get_data() -> ResponseSchema:
-#     async with AsyncClient() as aclient:
-#         new_data = APIData(aclient)
-#         res = await new_data.get_data()
-#     return res
-
-
-# print(asyncio.run(get_data()))

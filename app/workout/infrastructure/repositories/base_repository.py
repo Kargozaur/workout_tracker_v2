@@ -50,7 +50,7 @@ class BaseRepository[
             if order and isinstance(field, str) and field.startswith("-"):
                 desc = True
                 field = field[1:]
-            if attr := getattr(self.model, field, None):
+            if attr := getattr(self.model, str(field), None):
                 result.append(attr.desc() if desc else attr)
         return result
 
@@ -120,6 +120,8 @@ class BaseRepository[
         entity: ModelT | None = await self.get_entity(**filters)
         if entity is None:
             raise EntityNotFoundError("Entity not found")
+        if not isinstance(attributes, BaseModel):
+            raise EntityUpdateError()
         data: dict[str, Any] = attributes.model_dump(exclude_none=True, by_alias=True)
         try:
             for k, v in data.items():
@@ -148,8 +150,12 @@ class BaseRepository[
 
     async def delete_expired(self) -> bool:
         """Deletes expired entities from the database."""
+        if not (column := getattr(self.model, "expires_at", None)):
+            raise EntityDeletionError(
+                "You can't delete row without expires_at attribute"
+            )
         now: dt.datetime = dt.datetime.now(dt.UTC)
-        query = sa.delete(self.model).where(self.model.expires_at < now)
+        query = sa.delete(self.model).where(column < now)
         try:
             await self.session.execute(query)
             return True
@@ -169,12 +175,13 @@ class BaseRepository[
             raise EntityDeletionError() from exc
 
     async def bulk_insert(self, schemas: list[CreateSchemaT]) -> int:
-        to_insert: list[dict[str, Any]] = [ins.to_dict() for ins in schemas]
+        logger.info(f"got len: {len(schemas)}")
+        to_insert: list[dict[str, Any]] = [ins.model_dump() for ins in schemas]
         query = sa.insert(self.model).values(to_insert)
         try:
-            result = await self.session.execute(query)
+            await self.session.execute(query)
             await self.session.flush()
-            return len(result)
+            return len(schemas)
         except Exception as exc:
             logger.exception(f"Exception is raised: {exc}")
             raise EntityCreationError() from exc

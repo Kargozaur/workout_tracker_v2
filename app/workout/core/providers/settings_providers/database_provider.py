@@ -1,3 +1,4 @@
+import sys
 from collections.abc import AsyncIterable
 
 from dishka import Provider, Scope, provide
@@ -7,6 +8,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
+from sqlalchemy.pool import AsyncAdaptedQueuePool, NullPool
 
 from app.workout.core.settings.db_settings import AbstractDbConfig
 from app.workout.core.settings.orm_settings import ORMConfig
@@ -17,10 +19,17 @@ class SQLAlchemyProvider(Provider):
     async def get_engine(
         self, db_cfg: AbstractDbConfig, orm_cfg: ORMConfig
     ) -> AsyncIterable[AsyncEngine]:
+        is_celery = "celery" in sys.argv[0]
         """Dishka takes responsibility of SQLAlchemy engine lifetime."""
+        params = {}
+        if is_celery:
+            params["poolclass"] = NullPool
+        else:
+            params = orm_cfg.model_dump()
+            params["poolclass"] = AsyncAdaptedQueuePool
         engine = create_async_engine(
             url=db_cfg.dsn,  # echo=True,
-            **orm_cfg.model_dump(),
+            **params,
         )
         yield engine
         await engine.dispose()

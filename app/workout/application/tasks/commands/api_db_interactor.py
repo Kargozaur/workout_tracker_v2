@@ -1,3 +1,4 @@
+import random
 from collections.abc import AsyncIterable
 
 from loguru import logger
@@ -31,22 +32,31 @@ class APIInteractor:
             result: list[ExerciseSchema] = []
             for item in response.data:
                 primary_muscle: str = item.target_muscles[0]
-                if not (muscle_g_id := self.muscle_map.get(primary_muscle)):
-                    continue
-                category: str = item.body_parts[0]
-                if not (category_id := self.category_map.get(category)):
-                    continue
-                schema: ExerciseSchema = ExerciseSchema(
-                    name=item.name,
-                    description=" ".join(item.description)[:500],
-                    exercise_slug=item.exercise_slug,
-                    category_id=category_id,
-                    muscle_group_id=muscle_g_id,
-                )
-                result.append(schema)
+                # if not (muscle_g_id := self.muscle_map.get(primary_muscle)):
+                #     continue
+                # category: str = item.body_parts[0]
+                # if not (category_id := self.category_map.get(category)):
+                #     continue
+                try:
+                    schema: ExerciseSchema = ExerciseSchema(
+                        name=item.name,
+                        description=" ".join(item.description)[:500],
+                        exercise_slug=item.exercise_slug,
+                        category_id=random.randint(
+                            1, 3
+                        ),  # need to fix enum and sqlalchemy enum,
+                        # currently it'll look like this
+                        muscle_group_id=random.randint(1, 5),
+                    )
+                    logger.info(f"Schema created: {schema.name}")
+                    result.append(schema)
+                except Exception as exc:
+                    logger.exception(f"An exception occured {exc}")
         if result:
             async with self.UoW:
-                logger.info("trying to insert an exercises list")
+                logger.info(
+                    f"trying to insert an exercises list wuth length {len(result)}"
+                )
                 await self.UoW.exercise_repository.create_exercises(result)
                 await self.UoW.commit()
         logger.info("inserted exercises")
