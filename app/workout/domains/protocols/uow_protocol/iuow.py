@@ -9,6 +9,9 @@ from app.workout.domains.protocols.repository_protocols.irefresh_repository impo
 from app.workout.domains.protocols.repository_protocols.iuser_repository import (
     IUserRepository,
 )
+from app.workout.domains.protocols.repository_protocols.iworkout_items_repository import (  # noqa: E501
+    IWorkoutItems,
+)
 from app.workout.domains.protocols.repository_protocols.iworkout_repository import (
     IWorkoutRepository,
 )
@@ -23,6 +26,7 @@ class IUnitOfWork(Protocol):
     refresh_repository: IRefreshRepository
     workout_repository: IWorkoutRepository
     exercise_repository: IExerciseRepository
+    workout_items_repository: IWorkoutItems
 
     async def __aenter__(self) -> Self: ...
 

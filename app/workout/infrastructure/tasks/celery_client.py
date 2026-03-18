@@ -1,5 +1,4 @@
 import asyncio
-from collections.abc import Mapping, Sequence
 from typing import cast
 
 from celery import Celery

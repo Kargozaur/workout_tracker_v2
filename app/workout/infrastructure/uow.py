@@ -12,6 +12,9 @@ from app.workout.infrastructure.repositories.refresh_repository import (
 from app.workout.infrastructure.repositories.user_repository import (
     UserRepository,
 )
+from app.workout.infrastructure.repositories.workout_items_repository import (
+    WorkoutItemsRepository,
+)
 from app.workout.infrastructure.repositories.workout_repository import (
     WorkoutRepository,
 )
@@ -29,7 +32,10 @@ class UnitOfWork(IUnitOfWork):
             session
         )
         self.workout_repository: WorkoutRepository = WorkoutRepository(session)
-        self.exercise_repository = ExerciseRepository(session)
+        self.exercise_repository: ExerciseRepository = ExerciseRepository(session)
+        self.workout_items_repository: WorkoutItemsRepository = WorkoutItemsRepository(
+            session
+        )
 
     async def __aenter__(self) -> Self:
         return self
