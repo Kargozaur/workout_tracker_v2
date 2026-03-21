@@ -1,6 +1,8 @@
 from uuid import UUID
 
+import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload
 
 from app.workout.application.common.dataclasses.pagination import Slice
 from app.workout.application.common.enums.workout_statuses import (
@@ -21,6 +23,8 @@ from app.workout.domains.exceptions.workout_exceptions import (
 from app.workout.domains.protocols.repository_protocols.iworkout_repository import (
     IWorkoutRepository,
 )
+from app.workout.infrastructure.db.models.exercises import Exercises
+from app.workout.infrastructure.db.models.workout_items import WorkoutItems
 from app.workout.infrastructure.db.models.workouts import Workout
 from app.workout.infrastructure.repositories.base_repository import (
     BaseRepository,
@@ -61,19 +65,13 @@ class WorkoutRepository(
         )
 
     async def get_workout(self, user_id: UUID, workout_id: UUID) -> Workout | None:
-        return await super().get_entity(
-            id=workout_id,
-            user_id=user_id,
-            fields=(
-                "id",
-                "name",
-                "status",
-                "scheduled_at",
-                "started_at",
-                "finished_at",
-                "note",
-            ),
+        query = (
+            sa.select(Workout)
+            .options(joinedload(Workout.workout_items).joinedload(WorkoutItems.items))
+            .where(Workout.id == workout_id, Workout.user_id == user_id)
         )
+        res = await self.session.execute(query)
+        return res.unique().scalar_one_or_none()
 
     async def create_workout(self, schema: CreateWorkout) -> Workout:
         return await super().create_entity(schema)

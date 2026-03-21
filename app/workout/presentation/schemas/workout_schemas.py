@@ -1,8 +1,9 @@
 import datetime as dt
+from decimal import Decimal
 from typing import Annotated
 from uuid import UUID
 
-from pydantic import BeforeValidator
+from pydantic import BaseModel, BeforeValidator
 
 from . import ConfigDict, Field, GenericId
 
@@ -11,12 +12,25 @@ def replace_none(v: str) -> BeforeValidator:
     return BeforeValidator(lambda x: x if x is not None else v)
 
 
-NotStarted = Annotated[
-    str | dt.datetime, replace_none("Workout is not yet started")
-]
-NotFinished = Annotated[
-    str | dt.datetime, replace_none("Workout is not yet finished")
-]
+NotStarted = Annotated[str | dt.datetime, replace_none("Workout is not yet started")]
+NotFinished = Annotated[str | dt.datetime, replace_none("Workout is not yet finished")]
+
+
+class Exercise(BaseModel):
+    id: UUID | None
+    name: str | None
+    description: str | None
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class Items(BaseModel):
+    is_completed: bool
+    distance_km: Decimal | None
+    duration_seconds: Decimal | None
+    items: Exercise = Field(serialization_alias="exercise")
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class WorkoutResponse(GenericId[UUID]):
@@ -28,3 +42,7 @@ class WorkoutResponse(GenericId[UUID]):
     finished_at: NotFinished = Field(serialization_alias="finishedAt")
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class WorkoutNestedResponse(WorkoutResponse):
+    workout_items: list[Items]

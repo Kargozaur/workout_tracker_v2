@@ -68,9 +68,7 @@ class WorkoutProvider(Provider):
         service: ICacheService[WorkoutCache],
         access_token: AccessToken,
     ) -> StartWorkoutInteractor:
-        return StartWorkoutInteractor(
-            uow, token_provider, service, access_token
-        )
+        return StartWorkoutInteractor(uow, token_provider, service, access_token)
 
     @provide
     def get_workout_finisher(
@@ -80,9 +78,7 @@ class WorkoutProvider(Provider):
         service: ICacheService[WorkoutCache],
         access_token: AccessToken,
     ) -> FinishWorkoutInteractor:
-        return FinishWorkoutInteractor(
-            uow, token_provider, service, access_token
-        )
+        return FinishWorkoutInteractor(uow, token_provider, service, access_token)
 
     @provide
     def get_note_interactor(
@@ -94,15 +90,15 @@ class WorkoutProvider(Provider):
     ) -> AddNoteInteractor:
         return AddNoteInteractor(uow, token_provider, service, access_token)
 
-    @decorate
-    def get_single_workout_cache(
-        self,
-        uow: IUnitOfWork,
-        token_provider: ITokenProvider,
-        access_token: AccessToken,
-        interactor: GetSingleWorkout,
-        cache_service: ICacheService[WorkoutCache],
-    ) -> GetSingleWorkout:
-        return GetCachedWorkout(
-            uow, token_provider, access_token, interactor, cache_service
-        )
+    # @decorate
+    # def get_single_workout_cache(
+    #     self,
+    #     uow: IUnitOfWork,
+    #     token_provider: ITokenProvider,
+    #     access_token: AccessToken,
+    #     interactor: GetSingleWorkout,
+    #     cache_service: ICacheService[WorkoutCache],
+    # ) -> GetSingleWorkout:
+    #     return GetCachedWorkout(
+    #         uow, token_provider, access_token, interactor, cache_service
+    #     )

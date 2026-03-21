@@ -31,7 +31,10 @@ from app.workout.presentation.api.annotated.pagination import (
 from app.workout.presentation.schemas.pagination_schema import (
     PaginatedResponse,
 )
-from app.workout.presentation.schemas.workout_schemas import WorkoutResponse
+from app.workout.presentation.schemas.workout_schemas import (
+    WorkoutNestedResponse,
+    WorkoutResponse,
+)
 
 
 def create_workout_router() -> APIRouter:
@@ -68,7 +71,7 @@ def create_workout_router() -> APIRouter:
     @router.get(
         "/workouts/{workout_id}",
         status_code=success_status_codes.ok,
-        response_model=WorkoutResponse,
+        response_model=WorkoutNestedResponse,
         description="get a single workout by its ID.",
     )
     @inject
